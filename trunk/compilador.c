@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "estruturas.h"
+//#include "estruturas.h"
 #include "simulador_AFD.h"
 #include "montador_AFD.h"
 
