@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#ifndef ESTRUTURAS
+#define ESTRUTURAS
 typedef struct fluxo_tokens {
 	char nome[10];
 	int valor_atributo;
@@ -34,3 +36,4 @@ typedef struct AFD {
 	int numero_estados;
 	struct estado *primeiro;
 } AFD;
+#endif
