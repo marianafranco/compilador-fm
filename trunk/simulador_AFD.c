@@ -2,7 +2,7 @@
 
 void simula_AFD (AFD *automato, FILE *cod_fonte, fluxo_tokens *tokens, tabela_simbolos *tabela) {
 	
-	// Número do estado atual
+	// Numero do estado atual
 	int estado_atual = 0;
 	// Buffer do ultimo caracter lido
 	char buffer;
@@ -10,7 +10,7 @@ void simula_AFD (AFD *automato, FILE *cod_fonte, fluxo_tokens *tokens, tabela_si
 	// Coloca caracter no buffer
 	buffer = fgetc(cod_fonte);
 	
-	// Enquanto não chegarmos ao fim do arquivo
+	// Enquanto nao chegarmos ao fim do arquivo
 	while (buffer != EOF) {
 		// Caso tivermos um espaço ou uma quebra de linha
 		while (0) {
