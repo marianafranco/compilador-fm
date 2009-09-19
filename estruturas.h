@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+
 typedef struct fluxo_tokens {
 	char nome[10];
 	int valor_atributo;
