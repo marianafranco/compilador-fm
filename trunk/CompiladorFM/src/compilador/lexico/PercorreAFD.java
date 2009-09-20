@@ -52,8 +52,6 @@ public class PercorreAFD {
 					// Caso o token tenha acabado
 					if (fechouToken == true) {
 						
-						System.out.println("TOKEN: " + token);
-						
 						// Caso seja um numero ou um caracter, nao e necessaria uma entrada na tabela
 						if (tipo == 1 || tipo == 3) {
 							tokensTokens.adicionaToken(token, -1);
@@ -61,7 +59,6 @@ public class PercorreAFD {
 						// Se for uma string, colocamos na tabela
 						else if (tipo == 2) {
 							int posicao = tabelaSimbolos.ultimaPosicao();
-							
 							tokensTokens.adicionaToken(token, posicao);
 							tabelaSimbolos.adicionaEntrada (posicao, token.toString(), tipo, linha, coluna);
 						}
