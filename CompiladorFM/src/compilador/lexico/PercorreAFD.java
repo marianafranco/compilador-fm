@@ -31,7 +31,9 @@ public class PercorreAFD {
 			// Enquanto nao chegamos ao fim do arquivo
 			while(atual != -1) {
 				
-				// Guarda o pr—ximo caracter
+				System.out.println((char)atual);
+				
+				// Guarda o proximo caracter
 				proximo = arquivoFonte.read();
 				
 				if (atual == '\n') {
@@ -45,16 +47,18 @@ public class PercorreAFD {
 					token = token + (char) atual;
 					
 					// Simula o automato com a entrada
-					automato.recebeEntrada((char) atual, (char) proximo, tipo, fechouToken);
+					fechouToken = automato.recebeEntrada((char) atual, (char) proximo, tipo);
 					
 					// Caso o token tenha acabado
 					if (fechouToken == true) {
+						
+						System.out.println("TOKEN: " + token);
 						
 						// Caso seja um numero ou um caracter, nao e necessaria uma entrada na tabela
 						if (tipo == 1 || tipo == 3) {
 							tokensTokens.adicionaToken(token, -1);
 						}
-						// Se for uma string, colcamos entrada na tabela
+						// Se for uma string, colocamos na tabela
 						else if (tipo == 2) {
 							int posicao = tabelaSimbolos.ultimaPosicao();
 							
