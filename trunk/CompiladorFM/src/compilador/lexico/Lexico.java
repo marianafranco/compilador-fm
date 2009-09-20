@@ -39,15 +39,17 @@ public class Lexico {
 		// Monta o Automato Finito Deterministico
 		montador.executa(this.automato);
 		
+		
+		
+		// Simula Automato Finito Deterministico com o aquivo fonte de entrada
+		simulador.executa(this.automato, this.arquivoFonte, this.fluxoTokens, this.tabelaSimbolos);
+		
 		try{
 			this.arquivoFonte.close();
 		}catch(Exception e){
 			e.printStackTrace();
 			return false;
 		}
-		
-		// Simula Automato Finito Deterministico com o aquivo fonte de entrada
-		simulador.executa(this.automato, this.arquivoFonte, this.fluxoTokens, this.tabelaSimbolos);
 		
 		return true;
 	}
