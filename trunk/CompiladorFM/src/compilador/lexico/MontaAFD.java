@@ -62,28 +62,31 @@ public class MontaAFD {
 			for (int i = 0; i < nodes.getLength(); i++) {
 				
 				// Recupera o id
-				expr = xpath.compile("//id/text()");
+				expr = xpath.compile("./id/text()");
 				result = expr.evaluate(nodes.item(i), XPathConstants.NODE);
 				Node node =  (Node) result;
 				int id = Integer.parseInt(node.getNodeValue()) ;
+				System.out.println("Estado ID: " + id);
 				
 				// Recupera se é final ou não
-				expr = xpath.compile("//final/text()");
+				expr = xpath.compile("./final/text()");
 				result = expr.evaluate(nodes.item(i), XPathConstants.NODE);
 				node =  (Node) result;
 				boolean aceitacao = Boolean.parseBoolean(node.getNodeValue());
+				System.out.println("\tFINAL: " + aceitacao);
 				
 				// Recupera o tipo
-				expr = xpath.compile("//tipo/text()");
+				expr = xpath.compile("./tipo/text()");
 				result = expr.evaluate(nodes.item(i), XPathConstants.NODE);
 				node =  (Node) result;
 				int tipo = Integer.parseInt(node.getNodeValue());
+				System.out.println("\tTIPO: " + tipo);
 				
 				// Cria o estado
 				Estado estado = new Estado(id, aceitacao, tipo);
 				
 				// Recupera as transições
-				expr = xpath.compile("//transicao");
+				expr = xpath.compile("./transicao");
 				result = expr.evaluate(nodes.item(i), XPathConstants.NODESET);
 				NodeList nodesTransicao = (NodeList) result;
 				
@@ -94,17 +97,21 @@ public class MontaAFD {
 				// Adiciona cada transição ao estado
 				for (int j = 0; j < nodesTransicao.getLength(); j++) {
 					
+					System.out.println("\tTransicao:");
+					
 					// Recupera as entradas
-					expr = xpath.compile("//entradas/text()");
+					expr = xpath.compile("./entradas/text()");
 					result = expr.evaluate(nodesTransicao.item(j), XPathConstants.NODE);
 					node =  (Node) result;
 					String entrada = node.getNodeValue();
+					System.out.println("\t\tENTRADA: " + entrada);
 					
 					// Recupera o id do próximo estado
-					expr = xpath.compile("//proximo/text()");
+					expr = xpath.compile("./proximo/text()");
 					result = expr.evaluate(nodesTransicao.item(j), XPathConstants.NODE);
 					node =  (Node) result;
 					int proximo = Integer.parseInt(node.getNodeValue());
+					System.out.println("\t\tPROXIMO: " + proximo);
 					
 					// Cria a transição
 					Transicao transicao = new Transicao(proximo, entrada);
