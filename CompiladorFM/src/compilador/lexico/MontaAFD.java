@@ -10,6 +10,9 @@ import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import compilador.lexico.estruturas.AFD;
 import compilador.lexico.estruturas.Estado;
@@ -36,9 +39,14 @@ public class MontaAFD {
 		try{
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			factory.setNamespaceAware(true);
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document doc = builder.parse(arquivoXML);
 			
+			// Para fazer a validacao do XML atraves da DTD
+			factory.setValidating(true);	
+			ErrorHandler handler = new MeuErrorHandler();
+
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			builder.setErrorHandler(handler);
+			Document doc = builder.parse(arquivoXML);
 			
 			XPathFactory factoryXPath = XPathFactory.newInstance();
 			XPath xpath = factoryXPath.newXPath();
@@ -118,5 +126,29 @@ public class MontaAFD {
 			return false;
 		}
 	}
+	
+	private static class MeuErrorHandler implements ErrorHandler {
+		public void warning(SAXParseException e) throws SAXException {
+	         System.out.println("[ATENCAO]:"); 
+	         printInfo(e);
+	      }
+	      public void error(SAXParseException e) throws SAXException {
+	         System.out.println("[ERRO] O arquivo XML nao e valido: "); 
+	         printInfo(e);
+	      }
+	      public void fatalError(SAXParseException e) throws SAXException {
+	         System.out.println("[ERRO] Na validacao do arquivo XML:"); 
+	         printInfo(e);
+	      }
+	      private void printInfo(SAXParseException e) {
+	      	 System.out.println("   Public ID: "+e.getPublicId());
+	      	 System.out.println("   System ID: "+e.getSystemId());
+	      	 System.out.println("   Line number: "+e.getLineNumber());
+	      	 System.out.println("   Column number: "+e.getColumnNumber());
+	      	 System.out.println("   Message: "+e.getMessage());
+	      }
+
+	}
+
 
 }
