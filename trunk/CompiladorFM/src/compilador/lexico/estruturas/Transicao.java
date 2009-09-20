@@ -7,7 +7,8 @@ public class Transicao {
 	
 	public Transicao(int proximo, String entrada) {
 		this.proximo = proximo;
-		for (int i = 0; entrada.length() > i; i++) {
+		this.entrada = new char[entrada.length()];
+		for (int i = 0; i < entrada.length(); i++) {
 			this.entrada[i] = entrada.charAt(i); 
 		}
 	}
