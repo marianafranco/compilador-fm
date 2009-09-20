@@ -1,31 +1,54 @@
 #include "simulador_AFD.h"
 
+void get_token(){
+     
+}
+
+
 void simula_AFD (AFD *automato, FILE *cod_fonte, fluxo_tokens *tokens, tabela_simbolos *tabela) {
 	
 	// Numero do estado atual
 	int estado_atual = 0;
-	// Buffer do ultimo caracter lido
-	char buffer;
 	
-	// Coloca caracter no buffer
-	buffer = fgetc(cod_fonte);
+	// Caractere atual e proximo
+	char atual;
+	char proximo;
 	
+	// Array que vai montando o token
+	char token [100];
+  int token_id = 0; 
+  
+  int coluna = 0;
+	int linha = 0;
+	
+	
+	// Pega o primeiro caractere do arquivo fonte
+	atual = fgetc(cod_fonte);
+	
+	printf("\n[INFO] Inicio da analise lexica.\n");
 	// Enquanto nao chegarmos ao fim do arquivo
-	while (buffer != EOF) {
-		// Caso tivermos um espaço ou uma quebra de linha
-		while (0) {
-			// Próximo caracter
-			buffer = fgetc(cod_fonte);
-		}
+	while (atual != EOF) {
+        
+    printf("%c", atual);
+    
+		// Caso tivermos um espaco ou uma quebra de linha
+		proximo = fgetc(cod_fonte);
 		
-		// Muda de estado
+		if(atual == '\n'){
+        coluna = 0;
+        linha++;
+    
+    }else if(atual == ' ' || atual == '\t'){
+        coluna++;
+    
+    }else {    
+        token[token_id] = atual;
+		    
+		    
 		
-		// Caso o token for completado com sucesso
-		if (0) {
-			// Grava token
-		}
-		
-		// Próximo caracter
-		buffer = fgetc(cod_fonte);
+    }
+    
+    atual = proximo;
 	}
+	printf("\n[INFO] Fim da analise lexica.\n");
 }
