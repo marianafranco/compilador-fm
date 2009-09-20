@@ -30,7 +30,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #ifndef EZXML_NOMMAP
-#include <sys/mman.h>
+#include "mman.h"
 #endif // EZXML_NOMMAP
 #include <sys/stat.h>
 #include "ezxml.h"
