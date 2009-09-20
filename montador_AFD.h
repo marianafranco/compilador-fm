@@ -1,3 +1,5 @@
+#include <string.h>
 #include "estruturas.h"
+#include "ezxml.h"
 
-void monta_AFD (FILE *sintaxe, AFD *automato);
+void monta_AFD (AFD *automato);
