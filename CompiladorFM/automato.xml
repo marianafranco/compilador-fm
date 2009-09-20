@@ -2,6 +2,7 @@
     <estado>
 		<id>0</id>
 		<final>1</final>
+        <tipo>0</tipo>
 		<transicao>
 			<entradas>0123456789</entradas>
 			<proximo>1</proximo>
@@ -26,6 +27,7 @@
 	<estado>
 		<id>1</id>
 		<final>1</final>
+        <tipo>1</tipo>
 		<transicao>
 			<entradas>0123456789</entradas>
 			<proximo>1</proximo>
@@ -34,6 +36,7 @@
     <estado>
 		<id>2</id>
 		<final>1</final>
+        <tipo>2</tipo>
 		<transicao>
 			<entradas>0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</entradas>
 			<proximo>2</proximo>
@@ -42,10 +45,12 @@
     <estado>
 		<id>3</id>
 		<final>1</final>
+        <tipo>3</tipo>
 	</estado>
     <estado>
 		<id>4</id>
 		<final>1</final>
+        <tipo>3</tipo>
 		<transicao>
 			<entradas>/</entradas>
 			<proximo>6</proximo>
@@ -54,6 +59,7 @@
     <estado>
 		<id>5</id>
 		<final>1</final>
+        <tipo>3</tipo>
 		<transicao>
 			<entradas>=</entradas>
 			<proximo>7</proximo>
@@ -62,6 +68,7 @@
     <estado>
 		<id>6</id>
 		<final>1</final>
+        <tipo>4</tipo>
 		<transicao>
 			<entradas>0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ;+-*()./=maiormenor</entradas>
 			<proximo>6</proximo>
@@ -74,5 +81,6 @@
     <estado>
 		<id>7</id>
 		<final>1</final>
+        <tipo>3</tipo>
 	</estado>
 </gramatica>
