@@ -21,7 +21,7 @@ public class PercorreAFD {
 			int proximo = -1; // Buffer de caracteres lidos
 			String token = ""; // Valor to token
 			int tipo = 0; // Tipo do token
-			boolean fechouToken = false; // Indica se um token foi finalizado
+			int fechouToken = -1; // Indica se um token foi finalizado
 			int linha = 1; // Guarda a linha sendo processada
 			int coluna = 1; // Guarda a coluna sendo processada
 			
@@ -50,7 +50,9 @@ public class PercorreAFD {
 					fechouToken = automato.recebeEntrada((char) atual, (char) proximo, tipo);
 					
 					// Caso o token tenha acabado
-					if (fechouToken == true) {
+					if (fechouToken != -1) {
+						
+						tipo = fechouToken;
 						
 						// Caso seja um numero ou um caracter, nao e necessaria uma entrada na tabela
 						if (tipo == 1 || tipo == 3) {
