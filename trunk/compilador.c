@@ -10,25 +10,12 @@ void lexico(FILE *cod_fonte, fluxo_tokens *tokens, tabela_simbolos *tabela) {
 	// Automato que processara o codigo fonte
 	AFD *automato;
 	
-	// Arquivo que descreve o automato
-  FILE *automato_configs;
-  automato_configs = fopen("gramatica.xml", "r");
-  
-  // Verifica se o arquivo de configuracoes do automato existe
-  if(!automato_configs) {
-      printf("[ERRO] O arquivo de configuracao do automato nao pode ser encontrado!\n");
-        
-  }else{
-      printf("[INFO] O arquivo de sintaxe foi encontrado!\n");
-      
-      // Monta Automato Finito Deterministico
-    	monta_AFD(automato_configs, automato);
+    // Monta Automato Finito Deterministico
+  	monta_AFD(automato);
     	
-    	// Simula Automato Finito Deterministico com a entrada
-    	simula_AFD(automato, cod_fonte, tokens, tabela);        
-    	
-    	fclose(automato_configs);
-  }
+   	// Simula Automato Finito Deterministico com a entrada
+   	simula_AFD(automato, cod_fonte, tokens, tabela);        
+
 }
 
 // Chama sequencialmente as etapas do compilador
