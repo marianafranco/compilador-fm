@@ -17,7 +17,8 @@ public class PercorreAFD {
 	public boolean executa(AFD automato, Reader arquivoFonte, FluxoTokens tokensTokens, TabelaSimbolos tabelaSimbolos){
 		
 		try{
-			int buffer[] = null; // Buffer de caracteres lidos
+			int atual = -1; // Buffer de caracteres lidos
+			int proximo = -1; // Buffer de caracteres lidos
 			char token[] = null; // Nome to token
 			int tipo = 0; // Tipo do token
 			boolean fechouToken = false; // Indica se um token foi finalizado
@@ -25,26 +26,26 @@ public class PercorreAFD {
 			int coluna = 1; // Guarda a coluna sendo processada
 			
 			// Le o primeiro caracter
-			buffer[0] = arquivoFonte.read();
+			atual = arquivoFonte.read();
 					
 			// Enquanto nao chegamos ao fim do arquivo
-			while(buffer[0] != -1) {
+			while(atual != -1) {
 				
 				// Guarda o pr—ximo caracter
-				buffer[1] = arquivoFonte.read();
+				proximo = arquivoFonte.read();
 				
-				if (buffer[0] == '\n') {
+				if (atual == '\n') {
 					linha++;
 					coluna = 0;
 				}
 				// Se o caracter nao for um espaco, uma quebra de linha ou uma tabulacao
-				else if (buffer[0] != ' ' && buffer[0] != '\t') {
+				else if (atual != ' ' && atual != '\t') {
 					
 					// Coloca mais um caracter no token
-					token[token.length] = (char) buffer[0];
+					token[token.length] = (char) atual;
 					
 					// Simula o automato com a entrada
-					automato.recebeEntrada((char) buffer[0], (char) buffer[1], tipo, fechouToken);
+					automato.recebeEntrada((char) atual, (char) proximo, tipo, fechouToken);
 					
 					// Caso o token tenha acabado
 					if (fechouToken == true) {
@@ -67,7 +68,7 @@ public class PercorreAFD {
 				}
 				
 				// Pega proximo caracter
-				buffer[0] = buffer[1];
+				atual = proximo;
 				
 				// Atualiza coluna
 				coluna++;
