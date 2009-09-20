@@ -6,7 +6,8 @@ void adiciona_estado (int id, int final) {
 }
 
 // Adiciona nova transição
-void adiciona_transicao () {
+void adiciona_transicao (char entradas[], int proximo) {
+	printf("%s  ->  %d\n", entradas, proximo); 
 }
 
 // Entra diversos tipos de token e monta um AFD
@@ -23,8 +24,9 @@ void monta_AFD (AFD *automato) {
 		
 		// Para cada transicao do estado
 		for (transition = ezxml_child(state, "transicao"); transition; transition = transition->next) {
-			adiciona_transicao();
-			//printf("Entrada:%s, proximo: %s\n", ezxml_child(transition, "entradas")->txt, ezxml_child(transition, "proximo")->txt);
+			
+			// Adiciona transicao
+			adiciona_transicao(ezxml_child(transition, "entradas")->txt, atoi(ezxml_child(transition, "proximo")->txt));
 		}
 	}
 	ezxml_free(arquivo); 
