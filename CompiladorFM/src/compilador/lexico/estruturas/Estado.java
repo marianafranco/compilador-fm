@@ -45,4 +45,5 @@ public class Estado {
 		
 		return proximo;
 	}
+	
 }
