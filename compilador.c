@@ -9,6 +9,9 @@ void lexico(FILE *cod_fonte, fluxo_tokens *tokens, tabela_simbolos *tabela) {
 	
 	// Automato que processara o codigo fonte
 	AFD *automato;
+	automato = (AFD *) malloc(sizeof(AFD));
+
+	automato->numero_estados = 0;
 	
     // Monta Automato Finito Deterministico
   	monta_AFD(automato);
