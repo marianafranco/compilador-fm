@@ -29,6 +29,10 @@ public class Estado {
 		return this.id;
 	}
 	
+	public int getTipo () {
+		return this.tipo;
+	}
+	
 	public boolean getAceitacao () {
 		return this.aceitacao;
 	}

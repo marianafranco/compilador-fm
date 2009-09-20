@@ -31,9 +31,33 @@ public class AFD {
 		this.estados = new Estado [this.numEstados];
 	}
 	
+	public int procuraEstado (int id) {
+		
+		for (int i = 0; this.estados.length > i; i++) {
+			if (this.estados[i].getId() == id) {
+				return i;
+			}
+		}
+		return -1;
+	}
 	
 	public void recebeEntrada (char atual, char proximo, int tipo, boolean fechou) {
 		
+		// Pega o indice do estado atual
+		int indice = procuraEstado(this.estadoAtivo);
+		
+		// Muda o estado atual
+		this.estadoAtivo = this.estados[indice].proximoEstado(atual);
+		
+		// Pega o tipo do estado atual
+		indice = procuraEstado(this.estadoAtivo);
+		tipo = this.estados[indice].getTipo();
+		
+		if (this.estados[indice].proximoEstado(proximo) != estadoAtivo) {
+			fechou = true;
+		}
+		else {
+			fechou = false;
+		}
 	}
-
 }
