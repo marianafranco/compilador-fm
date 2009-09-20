@@ -1,2 +1,11 @@
-3.1415
-nome
+int c2, b;
+int a = 1;
+
+b = 2;
+
+c2 = (a + b * b / b);
+
+// comentario
+se (a == a) {
+	c2 = a;
+}
