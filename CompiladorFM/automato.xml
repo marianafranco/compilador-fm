@@ -22,7 +22,7 @@
 			<proximo>4</proximo>
 		</transicao>
         <transicao>
-			<entradas>=maiormenor</entradas>
+			<entradas>=&lt;&gt;</entradas>
 			<proximo>5</proximo>
 		</transicao>
 	</estado>
@@ -72,7 +72,7 @@
 		<final>true</final>
         <tipo>4</tipo>
 		<transicao>
-			<entradas>0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ;+-*()./=maiormenor</entradas>
+			<entradas>0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ;+-*()./=&lt;&gt;</entradas>
 			<proximo>6</proximo>
 		</transicao>
         <transicao>
