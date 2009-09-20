@@ -32,7 +32,7 @@ public class AFD {
 	}
 	
 	
-	public void recebeEntrada (char atual, char proximo) {
+	public void recebeEntrada (char atual, char proximo, int tipo, boolean fechou) {
 		
 	}
 
