@@ -1,6 +1,6 @@
 package compilador.lexico;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.FileReader;
 import java.io.Reader;
 
@@ -23,15 +23,16 @@ public class Lexico {
 	
 	
 	
-	public Lexico(String nomeArquivo) throws FileNotFoundException{
+	public Lexico(String nomeArquivo) throws IOException {
 		this.arquivoFonte = new FileReader(nomeArquivo);
 		
 		this.automato = new AFD();
 		this.montador = new MontaAFD();
 		this.simulador = new PercorreAFD();
+		this.arquivoFonte.close();
 	}
 	
-	public boolean executa(){
+	public boolean executa() throws IOException{
 		
 		// Monta o Automato Finito Deterministico
 		montador.executa(this.automato);
