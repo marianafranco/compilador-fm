@@ -19,7 +19,7 @@ public class PercorreAFD {
 		try{
 			int atual = -1; // Buffer de caracteres lidos
 			int proximo = -1; // Buffer de caracteres lidos
-			char token[] = null; // Nome to token
+			String token = ""; // Valor to token
 			int tipo = 0; // Tipo do token
 			boolean fechouToken = false; // Indica se um token foi finalizado
 			int linha = 1; // Guarda a linha sendo processada
@@ -42,7 +42,7 @@ public class PercorreAFD {
 				else if (atual != ' ' && atual != '\t') {
 					
 					// Coloca mais um caracter no token
-					token[token.length] = (char) atual;
+					token = token + (char) atual;
 					
 					// Simula o automato com a entrada
 					automato.recebeEntrada((char) atual, (char) proximo, tipo, fechouToken);
@@ -52,18 +52,18 @@ public class PercorreAFD {
 						
 						// Caso seja um numero ou um caracter, nao e necessaria uma entrada na tabela
 						if (tipo == 1 || tipo == 3) {
-							tokensTokens.adicionaToken(token.toString(), -1);
+							tokensTokens.adicionaToken(token, -1);
 						}
 						// Se for uma string, colcamos entrada na tabela
 						else if (tipo == 2) {
 							int posicao = tabelaSimbolos.ultimaPosicao();
 							
-							tokensTokens.adicionaToken(token.toString(), posicao);
+							tokensTokens.adicionaToken(token, posicao);
 							tabelaSimbolos.adicionaEntrada (posicao, token.toString(), tipo, linha, coluna);
 						}
 						
 						// Zera token
-						token = null;
+						token = "";
 					}
 				}
 				

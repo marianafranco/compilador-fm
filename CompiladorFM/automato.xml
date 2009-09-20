@@ -3,7 +3,7 @@
 <gramatica>
     <estado>
 		<id>0</id>
-		<final>1</final>
+		<final>true</final>
         <tipo>0</tipo>
 		<transicao>
 			<entradas>0123456789</entradas>
@@ -28,7 +28,7 @@
 	</estado>
 	<estado>
 		<id>1</id>
-		<final>1</final>
+		<final>true</final>
         <tipo>1</tipo>
 		<transicao>
 			<entradas>0123456789</entradas>
@@ -37,7 +37,7 @@
 	</estado>
     <estado>
 		<id>2</id>
-		<final>1</final>
+		<final>true</final>
         <tipo>2</tipo>
 		<transicao>
 			<entradas>0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</entradas>
@@ -46,12 +46,12 @@
 	</estado>
     <estado>
 		<id>3</id>
-		<final>1</final>
+		<final>true</final>
         <tipo>3</tipo>
 	</estado>
     <estado>
 		<id>4</id>
-		<final>1</final>
+		<final>true</final>
         <tipo>3</tipo>
 		<transicao>
 			<entradas>/</entradas>
@@ -60,7 +60,7 @@
 	</estado>
     <estado>
 		<id>5</id>
-		<final>1</final>
+		<final>true</final>
         <tipo>3</tipo>
 		<transicao>
 			<entradas>=</entradas>
@@ -69,7 +69,7 @@
 	</estado>
     <estado>
 		<id>6</id>
-		<final>1</final>
+		<final>true</final>
         <tipo>4</tipo>
 		<transicao>
 			<entradas>0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ;+-*()./=maiormenor</entradas>
@@ -82,7 +82,7 @@
 	</estado>
     <estado>
 		<id>7</id>
-		<final>1</final>
+		<final>true</final>
         <tipo>3</tipo>
 	</estado>
 </gramatica>
