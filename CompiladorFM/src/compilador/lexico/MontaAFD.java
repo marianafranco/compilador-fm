@@ -64,8 +64,14 @@ public class MontaAFD {
 				node =  (Node) result;
 				boolean aceitacao = Boolean.parseBoolean(node.getNodeValue());
 				
+				// Recupera o tipo
+				expr = xpath.compile("//tipo/text()");
+				result = expr.evaluate(nodes.item(i), XPathConstants.NODE);
+				node =  (Node) result;
+				int tipo = Integer.parseInt(node.getNodeValue());
+				
 				// Cria o estado
-				Estado estado = new Estado(id, aceitacao);
+				Estado estado = new Estado(id, aceitacao, tipo);
 				
 				// Recupera as transições
 				expr = xpath.compile("//transicao");
