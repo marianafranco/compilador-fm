@@ -24,11 +24,10 @@ public class MontaAFD {
 		
 	}
 	
+	
 	public boolean executa(AFD automato){
-		
-		parseXML(this.arquivoXML, automato);
-		
-		return true;
+		// Cria o automato a partir do aquivo XML.
+		return parseXML(this.arquivoXML, automato);
 	}
 	
 	
@@ -99,13 +98,16 @@ public class MontaAFD {
 					estado.adicionaTransicao(transicao, j);
 				}
 				
+				// Adiciona o estado no automato
 				automato.adicionaEstado(estado, i);
 				
-				System.out.println(nodes.item(i).getNodeValue()); 
+				//System.out.println(nodes.item(i).getNodeValue()); 
 			}
 			return true;
+			
 		}catch(Exception e){
-			e.printStackTrace();
+			//e.printStackTrace();
+			System.out.println("[ERRO] Erro ao fazer o parser do arquivo XML");
 			return false;
 		}
 	}
