@@ -6,6 +6,7 @@ public class Estado {
 	
 	private int id;
 	private boolean aceitacao;
+	private int numTransicoes;
 	private Transicao transicoes[];
 	
 	public Estado(int id, boolean aceitacao) {
@@ -13,8 +14,13 @@ public class Estado {
 		this.aceitacao = aceitacao;
 	}
 	
-	public void adicionaTransicao (Transicao nova) {
-		this.transicoes[this.transicoes.length] = nova;
+	public void adicionaTransicao (Transicao nova, int indice) {
+		this.transicoes[indice] = nova;
+	}
+	
+	public void setNumTransicoes(int numTransicoes){
+		this.numTransicoes = numTransicoes;
+		this.transicoes = new Transicao [this.numTransicoes];
 	}
 	
 	public int getId () {
