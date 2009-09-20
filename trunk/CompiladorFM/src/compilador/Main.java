@@ -1,6 +1,7 @@
 package compilador;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import compilador.lexico.Lexico;
 
@@ -15,7 +16,7 @@ public class Main {
 	 * @param args argumentos de linha de comando
 	 * @throws FileNotFoundException 
 	 */
-	public static void main(String[] args) throws FileNotFoundException {
+	public static void main(String[] args) {
 		
 		// Caso o numero de argumentos passados seja diferente de 2
 		if(args.length != 1){ // TODO Depois mudar para 2
@@ -25,8 +26,13 @@ public class Main {
 			debugMensagem("arquivo fonte: " + args[0]);
 			String codFonte = args[0];
 			
-			Lexico lex = new Lexico(codFonte);
-			lex.executa();
+			try{
+				Lexico lex = new Lexico(codFonte);
+				lex.executa();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			
 			
 		}
 

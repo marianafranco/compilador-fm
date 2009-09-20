@@ -39,6 +39,7 @@ public class MontaAFD {
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document doc = builder.parse(arquivoXML);
 			
+			
 			XPathFactory factoryXPath = XPathFactory.newInstance();
 			XPath xpath = factoryXPath.newXPath();
 			
