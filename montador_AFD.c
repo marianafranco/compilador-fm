@@ -1,5 +1,17 @@
 #include "montador_AFD.h"
 
+// Funcao de teste da montagem do automato
+void imprime_automato (AFD *automato) {
+	
+	estado *ultimo;
+	ultimo = automato->primeiro;
+	
+	// Percorre todos os estados
+	for (int i = 0; automato->numero_estados < i; i++) {
+		ultimo = ultimo->proximo;
+	}
+}
+
 // Retorna o último estado da lista de um automato
 void ultimo_estado (AFD *automato, estado *ultimo) {
 	
@@ -27,7 +39,7 @@ void adiciona_estado (int id, int final, AFD *automato) {
 
 // Adiciona nova transição
 void adiciona_transicao (char entradas[], int proximo, AFD *automato) {
-	printf("%s  ->  %d\n", entradas, proximo); 
+	//printf("%s  ->  %d\n", entradas, proximo); 
 }
 
 // Entra diversos tipos de token e monta um AFD
