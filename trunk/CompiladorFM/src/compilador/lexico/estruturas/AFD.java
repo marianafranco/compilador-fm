@@ -41,7 +41,7 @@ public class AFD {
 		return -1;
 	}
 	
-	public boolean recebeEntrada (char atual, char proximo, int tipo) {
+	public int recebeEntrada (char atual, char proximo, int tipo) {
 		
 		// Pega o indice do estado atual
 		int estadoAtual = procuraEstado(this.estadoAtivo);
@@ -51,7 +51,9 @@ public class AFD {
 		
 		if(proximoEstado == -1){
 			this.estadoAtivo = 0;
-			return true;
+			tipo = this.estados[estadoAtual].getTipo();
+			return tipo;
+			//return true;
 		}else{
 			this.estadoAtivo = proximoEstado;
 			
@@ -62,10 +64,12 @@ public class AFD {
 			proximoEstado = this.estados[estadoAtual].proximoEstado(proximo);
 			
 			if(proximoEstado == -1 || proximoEstado != estadoAtivo){
-				return true;
+				return tipo;
+				//return true;
 			}
 			else {
-				return false;
+				return -1;
+				//return false;
 			}
 			
 		}
