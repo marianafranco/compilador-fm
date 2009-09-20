@@ -18,7 +18,7 @@ public class AFD {
 		this.estados[this.estados.length] = adicionado;
 	}
 	
-	public void recebeEntrada (char entrada) {
+	public void recebeEntrada (char atual, char proximo) {
 		
 	}
 
