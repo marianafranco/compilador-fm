@@ -31,6 +31,8 @@ public class Lexico {
 		this.automato = new AFD();
 		this.montador = new MontaAFD();
 		this.simulador = new PercorreAFD();
+		this.tabelaSimbolos = new TabelaSimbolos();
+		this.fluxoTokens = new FluxoTokens();
 		//this.arquivoFonte.close();
 	}
 	

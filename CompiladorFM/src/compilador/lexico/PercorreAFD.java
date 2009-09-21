@@ -60,7 +60,7 @@ public class PercorreAFD {
 						}
 						// Se for uma string, colocamos na tabela
 						else if (tipo == 2) {
-							int posicao = tabelaSimbolos.ultimaPosicao();
+							int posicao = tabelaSimbolos.getEntradas();
 							tokensTokens.adicionaToken(token, posicao);
 							tabelaSimbolos.adicionaEntrada (posicao, token.toString(), tipo, linha, coluna);
 						}
