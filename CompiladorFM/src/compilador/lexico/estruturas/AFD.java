@@ -41,7 +41,30 @@ public class AFD {
 		return -1;
 	}
 	
-	public int recebeEntrada (char atual, char proximo, int tipo) {
+	public boolean temTransicao (char atual) {
+		// Pega o indice do estado atual
+		int estadoAtual = procuraEstado(this.estadoAtivo);
+		
+		// Pega o estado atual
+		int proximoEstado = this.estados[estadoAtual].proximoEstado(atual);
+		
+		if (proximoEstado == -1) {
+			if (this.estados[estadoAtual].getAceitacao() == true) {
+				return false;
+			}
+			else {
+				System.out.println("Transicao incorreta, imprimir linha e coluna e dar erro");
+				return true;
+			}
+		}
+		else {
+			return true;
+		}
+	}
+	
+	public int recebeEntrada (char atual, char proximo) {
+		
+		int tipo;
 		
 		System.out.println(atual  + " " + proximo);
 		
