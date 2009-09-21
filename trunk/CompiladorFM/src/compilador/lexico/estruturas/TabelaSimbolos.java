@@ -13,7 +13,7 @@ public class TabelaSimbolos {
 	
 	public void adicionaEntrada (int posicao, String nome, int tipo, int linha, int coluna) {
 		
-		System.out.println("TOKEN: " + nome);
+		System.out.println("Posicao: " + posicao + ", nome: " + nome + ", tipo: " + tipo + ", linha: " + linha + ", coluna: "+ coluna);
 		
 		Simbolo novo = new Simbolo(posicao, nome, tipo, linha, coluna);
 		

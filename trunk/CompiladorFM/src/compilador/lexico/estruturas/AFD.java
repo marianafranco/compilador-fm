@@ -43,10 +43,12 @@ public class AFD {
 	
 	public int recebeEntrada (char atual, char proximo, int tipo) {
 		
+		System.out.println(atual  + " " + proximo);
+		
 		// Pega o indice do estado atual
 		int estadoAtual = procuraEstado(this.estadoAtivo);
 		
-		// Muda o estado atual
+		// Pega o estado atual
 		int proximoEstado = this.estados[estadoAtual].proximoEstado(atual);
 		
 		if(proximoEstado == -1){

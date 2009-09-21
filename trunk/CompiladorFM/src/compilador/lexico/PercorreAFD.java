@@ -31,7 +31,7 @@ public class PercorreAFD {
 			// Enquanto nao chegamos ao fim do arquivo
 			while(atual != -1) {
 				
-				System.out.println((char)atual);
+				//System.out.println((char)atual);
 				
 				// Guarda o proximo caracter
 				proximo = arquivoFonte.read();
@@ -40,35 +40,33 @@ public class PercorreAFD {
 					linha++;
 					coluna = 0;
 				}
-				// Se o caracter nao for um espaco, uma quebra de linha ou uma tabulacao
-				else if (atual != ' ' && atual != '\t') {
+			
+				
+				// Coloca mais um caracter no token
+				token = token + (char) atual;
+				
+				// Simula o automato com a entrada
+				fechouToken = automato.recebeEntrada((char) atual, (char) proximo, tipo);
+				/*
+				// Caso o token tenha acabado
+				if (fechouToken != -1) {
 					
-					// Coloca mais um caracter no token
-					token = token + (char) atual;
+					tipo = fechouToken;
 					
-					// Simula o automato com a entrada
-					fechouToken = automato.recebeEntrada((char) atual, (char) proximo, tipo);
-					
-					// Caso o token tenha acabado
-					if (fechouToken != -1) {
-						
-						tipo = fechouToken;
-						
-						// Caso seja um numero ou um caracter, nao e necessaria uma entrada na tabela
-						if (tipo == 1 || tipo == 3) {
-							tokensTokens.adicionaToken(token, -1);
-						}
-						// Se for uma string, colocamos na tabela
-						else if (tipo == 2) {
-							int posicao = tabelaSimbolos.getEntradas();
-							tokensTokens.adicionaToken(token, posicao);
-							tabelaSimbolos.adicionaEntrada (posicao, token.toString(), tipo, linha, coluna);
-						}
-						
-						// Zera token
-						token = "";
+					// Caso seja um numero ou um caracter, nao e necessaria uma entrada na tabela
+					if (tipo == 1 || tipo == 3) {
+						tokensTokens.adicionaToken(token, -1);
 					}
-				}
+					// Se for uma string, colocamos na tabela
+					else if (tipo == 2) {
+						int posicao = tabelaSimbolos.getEntradas();
+						tokensTokens.adicionaToken(token, posicao);
+						tabelaSimbolos.adicionaEntrada (posicao, token.toString(), tipo, linha, coluna);
+					}
+					
+					// Zera token
+					token = "";
+				*/
 				
 				// Pega proximo caracter
 				atual = proximo;
