@@ -45,21 +45,61 @@ public class AFD {
 		// Pega o indice do estado atual
 		int estadoAtual = procuraEstado(this.estadoAtivo);
 		
-		// Pega o estado atual
+		// Verifica se existe transicao
 		int proximoEstado = this.estados[estadoAtual].proximoEstado(atual);
 		
+		// Se nao existe
 		if (proximoEstado == -1) {
+			// Verifica se o estado atual é de aceitacao
 			if (this.estados[estadoAtual].getAceitacao() == true) {
 				return false;
 			}
 			else {
 				System.out.println("Transicao incorreta, imprimir linha e coluna e dar erro");
-				return true;
+				return false;
 			}
 		}
+		// Se existe transicao, retorna true
 		else {
 			return true;
 		}
+	}
+	
+	public void percorre(char atual){
+		// Pega o indice do estado atual
+		int estadoAtual = procuraEstado(this.estadoAtivo);
+		
+		// Pega o próximo estado
+		int proximoEstado = this.estados[estadoAtual].proximoEstado(atual);
+		
+		this.estadoAtivo = proximoEstado;
+	}
+	
+	public boolean transicaoFinal(char proximo){
+		// Pega o indice do estado atual
+		int estadoAtual = procuraEstado(this.estadoAtivo);
+		
+		// Verifica se existe transicao
+		int proximoEstado = this.estados[estadoAtual].proximoEstado(proximo);
+		
+		// Se nao existe
+		if (proximoEstado == -1) {
+			System.out.println("Erro em transicaoFinal");
+			return false;
+		}
+		// Se existe transicao
+		else {
+			// Verifica se o estado é de aceitacao
+			if (this.estados[proximoEstado].getAceitacao() == true) {
+				return true;
+			}else{
+				return false;
+			}
+		}
+	}
+	
+	public void setEstadoAtivo(int estadoID){
+		this.estadoAtivo = estadoID;
 	}
 	
 	public int recebeEntrada (char atual, char proximo) {

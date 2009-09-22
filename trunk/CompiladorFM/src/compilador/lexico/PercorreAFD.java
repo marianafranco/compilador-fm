@@ -38,22 +38,52 @@ public class PercorreAFD {
 				if (atual == '\n') {
 					linha++;
 					coluna = 0;
-				}
-				
-				// Coloca mais um caracter no token
-				token = token + (char) atual;
-				
-				if (automato.temTransicao((char) atual) == true) {
-					if (true) {
-						// nao gera token
-					}
-					else {
-						//gera token
-					}
+					
+					// volta para o estado inicial
+					automato.setEstadoAtivo(0);
 				}
 				else {
-					// volta p/ inicial e gera token
+				if (atual != ' ' && atual != '\t'){
+					
+					// Coloca mais um caracter no token
+					token = token + (char) atual;
+					
+					if (automato.temTransicao((char) atual)) {
+						
+						// Faz o automato andar para o proximo estado
+						automato.percorre((char) atual);
+						
+						// Verifica se tem transicao com o proximo
+						if (automato.temTransicao((char) proximo)) {
+							
+							// Verifica se a transicao é para um estado final
+							if(automato.transicaoFinal((char) proximo)){
+								// nao gera token
+							}else{
+								// gera token e volta para o estado inicial
+								System.out.println("TOKEN = " + token);
+								token = "";
+								automato.setEstadoAtivo(0);
+							}
+							
+						}
+						else {
+							//gera token e volta para o estado inicial
+							System.out.println("TOKEN = " + token);
+							token = "";
+							automato.setEstadoAtivo(0);
+						}
+					}
+					else {
+						//gera token e volta para o estado inicial
+						System.out.println("TOKEN = " + token);
+						token = "";
+						automato.setEstadoAtivo(0);
+						
+					}
 				}
+				}
+				
 				
 					
 					// Caso seja um numero ou um caracter, nao e necessaria uma entrada na tabela
