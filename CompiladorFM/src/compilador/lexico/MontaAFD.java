@@ -125,6 +125,7 @@ public class MontaAFD {
 				
 				//System.out.println(nodes.item(i).getNodeValue()); 
 			}
+			System.out.println("[INFO] Automato montado com sucesso.");
 			return true;
 			
 		}catch(Exception e){

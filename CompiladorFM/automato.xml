@@ -14,7 +14,7 @@
 			<proximo>2</proximo>
 		</transicao>
         <transicao>
-			<entradas>;+-*().</entradas>
+			<entradas>;+-*().[]</entradas>
 			<proximo>3</proximo>
 		</transicao>
         <transicao>
@@ -72,12 +72,8 @@
 		<final>true</final>
         <tipo>4</tipo>
 		<transicao>
-			<entradas>0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ;+-*()./=&lt;&gt;</entradas>
+			<entradas>0123456789 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ;+-*()./=&lt;&gt;</entradas>
 			<proximo>6</proximo>
-		</transicao>
-        <transicao>
-			<entradas>newline</entradas>
-			<proximo>0</proximo>
 		</transicao>
 	</estado>
     <estado>
