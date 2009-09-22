@@ -20,7 +20,7 @@ public class Main {
 		
 		// Caso o numero de argumentos passados seja diferente de 2
 		if(args.length != 1){ // TODO Depois mudar para 2
-			System.out.println("[Erro] Forma de uso: compilador <fonte> <objeto>");
+			System.out.println("[ERRO] Forma de uso: compilador <fonte> <objeto>");
 		
 		}else{
 			debugMensagem("arquivo fonte: " + args[0]);
@@ -30,9 +30,8 @@ public class Main {
 				Lexico lex = new Lexico(codFonte);
 				lex.executa();
 			}catch(Exception e){
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
-			
 			
 		}
 
