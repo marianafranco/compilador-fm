@@ -3,7 +3,7 @@
 <gramatica>
     <estado>
 		<id>0</id>
-		<final>true</final>
+		<final>false</final>
         <tipo>0</tipo>
 		<transicao>
 			<entradas>0123456789</entradas>
@@ -14,7 +14,7 @@
 			<proximo>2</proximo>
 		</transicao>
         <transicao>
-			<entradas>;+-*().[]</entradas>
+			<entradas>.,;+-*()[]{}</entradas>
 			<proximo>3</proximo>
 		</transicao>
         <transicao>
