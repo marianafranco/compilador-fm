@@ -127,26 +127,30 @@ public class MontaAFD {
 			}
 			System.out.println("[INFO] Automato montado com sucesso.");
 			return true;
-			
+		
 		}catch(Exception e){
 			//e.printStackTrace();
 			System.out.println("[ERRO] Erro ao fazer o parser do arquivo XML");
 			return false;
 		}
+		
 	}
 	
 	private static class MeuErrorHandler implements ErrorHandler {
 		public void warning(SAXParseException e) throws SAXException {
 	         System.out.println("[ATENCAO]:"); 
 	         printInfo(e);
+	         throw new SAXException();
 	      }
 	      public void error(SAXParseException e) throws SAXException {
 	         System.out.println("[ERRO] O arquivo XML nao e valido: "); 
 	         printInfo(e);
+	         throw new SAXException();
 	      }
 	      public void fatalError(SAXParseException e) throws SAXException {
 	         System.out.println("[ERRO] Na validacao do arquivo XML:"); 
 	         printInfo(e);
+	         throw new SAXException();
 	      }
 	      private void printInfo(SAXParseException e) {
 	      	 System.out.println("   Public ID: "+e.getPublicId());
@@ -155,8 +159,6 @@ public class MontaAFD {
 	      	 System.out.println("   Column number: "+e.getColumnNumber());
 	      	 System.out.println("   Message: "+e.getMessage());
 	      }
-
 	}
-
 
 }

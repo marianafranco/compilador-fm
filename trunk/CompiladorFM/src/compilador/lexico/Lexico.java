@@ -8,6 +8,7 @@ import java.io.Reader;
 import compilador.lexico.estruturas.AFD;
 import compilador.lexico.estruturas.FluxoTokens;
 import compilador.lexico.estruturas.TabelaSimbolos;
+import compilador.lexico.exceptions.ArquivoNaoEcontradoException;
 
 
 public class Lexico {
@@ -24,37 +25,52 @@ public class Lexico {
 	
 	
 	
-	public Lexico(String nomeArquivo) throws FileNotFoundException{
+	public Lexico(String nomeArquivo) throws ArquivoNaoEcontradoException{
 		
-		this.arquivoFonte = new FileReader(nomeArquivo);
-
+		try{
+			this.arquivoFonte = new FileReader(nomeArquivo);
+		}catch (Exception e){
+			throw new ArquivoNaoEcontradoException("O arquivo " + nomeArquivo + " nao foi encontrado.");
+		}
+		
 		this.automato = new AFD();
 		this.montador = new MontaAFD();
 		this.simulador = new PercorreAFD();
 		this.tabelaSimbolos = new TabelaSimbolos();
 		this.fluxoTokens = new FluxoTokens();
-		//this.arquivoFonte.close();
 	}
+	
 	
 	public boolean executa(){
 		
 		// Monta o Automato Finito Deterministico
-		montador.executa(this.automato);
+		boolean montadorOK = montador.executa(this.automato);
 		
-		
-		
-		// Simula Automato Finito Deterministico com o aquivo fonte de entrada
-		simulador.executa(this.automato, this.arquivoFonte, this.fluxoTokens, this.tabelaSimbolos);
-		
+		if(montadorOK){
+			// Simula Automato Finito Deterministico com o aquivo fonte de entrada
+			boolean simuladorOK = simulador.executa(this.automato, this.arquivoFonte, this.fluxoTokens, this.tabelaSimbolos);
+			fechaArquivoFonte();
+			
+			if(simuladorOK){
+				return true;
+			}else{
+				return false;
+			}
+			
+		}else{
+			fechaArquivoFonte();
+			return false;
+		}
+	}
+	
+	
+	public void fechaArquivoFonte(){
 		try{
 			this.arquivoFonte.close();
 		}catch(Exception e){
-			e.printStackTrace();
-			return false;
+			//e.printStackTrace();
+			System.out.println("[ERRO] Impossivel fechar o arquivo fonte.");
 		}
-		
-		return true;
 	}
-	
 
 }
