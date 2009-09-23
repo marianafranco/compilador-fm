@@ -7,6 +7,7 @@ import compilador.lexico.estruturas.AFD;
 import compilador.lexico.estruturas.FluxoTokens;
 import compilador.lexico.estruturas.TabelaSimbolos;
 import compilador.lexico.estruturas.Tipo;
+import compilador.lexico.estruturas.PalavrasReservadas;
 
 public class PercorreAFD {
 
@@ -110,11 +111,19 @@ public class PercorreAFD {
 		if (tipo == Tipo.NUMERO || tipo == Tipo.ESPECIAL) {
 			tokensTokens.adicionaToken(token, -1);
 		}
-		// Se for uma string, colocamos na tabela
+		// Se for uma string, talvez colocamos na tabela
 		else if (tipo == Tipo.NOME) {
+			
+			PalavrasReservadas temp = new PalavrasReservadas();
+			
 			int posicao = tabelaSimbolos.getEntradas();
-			tokensTokens.adicionaToken(token, posicao);
-			tabelaSimbolos.adicionaEntrada (posicao, token.toString(), tipo, linha, coluna);
+			if (temp.reservada(token) == false) {
+				tokensTokens.adicionaToken(token, posicao);
+				tabelaSimbolos.adicionaEntrada (posicao, token.toString(), tipo, linha, coluna);
+			}
+			else {
+				tokensTokens.adicionaToken(token, -1);
+			}
 		}
 	}
 	
