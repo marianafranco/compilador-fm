@@ -1,0 +1,56 @@
+\documentclass[12pt,a4paper]{article} 
+\usepackage{graphicx}
+\usepackage[portuguese]{babel}
+\usepackage[applemac]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fullpage}
+
+\title{Linguagens e Compiladores - Compilador Léxico} 
+\author{Felipe Giunte Yoshida N$^o$USP 4978231\\Mariana Ramos Franco N$^o$USP 5179364}
+\date {24 de Setembro de 2009}
+
+\begin{document} 
+
+\begin{figure}[!t]
+\centering 
+\includegraphics[width=15.5cm]{logo.pdf}
+\end{figure}
+
+\maketitle 
+
+\section{Introdução}
+
+A função básica desta etapa do compilador é receber o código fonte e dividi-lo em tokens. Para tal, foi sugerido pelo professor a criação de um autômato finito determinístico (AFD), que recebe caracter por caracter o código fonte, o ``quebra'' em tokens e monta uma tabela que identifica alguns tipos de token.
+
+Inicialmente tentamos realizar a tarefa na linguagem C, mas devido a problemas de compatibilidade de bibliotecas entre Unix/Linux e Windows, resolvemos abandonar tal abordagem e reescrever o programa em Java, o que no final se mostrou mais organizado e prático.
+
+\section{Estruturas}
+
+Para facilitar a estruturação do código, criamos as seguintes estruturas:
+
+\begin{itemize}
+\item{AFD} - Autômato finito determinístico, composto de estados e o estado ativo
+\item{Estado} - Estado e suas transições
+\item{Transicao} - Entradas que ativam uma transição e o estado que é ativado
+\item{Token} - Parte do código, que é classificada
+\item{FluxoTokens} - Seqüência de tokens
+\item{TabelaSimbolos} - Tabela auxiliar, usada na classificação dos tokens
+\item{Simbolo} - Entrada da tabela de símbolos
+\item{Tipo} - Classificação dos tipos de token
+\item{PalavrasReservadas} - Definição das palavras reservadas
+\end{itemize}
+
+\section{Lógica}
+
+Podemos dividir a parte lógica desta etapa em basicamente duas partes:
+
+\paragraph{Montador do autômato} Descrito na classe \emph{MontaAFD}, ele recebe um arquivo XML com a especificação do AFD abaixo, e o converte na estrutuda \emph{AFD}.
+
+\begin{figure}[!ht]
+\centering 
+\includegraphics[width=15.5cm]{afd.pdf}
+\end{figure}
+
+\paragraph{Simulador do autômato} Descrito na classe \emph{PercorreAFD}, simula um AFD a partir do autômato montado no passo anterior e do código fonte, que é analisado caracter por caracter.
+
+\end{document} 
