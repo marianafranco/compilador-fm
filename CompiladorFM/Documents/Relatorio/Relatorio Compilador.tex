@@ -5,7 +5,10 @@
 %\usepackage[applemac]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{fullpage}
-\usepackage{indentfirst}
+
+\usepackage{indentfirst} % primeiro parágrado indendado
+\usepackage{listings}	 % para colocar código fonte
+
 
 
 \title{PCS2056 - Linguagens e Compiladores\\Compilador FM} 
@@ -23,19 +26,71 @@
 \tableofcontents
 \newpage
 
+% -- Introdução
 \section{Introdução}
 
+% -- Definição da Linguagem
 \section{Definição da Linguagem}
 
-A linguagem adotada no projeto corresponde à uma simplificação da linguagem de programação C, onde os comandos em inglês (IF, ELSE, FOR, ...) foram traduzidos para o português (SE, SENAO, PARA, ...).
+A linguagem adotada no projeto corresponde à uma simplificação da linguagem de programação C, onde os comandos em inglês (IF, ELSE, WHILE, ...) foram traduzidos para o português (SE, SENAO, ENQUANTO, ...).
+
+Além disso, os seguintes recursos foram retirados da linguagem:
+
+\begin{itemize}
+\item comandos: for, do while, switch/case
+\item ponteiros
+\item tipos: short/long, signed/unsigned, float/double
+\item alguns operadores unários
+\item alguns operadores binários
+\item structs, union, enum
+\item include, typedef
+\item etc...
+\end{itemize}
+
+Desta maneira, a linguagem adotada (que chamaremos de linguagem FM) aceita programas formados por uma sequência de comandos separados por ponto e vírgula. Os comando aceitos pela linguagem são os seguintes:
+
+\begin{itemize}
+\item Declaração de variáveis
+\item Atribuição de valor à uma variável
+\item Comando iterativo: enquanto
+\item Comando condicional: se/senao
+\item Chamada de função
+\item Comando de entrada de dados
+\item Comando de saída de dados
+\end{itemize}
 
 Abaixo encontra-se a descrição formal da linguagem através de uma gramática livre de contexto na notação BNF e na notação de Wirth.
 
+% -- Definição Formal da Linguagem -- Notação BNF
 \subsection{Definição Formal da Linguagem -- Notação BNF}
 
+\lstset{
+showspaces=false,               % show spaces adding particular underscores
+showstringspaces=false,         % underline spaces within strings
+showtabs=false,                 % show tabs within strings adding particular underscores
+%frame=single,	                % adds a frame around the code
+tabsize=4,	                	% sets default tabsize to 2 spaces
+captionpos=b,                   % sets the caption-position to bottom
+basicstyle=\ttfamily\footnotesize,     	% Estilo geral (fonte pequena, monoespaçada "true type")
+breaklines=true                 % sets automatic line breaking
+}
+
+\lstinputlisting[label=BNF]{NotaçãoBNF.txt}	
+
+\paragraph{}	% linha em branco
+
+% -- Definição Formal da Linguagem -- Notação de Wirth
 \subsection{Definição Formal da Linguagem -- Notação de Wirth}
 
+\lstinputlisting[label=Wirth]{NotaçãoWirth.txt}
+
+\paragraph{}	% linha em branco
+
+% -- Simplificação da Gramática
 \subsection{Simplificação da Gramática}
+
+Para permitir a implementação do autômato de pilha estruturado, método que será utilizado para a construção do analisador sintático, a descrição em notação de Wirth mostrada anteriormente foi reduzida, agrupando os não-terminais essenciais à linguagem.
+
 
 \section{Autômato finito equivalente à gramática léxica definida}
 
