@@ -39,6 +39,36 @@ Abaixo encontra-se a descrição formal da linguagem através de uma gramática livr
 
 \section{Autômato finito equivalente à gramática léxica definida}
 
+\begin{figure}[!h]
+\centering 
+\includegraphics[width=15.5cm]{AFD.pdf}
+\caption{Autômato finito equivalente à gramática definida \label{AFD}}
+\end{figure}
+
+
+\begin{minipage}[t]{0.5\linewidth} % A minipage that covers half the page
+	\textbf{Estados:}\\
+	1 - Inicial\\
+	2 - Número\\
+	3 - String\\
+	4 - Caracter especial\\
+	5 - Divisão\\
+	6 - Comentário\\
+	7 - Comparação ou atribuição\\
+	8 - Comparação\\		
+\end{minipage}
+\begin{minipage}[t]{0.5\linewidth}
+	\textbf{Entradas:}\\
+	A - Qualquer caracter\\
+	B - Nova linha\\
+	C - Caracteres especiais (. , ; + - * ( ) [ ] \{ \})\\
+	E - Igual\\
+	G - Maior ou menor (< >)\\
+	L - Letra\\
+	N - Número\\
+	S - Barra\\
+\end{minipage}
+
 \section{Dependências de contexto da linguagem}
 
 \section{Descrição do analisador léxico}
