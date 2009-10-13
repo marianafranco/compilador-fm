@@ -75,14 +75,14 @@ basicstyle=\ttfamily\footnotesize,     	% Estilo geral (fonte pequena, monoespaç
 breaklines=true                 % sets automatic line breaking
 }
 
-\lstinputlisting[label=BNF]{NotaçãoBNF.txt}	
+\lstinputlisting[label=BNF]{NotacaoBNF.txt}	
 
 \paragraph{}	% linha em branco
 
 % -- Definição Formal da Linguagem -- Notação de Wirth
 \subsection{Definição Formal da Linguagem -- Notação de Wirth}
 
-\lstinputlisting[label=Wirth]{NotaçãoWirth.txt}
+\lstinputlisting[label=Wirth]{NotacaoWirth.txt}
 
 \paragraph{}	% linha em branco
 
@@ -91,8 +91,9 @@ breaklines=true                 % sets automatic line breaking
 
 Para permitir a implementação do autômato de pilha estruturado, método que será utilizado para a construção do analisador sintático, a descrição em notação de Wirth mostrada anteriormente foi reduzida, agrupando os não-terminais essenciais à linguagem.
 
+\section{Descrição do analisador léxico}
 
-\section{Autômato finito equivalente à gramática léxica definida}
+A função desta etapa do compilador é receber o código fonte como entrada, dividi-lo em tokens e preencher parte da tabela de símbolos. Para esta funcionalidade, implementamos o autômato finito representado na figura \ref{AFD}, que recebe cada caractere do código fonte e cada vez que volta ao estado inicial, pode escrever um token na estrutura de fluxo de tokens e pode também colocar uma entrada na tabela de símbolos.
 
 \begin{figure}[!h]
 \centering 
@@ -124,17 +125,43 @@ Para permitir a implementação do autômato de pilha estruturado, método que será 
 	S - Barra\\
 \end{minipage}
 
-\section{Dependências de contexto da linguagem}
+Dividimos a implementação do analisador léxico em duas etapas: a primeira monta o autômato em uma estrutura interna de acordo com um arquivo XML e o segundo simula tal autômato a partir do código fonte.
 
-\section{Descrição do analisador léxico}
+\subsection{Montagem do autômato finito}
 
-\subsection{Autômato Finito do analisador léxico}
+Nesta etapa, o programa lê um arquivo XML como indicado na
 
-\subsection{Funções do analisador léxico}
+%\begin{tabular}{|c|}
+%\hline
+\begin{verbatim}
+<gramatica>
+     <estado>
+          <id>0</id>
+          <final>false</final>
+          <tipo>0</tipo>
+          <transicao>
+               <entradas>0123456789</entradas>
+               <proximo>1</proximo>
+          </transicao>
+          [Outras transições]
+     </estado>
+     [Outros estados]
+<gramatica>
+\end{verbatim}
+%\end{tabular}
 
-\subsection{Tabelas utilizadas pelo analisador léxico}
+\subsection{Simulação do autômato finito}
 
-\subsection{Teste realizado no analisador léxico}
+\subsection{Tabelas}
+
+\subsection{Testes}
+
+
+
+
+
+
+
 
 \section{Projeto do analisador sintático e das rotinas semânticas}
 
