@@ -8,7 +8,7 @@
 
 \usepackage{indentfirst} % primeiro parágrado indendado
 \usepackage{listings}	 % para colocar código fonte
-
+\usepackage{verbatimbox}
 
 
 \title{PCS2056 - Linguagens e Compiladores\\Compilador FM} 
@@ -28,6 +28,8 @@
 
 % -- Introdução
 \section{Introdução}
+
+Temos de escrever as restrições da linguagem (talvez em um item em separado)... Não esquecer!
 
 % -- Definição da Linguagem
 \section{Definição da Linguagem}
@@ -118,22 +120,22 @@ A função desta etapa do compilador é receber o código fonte como entrada, dividi
 	A - Qualquer caracter\\
 	B - Nova linha\\
 	C - Caracteres especiais (. , ; + - * ( ) [ ] \{ \})\\
-	E - Igual\\
+	E - Igual\\ (=)
 	G - Maior ou menor (< >)\\
-	L - Letra\\
-	N - Número\\
-	S - Barra\\
+	L - Letra [A-z]\\
+	N - Número [0-9]\\
+	S - Barra (/)\\
 \end{minipage}
 
 Dividimos a implementação do analisador léxico em duas etapas: a primeira monta o autômato em uma estrutura interna de acordo com um arquivo XML e o segundo simula tal autômato a partir do código fonte.
 
 \subsection{Montagem do autômato finito}
 
-Nesta etapa, o programa lê um arquivo XML como indicado na
+\subsubsection{XML}
 
-%\begin{tabular}{|c|}
-%\hline
-\begin{verbatim}
+Nesta etapa, o programa lê um arquivo XML como indicado na figura \ref{xml}. Nele temos uma tag \emph{gramatica} que engloba todo o arquivo. Dentro desta tag, há um ou mais estados identificados com a tag \emph{estado}. Dentro dos estados há as tags \emph{id}, que é um número para identificar o estado, a tag \emph{final}, para informar se o estado pode finalizar um token, a tag \emph{tipo} para classificar o token de acordo com a o id mostrado na tabela \ref{tipo} quando o fim do mesmo é identificado  e zero ou mais transições, identificadas pelas tags \emph{transicao}. Cada transição tem um ou mais caracteres que indicam quais entradas que ativam a transição, identificados pela tag \emph{entradas} e o respectivo estado que é ativado.
+
+\begin{verbbox}
 <gramatica>
      <estado>
           <id>0</id>
@@ -146,70 +148,216 @@ Nesta etapa, o programa lê um arquivo XML como indicado na
           [Outras transições]
      </estado>
      [Outros estados]
-<gramatica>
-\end{verbatim}
-%\end{tabular}
+</gramatica>
+\end{verbbox}
+\begin{center}
+\begin{figure}[!h]
+\centering 
+\theverbbox[t]\\
+\caption{Autômato finito equivalente à gramática definida \label{xml}}
+\end{figure}
+\end{center}
+
+
+\begin{table}[!h]
+\centering 
+\begin{tabular}{|c|c|}
+\hline
+Tag \emph{tipo} & Significado\\ 
+\hline
+0 & Estado Inicial \\ 
+1 & Número \\ 
+2 & Seqüência de caracteres \\ 
+3 & Caractere especial \\ 
+4 & Comentário \\ 
+\hline 
+\end{tabular}
+\caption{Relação entre a identificação da tag \emph{tipo} do XML e o tipo de token gerado \label{tipo}}
+\end {table}
+
+No exemplo da figura \ref{xml}, é mostrado apenas um estado, inicial, que não finaliza tokens. Ao receber um número, há uma transição para o estado 1, que não é mostrado.
+
+\subsubsection{Estrutura do autômato}
+
+Podemos ver na figura \ref{classes_afd} o diagrama de classes da estrutura em qual o autômato do arquivo XML é transformado. Temos basicamente três classes: AFD (autômatos), Estado e Transição. Iremos descrever a partir de agora cada uma destas classes, seus métodos e atributos. Como os \emph{gets} e \emph{sets} não necessitam de explicação, serão ignorados.
+
+\begin{figure}[!h]
+\centering 
+\includegraphics[height=12cm]{classes_AFD.pdf}
+\caption{Diarama de classes do autômato \label{classes_afd}}
+\end{figure}
+
+\paragraph{AFD}
+
+\subparagraph{Atributos} Um autômato, como esperado, tem uma série de estados, armazenados no vetor \emph{estados}. A variável \emph{numEstados} indica o número de entradas neste vetor e a variável \emph{estadoAtivo} indica qual deles está ativo naquele momento.
+
+\subparagraph{Métodos} Os dois métodos \emph{adicionaEstado} obviamente adicionam um estado na máquina. A diferença é que um define o estado como ativo se ele é considerado inicial, e o outro, caso a entrada \emph{inicial} seja verdadeira. O método \emph{procuraEstado} retorna o id do vetor estados equivalente ao estado com o id definido dentro da classe Estado. Já o método \emph{temTransicao}, retorna um booleano que indica se há uma transição válida  do estado ativo para a o caractere de entrada. O método \emph{percorre} é um dos mais importantes. Ele é usado na simulação do autômato, onde o caractere de entrada faz a transição para o próximo estado automaticamente e altera todas as variáveis internas do autômato. Finalmente, o método \emph{transicaoFinal} indica se o estado ativo emite um token ou não.
+
+\paragraph{Estado}
+
+\subparagraph{Atributos} Cada estado é identificado por seu \emph{id}. Há também a indicação se ele emite um token ou não, pela variável \emph{aceitacao}. A variável \emph{tipo} foi descrita anteriormente na tabela \ref{tipo}, e indica qual o tipo de token a partir deste estado. \emph{numTransicoes} guarda o número de transições que saem deste estado e \emph{transicoes} é um vetor de transições.
+
+\subparagraph{Métodos} Há apenas dois métodos relevantes nesta classe. O primeiro, \emph{adicionaTransicao}, adiciona uma transição ao estado. Já o método \emph{proximoEstado} retorna o id do próximo estado quando o caractere de entrada é recebido.
+
+\paragraph{Transicao}
+
+\subparagraph{Atributos} Uma transição é composta pelo id do estado que ficará ativo (\emph{proximo}) quando alguma dos caracteres do vetor \emph{entrada} é recebido.
+
+\subparagraph{Métodos} O método \emph{proximoEstado} retorna o id do estado que é ativado com o caractere de entrada ou -1 caso não haja transição válida.
 
 \subsection{Simulação do autômato finito}
 
-\subsection{Tabelas}
+Para a simulação do autômato, tomamos como o mesmo já definido na estrutura descrita no item anterior. Como vimos, o método \emph{percorre} é o que realiza esta função com a ajuda dos outros métodos já descritos. Portanto, focaremos nesta etapa a descrição das estruturas que recebem os dados vindos da máquina.
 
-\subsection{Testes}
+\subsubsection{Estrutura do fluxo de tokens}
+
+\begin{figure}[!h]
+\centering 
+\includegraphics[width=15.5cm]{classes_fluxo.pdf}
+\caption{Diarama de classes do fluxo de tokens \label{classes_fluxo}}
+\end{figure}
+
+\paragraph{FluxoTokens} 
+
+\subparagraph{Atributos} Apenas o primeiro token do fluxo é armazenado na variável \emph{token}, onde seu tamanho é armazenado na variável \emph{tamanho}.
+
+\subparagraph{Métodos} O método \emph{adicionaToken} adiciona um token no vetor de tokens.
+
+\paragraph{Token}  
+
+\subparagraph{Atributos} A variável \emph{valor} guarda o nome das variáveis representadas pelos tokens. A variável \emph{Indice} estabelece uma relação numérica com a tabela de símbolos e a variável \emph{proximo} indica o próximo token do fluxo.
+
+\subparagraph{Métodos} Não há métodos a serem descritos.
+
+\subsubsection{Estrutura da tabela de símbolos}
+
+\begin{figure}[!h]
+\centering 
+\includegraphics[width=15.5cm]{classes_simbolos.pdf}
+\caption{Diarama de classes da tabela de símbolos \label{classes_simbolos}}
+\end{figure}
+
+\paragraph{TabelaDeSimbolos}
+
+\subparagraph{Atributos} Apenas o primeiro simbolo da tabela é armazenado na variável \emph{simbolo}, onde seu tamanho é armazenado na variável \emph{entradas}.
+
+\subparagraph{Métodos} O método \emph{adicionaEntrada} adiciona um símbolo na tabela de símbolos.
+
+\paragraph{Simbolo}
+
+\subparagraph{Atributos} \emph{Id} é a ligação numérica de um símbolo com o fluxo de tokens. \emph{Nome} é um identificador para o símbolo, \emph{tipo} é uma classificação do mesmo tipo da tabela \ref{tipo}. \emph{Linha} e \emph{coluna} indicam onde cada token está dentro do código fonte, e próximo é o próximo token da tabela.
+
+\subparagraph{Métodos} Não há métodos a serem descritos.
+
+\subsection{Classes especiais}
+
+Definimos também algumas classes especiais, responsáveis por guardar dados e facilitar uma rápida modificação em dados caso necessário. Temos duas classes, \emph{Tipo} e \emph{PalvrasReservadas}. A primeira apenas guarda os dados da tabela \ref{tipo}. Já a segunda, explicitada na figura \ref{classe_palavras}, contém as palavras da figura \ref{palavras}. Internamente, o vetor \emph{palavras} contém estas palavras e o método \emph{resevada} indica se a seqüência de caracteres de entrada está nessa lista.
+
+\begin{figure}[!hbt]
+	\begin{minipage}[b]{0.5\linewidth} % A minipage that covers half the page
+\centering 
+\includegraphics[height=1.5cm]{classes_palavras.pdf}
+\caption{Diarama de classes da lista de palavras \label{classe_palavras}}
+	\end{minipage}
+	\hspace{0.7cm} % To get a little bit of space between the figures
+	\begin{minipage}[b]{0.5\linewidth}
+\centering 
+\begin{tabular}{|c|}
+\hline
+Palavras\\ 
+\hline
+se\\ 
+entao\\ 
+enquanto\\ 
+int\\ 
+flut\\ 
+\hline 
+\end{tabular}
+\caption{Palavras reservadas \label{palavras}}
+	\end{minipage}
+\end{figure}
+
+\subsection{Teste}
+
+Para testar esta etapa do compilador, criamos um pequeno código que é capaz de testar todas as funcionalidades da mesma. Ele é apresentado na figura \ref{teste}. Nele testamos todos os tipos identificáveis do analisador léxico: seqüência de caracteres, números, caracteres especiais, comparadores, atribuidores, comentários, atribuidores aritméticos e um caractere inválido. O resultado, obtido a partir do log desta etapa, pode ser visto logo abaixo.
+
+\begin{verbbox}
+int c2, b;
+int a = 1;
+b = 2;
+c2 = (a + b * b / b);
+
+// comentario
+se (a == a) {
+	c2 = a;
+}
+flut d = 3.21;
+123b
+b123
+int a [100];
+$
+\end{verbbox}
+\begin{center}
+\begin{figure}[!h]
+\centering 
+\theverbbox[t]\\
+\caption{Código de teste \label{teste}}
+\end{figure}
+\end{center}
+
+\subsubsection{Resultado}
+
+\lstinputlisting[label=resultado]{TesteLexico.txt}
 
 
 
+%\section{Projeto do analisador sintático e das rotinas semânticas}
 
+%\subsection{Lógica do Reconhecimento sintático}
 
+%\subsection{Lógica do Programa}
 
+%\section{Estruturas de Dados Utilizadas}
 
+%\section{Tabela de símbolos de identificadores de função(tsif)}
 
-\section{Projeto do analisador sintático e das rotinas semânticas}
+%\section{Tabela de símbolos	de variáveis de uma	função(tsvar)}
 
-\subsection{Lógica do Reconhecimento sintático}
+%\section{PilhaIFs}
 
-\subsection{Lógica do Programa}
+%\section{PilhaControleIFs}
 
-\section{Estruturas de Dados Utilizadas}
+%\section{PilhaLoops}
 
-\section{Tabela de símbolos de identificadores de função(tsif)}
+%\section{PilhaRetorno}
 
-\section{Tabela de símbolos	de variáveis de uma	função(tsvar)}
+%\section{PilhaOperadores}
 
-\section{PilhaIFs}
+%\section{PilhaOperandos}
 
-\section{PilhaControleIFs}
+%\section{Funções do analisador e reconhecedor sintático}
 
-\section{PilhaLoops}
+%\section{Descrição das principais rotinas semânticas}
 
-\section{PilhaRetorno}
+%\section{Linguagem de Montagem}
 
-\section{PilhaOperadores}
+%\section{Correspondência entre construções sintáticas e linguagem de montagem}
 
-\section{PilhaOperandos}
+%\section{Ambiente de Execução}
 
-\section{Funções do analisador e reconhecedor sintático}
+%\section{Estrutura geral do ambiente de execução}
 
-\section{Descrição das principais rotinas semânticas}
+%\section{Geração e execução do código de máquina virtual}
 
-\section{Linguagem de Montagem}
+%\section{Particionamento da Memória}
 
-\section{Correspondência entre construções sintáticas e linguagem de montagem}
+%\section{Exemplo de compilação}
 
-\section{Ambiente de Execução}
+%\section{Arquivo de saída gerado em linguagem de montagem}
 
-\section{Estrutura geral do ambiente de execução}
+%\section{Arquivo gerado pelo montador}
 
-\section{Geração e execução do código de máquina virtual}
-
-\section{Particionamento da Memória}
-
-\section{Exemplo de compilação}
-
-\section{Arquivo de saída gerado em linguagem de montagem}
-
-\section{Arquivo gerado pelo montador}
-
-\section{Resultado obtido na execução}
+%\section{Resultado obtido na execução}
 
 
 
@@ -217,9 +365,13 @@ Nesta etapa, o programa lê um arquivo XML como indicado na
 
 \begin{thebibliography}{10} 
 
-\bibitem{laudon} Laudon, K. C. \& Laudon, J. P.:
-\emph{Sistemas de Informações Gerenciais}, 
-7$^{a}$ edição, Prentice Hall, 2007
+\bibitem{jj} Neto, J. J.:
+\emph{Introdução à compilação}, 
+1$^{a}$ edição, LTC, 1987
+
+\bibitem{dragao} Neto, J. J.:
+\emph{Livro do dragao}, 
+1$^{a}$ edição, LTC, 1987
 
 \end{thebibliography}
 

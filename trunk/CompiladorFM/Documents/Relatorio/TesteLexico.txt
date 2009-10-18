@@ -1,0 +1,74 @@
+[INFO] arquivo fonte: arquivofonte.fm
+[INFO] Automato montado com sucesso.
+Token: int, valor: -1
+Token: c2, valor: 0
+Posicao: 0, nome: c2, tipo: 2, linha: 1, coluna: 6
+Token: ,, valor: -1
+Token: b, valor: 1
+Posicao: 1, nome: b, tipo: 2, linha: 1, coluna: 9
+Token: ;, valor: -1
+Token: int, valor: -1
+Token: a, valor: 2
+Posicao: 2, nome: a, tipo: 2, linha: 2, coluna: 5
+Token: =, valor: -1
+Token: 1, valor: -1
+Token: ;, valor: -1
+Token: b, valor: 3
+Posicao: 3, nome: b, tipo: 2, linha: 4, coluna: 1
+Token: =, valor: -1
+Token: 2, valor: -1
+Token: ;, valor: -1
+Token: c2, valor: 4
+Posicao: 4, nome: c2, tipo: 2, linha: 6, coluna: 2
+Token: =, valor: -1
+Token: (, valor: -1
+Token: a, valor: 5
+Posicao: 5, nome: a, tipo: 2, linha: 6, coluna: 7
+Token: +, valor: -1
+Token: b, valor: 6
+Posicao: 6, nome: b, tipo: 2, linha: 6, coluna: 11
+Token: *, valor: -1
+Token: b, valor: 7
+Posicao: 7, nome: b, tipo: 2, linha: 6, coluna: 15
+Token: /, valor: -1
+Token: b, valor: 8
+Posicao: 8, nome: b, tipo: 2, linha: 6, coluna: 19
+Token: ), valor: -1
+Token: ;, valor: -1
+Token: se, valor: -1
+Token: (, valor: -1
+Token: a, valor: 9
+Posicao: 9, nome: a, tipo: 2, linha: 9, coluna: 5
+Token: ==, valor: -1
+Token: a, valor: 10
+Posicao: 10, nome: a, tipo: 2, linha: 9, coluna: 10
+Token: ), valor: -1
+Token: {, valor: -1
+Token: c2, valor: 11
+Posicao: 11, nome: c2, tipo: 2, linha: 10, coluna: 3
+Token: =, valor: -1
+Token: a, valor: 12
+Posicao: 12, nome: a, tipo: 2, linha: 10, coluna: 7
+Token: ;, valor: -1
+Token: }, valor: -1
+Token: flut, valor: -1
+Token: d, valor: 13
+Posicao: 13, nome: d, tipo: 2, linha: 13, coluna: 6
+Token: =, valor: -1
+Token: 3, valor: -1
+Token: ., valor: -1
+Token: 21, valor: -1
+Token: ;, valor: -1
+Token: 123, valor: -1
+Token: b, valor: 14
+Posicao: 14, nome: b, tipo: 2, linha: 15, coluna: 4
+Token: b123, valor: 15
+Posicao: 15, nome: b123, tipo: 2, linha: 16, coluna: 4
+Token: int, valor: -1
+Token: a, valor: 16
+Posicao: 16, nome: a, tipo: 2, linha: 18, coluna: 5
+Token: [, valor: -1
+Token: 100, valor: -1
+Token: ], valor: -1
+Token: ;, valor: -1
+[ERRO] Transicao incorreta, imprimir linha e coluna e dar erro
