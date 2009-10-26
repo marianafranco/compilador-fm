@@ -49,7 +49,7 @@ Além disso, os seguintes recursos foram retirados da linguagem:
 \item etc...
 \end{itemize}
 
-Desta maneira, a linguagem adotada (que chamaremos de linguagem FM) aceita programas formados por uma sequência de comandos separados por ponto e vírgula. Os comando aceitos pela linguagem são os seguintes:
+Desta maneira, a linguagem adotada (que chamaremos de linguagem FM) aceita programas formados por uma sequência de comandos. Os comando aceitos pela linguagem são os seguintes:
 
 \begin{itemize}
 \item Declaração de variáveis
@@ -61,7 +61,7 @@ Desta maneira, a linguagem adotada (que chamaremos de linguagem FM) aceita progr
 \item Comando de saída de dados
 \end{itemize}
 
-Abaixo encontra-se a descrição formal da linguagem através de uma gramática livre de contexto na notação BNF e na notação de Wirth.
+Abaixo encontra-se a descrição formal da linguagem através da notação BNF e da notação de Wirth.
 
 % -- Definição Formal da Linguagem -- Notação BNF
 \subsection{Definição Formal da Linguagem -- Notação BNF}
@@ -92,6 +92,11 @@ breaklines=true                 % sets automatic line breaking
 \subsection{Simplificação da Gramática}
 
 Para permitir a implementação do autômato de pilha estruturado, método que será utilizado para a construção do analisador sintático, a descrição em notação de Wirth mostrada anteriormente foi reduzida, agrupando os não-terminais essenciais à linguagem.
+
+\lstinputlisting[label=Wirth]{NotacaoSimplificada.txt}
+
+\paragraph{}	% linha em branco
+
 
 \section{Descrição do analisador léxico}
 

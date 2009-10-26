@@ -1,11 +1,16 @@
 
-<programa> ::= <tipo> principal ( <declara_parâmetros> ) 
+<programa> ::= <seq_funções> principal ( <declara_parâmetros> ) 
 			   { <seq_comandos> }
+			   
+<seq_funções> ::= <seq_funções> função | função | E
 
-<função> ::= <tipo> <identificador> ( <declara_parâmetros> ) 
-			 { <seq_comandos> }
+<função> ::= <tipo> <identificador> ( <declara_parâmetros> ) { 
+		     <seq_comandos> retorno <retorno> ;}
 
 <tipo> ::= inteiro | caracteres | booleano
+
+<retorno> :: = <variável> | <expressão> | <numero> 
+			   | " <seq_caracteres> " | <booleano>
 
 <declara_parâmetros> ::= <declara_parâmetros> , <parâmetro> 
 						 | <parâmetro> | E
@@ -17,7 +22,7 @@
 
 <vetor> ::= [ <número> ] | E
 
-<seq_comandos> ::= <seq_comandos> <comando> | <comando>
+<seq_comandos> ::= <seq_comandos> <comando> | <comando> | E
 
 <comando> ::= <declaração> | <atribuição> | <iterativo> | <condicional> 
 			  | <chamada_função> | <entrada> | <saída> | E 
@@ -38,10 +43,12 @@
 
 <fator> ::= <variável> | <valor_função> | <numero> | ( <expressão> )
 
-<valor_função> ::= <identificador> ( <lista_parâmetros> )
-
-<lista_parâmetros> ::= <expressão> 
-					   | <lista_parâmetros> , <expressão> | E
+<valor_função> ::= <identificador> ( <lista_parâmetros> ) 
+					   
+<lista_parâmetros> ::= <expressão> | " <seq_caracteres> " | <booleano>
+					   | <lista_parâmetros> , <expressão> 
+					   | <lista_parâmetros> , " <seq_caracteres> "
+					   | <lista_parâmetros> , <booleano> | E
 
 <seq_caracteres> := <seq_caracteres> <letra> 
 					| <seq_caracteres> <digito> 
@@ -56,8 +63,8 @@
 <comparador> ::= > | < | >= | <= | == | !=
 
 <condicional> ::= se ( <condição> ) { <seq_comandos> } 
-				  | se ( <condição> ) { <seq_comandos> } 
-				    senao { <seq_comandos> }
+				 | se ( <condição> ) { <seq_comandos> } 
+				  senao { <seq_comandos> }
 
 <chamada_função> ::= <valor_função> ;
 
