@@ -1,9 +1,14 @@
 
-programa = tipo "principal" "(" declara_parâmetros ")" 
+programa = seq_funções "principal" "(" declara_parâmetros ")" 
 			"{" seq_comandos "}" .
+			
+seq_funções = { função } .
 
 função = tipo identificador "(" declara_parâmetros ")" 
-		  "{" seq_comandos "}" .
+		 "{" seq_comandos "retorno" retorno ";" "}" .
+		 
+retorno = variável | expressão | numero | """ seq_caracteres """ 
+		  | booleano
 
 tipo = "inteiro" | "caracteres" | "booleano" .
 
@@ -15,14 +20,15 @@ identificador = letra { letra | digito } .
 
 vetor = [ "[" numero "]" ] .
 
-seq_comandos = comando { comando } .
+seq_comandos = { comando } .
 
 comando = [ declaração | atribuição | iterativo 
 			| condicional | chamada_função | entrada | saida ] .
 
 declaração = parâmetro ";" .
 
-atribuição = variável "=" ( expressão | """ seq_caracteres """ | booleano )";" .
+atribuição = variável "=" ( expressão | """ seq_caracteres """ 
+			| booleano )";" .
 
 variável = identificador vetor_exp .
 
@@ -36,21 +42,21 @@ fator = variável | valor_função | numero | "(" expressão ")" .
 
 valor_função = identificador "(" lista_parâmetros ")" .
 
-lista_parâmetros =  [ expressão {"," expressão} ] .
+lista_parâmetros =  [ ( expressão | """ seq_caracteres """ | booleano ) 
+					{"," ( expressão | """ seq_caracteres """ | booleano ) } ] .
 
 seq_caracteres  = (letra | digito){letra | digito} .
 
 booleano = "true" | "false" .
 
-iterativo = enquanto "(" condição ")" "{" seq_comandos "}" .
+iterativo = "enquanto" "(" condição ")" "{" seq_comandos "}" .
 
-condição = expressão comparados expressão .
+condição = expressão comparador expressão .
 
-comparados = > | < | >= | <= | == | != .
+comparador = ">" | "<" | ">=" | "<=" | "==" | "!=" .
 
-condicional = se "(" condição ")" "{" seq_comandos "}" 
-			  | se "(" condição ")" "{" seq_comandos "}" 
-			  	"senão" "{" seq_comandos "}" .
+condicional = "se" "(" condição ")" "{" seq_comandos "}" 
+			  [ "senão" "{" seq_comandos "}" ] .
 
 chamada_função = valor_função ";"
 
