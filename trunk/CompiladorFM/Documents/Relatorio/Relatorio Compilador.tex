@@ -97,7 +97,6 @@ Para permitir a implementação do autômato de pilha estruturado, método que será 
 
 \paragraph{}	% linha em branco
 
-
 \section{Descrição do analisador léxico}
 
 A função desta etapa do compilador é receber o código fonte como entrada, dividi-lo em tokens e preencher parte da tabela de símbolos. Para esta funcionalidade, implementamos o autômato finito representado na figura \ref{AFD}, que recebe cada caractere do código fonte e cada vez que volta ao estado inicial, pode escrever um token na estrutura de fluxo de tokens e pode também colocar uma entrada na tabela de símbolos.
@@ -159,7 +158,7 @@ Nesta etapa, o programa lê um arquivo XML como indicado na figura \ref{xml}. Nel
 \begin{figure}[!h]
 \centering 
 \theverbbox[t]\\
-\caption{Autômato finito equivalente à gramática definida \label{xml}}
+\caption{Estrutura do autômato descrito em XML \label{xml}}
 \end{figure}
 \end{center}
 
@@ -177,7 +176,7 @@ Tag \emph{tipo} & Significado\\
 4 & Comentário \\ 
 \hline 
 \end{tabular}
-\caption{Relação entre a identificação da tag \emph{tipo} do XML e o tipo de token gerado \label{tipo}}
+\caption{Relação entre a identificação da tag \emph{tipo} do XML e o tipo do estado \label{tipo}}
 \end {table}
 
 No exemplo da figura \ref{xml}, é mostrado apenas um estado, inicial, que não finaliza tokens. Ao receber um número, há uma transição para o estado 1, que não é mostrado.
@@ -364,19 +363,15 @@ $
 
 %\section{Resultado obtido na execução}
 
-
-
-
-
 \begin{thebibliography}{10} 
 
 \bibitem{jj} Neto, J. J.:
 \emph{Introdução à compilação}, 
 1$^{a}$ edição, LTC, 1987
 
-\bibitem{dragao} Neto, J. J.:
-\emph{Livro do dragao}, 
-1$^{a}$ edição, LTC, 1987
+\bibitem{dragao} Aho, A. V.; Lam, M. S.; Sethi, R.; Ullman J. D.:
+\emph{Compiladores: Princípios, técnicas e ferramentas}, 
+2$^{a}$ edição, Pearson, 2008
 
 \end{thebibliography}
 
