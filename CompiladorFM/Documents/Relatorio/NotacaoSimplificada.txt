@@ -1,5 +1,8 @@
 
-programa = { tipo identificador 
+programa = { "estrut" 
+           "{" tipo identificador [ "[" numero "]" ] ";" 
+           { tipo identificador [ "[" numero "]" ] ";" } "}" }
+           { tipo identificador 
 		   "(" [ tipo identificador [ "[" numero "]" ]] 
 		   { "," tipo identificador [ "[" numero "]" ] } ] ")"
 		   "{" {comando} 

@@ -1,8 +1,16 @@
 
-<programa> ::= <seq_funções> principal ( <declara_parâmetros> ) 
+<programa> ::= <cabeçalho> <principal>
+
+<cabeçalho> ::= <cabeçalho> <estrut> | <estrut> | E
+
+<estrut>::= estrut { <seq_declarações> }
+
+<seq_declarações> ::= <seq_declarações> <declaração> | <declaração>
+
+<principal> ::= <seq_funções> principal ( <declara_parâmetros> ) 
 			   { <seq_comandos> }
 			   
-<seq_funções> ::= <seq_funções> função | função | E
+<seq_funções> ::= <seq_funções> <função> | <função> | E
 
 <função> ::= <tipo> <identificador> ( <declara_parâmetros> ) { 
 		     <seq_comandos> retorno <retorno> ;}
