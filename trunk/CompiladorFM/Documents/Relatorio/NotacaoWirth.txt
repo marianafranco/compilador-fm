@@ -1,5 +1,11 @@
 
-programa = seq_funções "principal" "(" declara_parâmetros ")" 
+programa = cabeçalho principal .
+
+cabeçalho = { estrut } .
+
+estrut = "estrut" "{" declaração { declaração } "}" .
+
+principal = seq_funções "principal" "(" declara_parâmetros ")" 
 			"{" seq_comandos "}" .
 			
 seq_funções = { função } .
