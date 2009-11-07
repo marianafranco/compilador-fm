@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.io.FileReader;
 import java.io.Reader;
 
+import compilador.exceptions.ArquivoNaoEcontradoException;
 import compilador.lexico.estruturas.AFD;
 import compilador.lexico.estruturas.FluxoTokens;
 import compilador.lexico.estruturas.TabelaSimbolos;
-import compilador.lexico.exceptions.ArquivoNaoEcontradoException;
 
 
 public class Lexico {
