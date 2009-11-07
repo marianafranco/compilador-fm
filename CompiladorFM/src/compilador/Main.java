@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import compilador.lexico.Lexico;
+import compilador.metacompilador.MetaCompilador;
 
 public class Main {
 
@@ -27,8 +28,11 @@ public class Main {
 			String codFonte = args[0];
 			
 			try{
-				Lexico lex = new Lexico(codFonte);
-				lex.executa();
+				MetaCompilador meta = new MetaCompilador();
+				meta.executa();
+				
+				//Lexico lex = new Lexico(codFonte);
+				//lex.executa();
 			}catch(Exception e){
 				//e.printStackTrace();
 			}

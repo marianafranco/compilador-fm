@@ -1,16 +1,18 @@
-package compilador.lexico.estruturas;
+package compilador.metacompilador.estruturas;
 
+import compilador.metacompilador.estruturas.Estado;
 import compilador.exceptions.CaractereInvalidoException;
-import compilador.lexico.estruturas.Estado;
 
 public class AFD {
 
+	private String nome;
 	private int estadoAtivo;
 	private int numEstados;
 	private Estado estados[];
 	
 	
-	public AFD () {
+	public AFD (String nome) {
+		this.nome = nome;
 		this.estadoAtivo = -1;
 	}
 	
@@ -28,23 +30,6 @@ public class AFD {
 			this.estadoAtivo = adicionado.getId();
 		}
 		this.estados[indice] = adicionado;
-	}
-	
-	
-	public int getTipo(){
-		int estadoAtual = procuraEstado(this.estadoAtivo);
-		return this.estados[estadoAtual].getTipo();
-	}
-	
-	
-	public void setNumEstados(int numEstados){
-		this.numEstados = numEstados;
-		this.estados = new Estado [this.numEstados];
-	}
-	
-	
-	public void setEstadoAtivo(int estadoID){
-		this.estadoAtivo = estadoID;
 	}
 	
 	
@@ -116,6 +101,29 @@ public class AFD {
 				return false;
 			}
 		}
+	}
+	
+	
+	// Gets e Sets
+	
+	public String getNome() {
+		return nome;
+	}
+
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+	
+	
+	public void setNumEstados(int numEstados){
+		this.numEstados = numEstados;
+		this.estados = new Estado [this.numEstados];
+	}
+	
+	
+	public void setEstadoAtivo(int estadoID){
+		this.estadoAtivo = estadoID;
 	}
 	
 }

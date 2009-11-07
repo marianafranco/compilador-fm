@@ -1,4 +1,4 @@
-package compilador.lexico.exceptions;
+package compilador.exceptions;
 
 public class CaractereInvalidoException extends Exception{
 
