@@ -6,6 +6,7 @@ import compilador.metacompilador.estruturas.AFD;
 import compilador.metacompilador.estruturas.APE;
 import compilador.metacompilador.estruturas.FluxoTokens;
 import compilador.metacompilador.estruturas.Pilha;
+import compilador.metacompilador.estruturas.Tipo;
 import compilador.metacompilador.estruturas.Token;
 
 public class PercorreMetaAPE {
@@ -44,6 +45,26 @@ public class PercorreMetaAPE {
 			// se autômato WIRTH
 			if(conteudoPilha.getSubmaquina().equals("WIRTH")){
 				wirth.setEstadoAtivo(conteudoPilha.getEstado());
+				
+				switch (token.getTipo()){
+				
+				case Tipo.NTERM:
+					if(wirth.temTransicao("NTERM")){
+						wirth.percorre("NTERM");
+					}else{
+						System.out.println("[ERRO] Não tem transição com " + token.getValor());
+					}
+					break;
+				case Tipo.TERM:	
+				
+					
+				case Tipo.ESPECIAL:
+				
+				
+					
+				case Tipo.DESCONHECIDO:
+				
+				}
 				
 				// se for nterminal ou terminal, não usa o valor direto
 				wirth.percorre(token.getValor());
