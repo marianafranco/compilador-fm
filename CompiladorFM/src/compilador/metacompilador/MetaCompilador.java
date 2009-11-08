@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.Reader;
 
 import compilador.metacompilador.estruturas.APE;
+import compilador.metacompilador.lexico.Lexico;
 import compilador.exceptions.ArquivoNaoEcontradoException;
 
 
@@ -16,7 +17,7 @@ public class MetaCompilador {
 	private APE automato;
 	
 	private MontaMetaAFD montador;
-	private PercorreMetaAFD simulador;
+	//private PercorreMetaAFD simulador;
 	
 	
 	//public MetaCompilador(String nomeArquivo) throws ArquivoNaoEcontradoException{
@@ -34,27 +35,38 @@ public class MetaCompilador {
 	}
 	
 	
-	public boolean executa(){
+	public boolean executa() {
 		
-		// Monta o Automato Finito Deterministico
-		boolean montadorOK = montador.executa(this.automato);
-		
-		if(montadorOK){
-			// Simula Automato Finito Deterministico com o aquivo fonte de entrada
-			//boolean simuladorOK = simulador.executa(this.automato, this.arquivoFonte, this.fluxoTokens, this.tabelaSimbolos);
-			boolean simuladorOK = true;
-			//fechaArquivoFonte();
+		try{
+			// Monta o Automato Finito Deterministico
+			boolean montadorOK = montador.executa(this.automato);
 			
-			if(simuladorOK){
-				return true;
+			if(montadorOK){
+				
+				// Lexico
+				Lexico lex = new Lexico("gramatica.txt");
+				boolean lexOK = lex.executa();
+				
+				// Simula Automato Finito Deterministico com o aquivo fonte de entrada
+				//boolean simuladorOK = simulador.executa(this.automato, this.arquivoFonte, this.fluxoTokens, this.tabelaSimbolos);
+				boolean simuladorOK = true;
+				//fechaArquivoFonte();
+				
+				if(simuladorOK){
+					return true;
+				}else{
+					return false;
+				}
+				
 			}else{
+				//fechaArquivoFonte();
 				return false;
 			}
-			
-		}else{
-			//fechaArquivoFonte();
+		}catch(Exception e){
+			e.printStackTrace();
 			return false;
 		}
+		
 	}
 	
 	

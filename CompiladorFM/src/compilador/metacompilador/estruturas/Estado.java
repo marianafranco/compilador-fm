@@ -6,12 +6,19 @@ public class Estado {
 	
 	private int id;
 	private boolean aceitacao;
+	private int tipo;
 	private int numTransicoes;
 	private Transicao transicoes[];
 	
 	public Estado(int id, boolean aceitacao) {
 		this.id = id;
 		this.aceitacao = aceitacao;
+	}
+	
+	public Estado(int id, boolean aceitacao, int tipo) {
+		this.id = id;
+		this.aceitacao = aceitacao;
+		this.tipo = tipo;
 	}
 	
 	public void adicionaTransicao (Transicao nova, int indice) {
@@ -45,5 +52,9 @@ public class Estado {
 	
 	public boolean getAceitacao () {
 		return this.aceitacao;
+	}
+	
+	public int getTipo () {
+		return this.tipo;
 	}
 }
