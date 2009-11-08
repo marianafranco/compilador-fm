@@ -20,11 +20,11 @@ import compilador.metacompilador.estruturas.Estado;
 import compilador.metacompilador.estruturas.Transicao;
 
 
-public class MontaMetaAFD {
+public class MontaMetaAPE {
 	
 	private String arquivoXML = "metacompilador.xml";
 	
-	public MontaMetaAFD(){
+	public MontaMetaAPE(){
 		
 	}
 	

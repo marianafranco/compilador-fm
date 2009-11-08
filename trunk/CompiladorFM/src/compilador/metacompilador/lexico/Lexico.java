@@ -16,7 +16,7 @@ public class Lexico {
 	
 	private AFD automato;
 	
-	private MontaAPE montador;
+	private MontaAFD montador;
 	private PercorreAFD simulador;
 	private FluxoTokens fluxoTokens;
 	
@@ -31,7 +31,7 @@ public class Lexico {
 		}
 		
 		this.automato = new AFD();
-		this.montador = new MontaAPE();
+		this.montador = new MontaAFD();
 		this.simulador = new PercorreAFD();
 		this.fluxoTokens = new FluxoTokens();
 	}
