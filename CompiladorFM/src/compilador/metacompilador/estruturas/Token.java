@@ -18,4 +18,24 @@ public class Token {
 		this.linha = linha;
 		this.coluna = coluna;
 	}
+
+	// Gets e Sets
+	
+	public String getValor() {
+		return valor;
+	}
+
+	public void setValor(String valor) {
+		this.valor = valor;
+	}
+
+	public int getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(int tipo) {
+		this.tipo = tipo;
+	}
+	
+	
 }

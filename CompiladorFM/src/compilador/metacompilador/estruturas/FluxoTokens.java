@@ -28,9 +28,15 @@ public class FluxoTokens {
 	}
 	
 	public Token recuperaToken(){
-		Token token = this.tokens.getFirst();
-		this.tokens.remove();
+		Token token = this.tokens.removeFirst();
 		this.tamanho--;
 		return token;
+	}
+	
+	
+	// Gets e Sets
+	
+	public int getTamanho(){
+		return this.tamanho;
 	}
 }

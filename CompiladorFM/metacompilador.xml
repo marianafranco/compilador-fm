@@ -14,7 +14,7 @@
 			<id>2</id>
 			<final>false</final>
 			<transicao>
-				<entradas>"="</entradas>
+				<entradas>=</entradas>
 				<proximo>3</proximo>
 			</transicao>
 		</estado>
@@ -30,7 +30,7 @@
 			<id>4</id>
 			<final>false</final>
 			<transicao>
-				<entradas>"."</entradas>
+				<entradas>.</entradas>
 				<proximo>1</proximo>
 			</transicao>
 		</estado>
@@ -57,19 +57,19 @@
 				<proximo>1</proximo>
 			</transicao>
 			<transicao>
-				<entradas>"e"</entradas>
+				<entradas>e</entradas>
 				<proximo>1</proximo>
 			</transicao>
 			<transicao>
-				<entradas>"("</entradas>
+				<entradas>(</entradas>
 				<proximo>2</proximo>
 			</transicao>
 			<transicao>
-				<entradas>"{"</entradas>
+				<entradas>{</entradas>
 				<proximo>4</proximo>
 			</transicao>
 			<transicao>
-				<entradas>"["</entradas>
+				<entradas>[</entradas>
 				<proximo>6</proximo>
 			</transicao>
 		</estado>
@@ -85,7 +85,7 @@
 			<id>3</id>
 			<final>false</final>
 			<transicao>
-				<entradas>")"</entradas>
+				<entradas>)</entradas>
 				<proximo>1</proximo>
 			</transicao>
 		</estado>
@@ -101,7 +101,7 @@
 			<id>5</id>
 			<final>false</final>
 			<transicao>
-				<entradas>"}"</entradas>
+				<entradas>}</entradas>
 				<proximo>1</proximo>
 			</transicao>
 		</estado>
@@ -117,7 +117,7 @@
 			<id>7</id>
 			<final>false</final>
 			<transicao>
-				<entradas>"]"</entradas>
+				<entradas>]</entradas>
 				<proximo>1</proximo>
 			</transicao>
 		</estado>
@@ -125,8 +125,32 @@
 			<id>1</id>
 			<final>true</final>
 			<transicao>
-				<entradas>"|"</entradas>
+				<entradas>|</entradas>
 				<proximo>8</proximo>
+			</transicao>
+			<transicao>
+				<entradas>TERM</entradas>
+				<proximo>1</proximo>
+			</transicao>
+			<transicao>
+				<entradas>NTERM</entradas>
+				<proximo>1</proximo>
+			</transicao>
+			<transicao>
+				<entradas>e</entradas>
+				<proximo>1</proximo>
+			</transicao>
+			<transicao>
+				<entradas>(</entradas>
+				<proximo>2</proximo>
+			</transicao>
+			<transicao>
+				<entradas>{</entradas>
+				<proximo>4</proximo>
+			</transicao>
+			<transicao>
+				<entradas>[</entradas>
+				<proximo>6</proximo>
 			</transicao>
 		</estado>
 		<estado>
@@ -141,19 +165,19 @@
 				<proximo>1</proximo>
 			</transicao>
 			<transicao>
-				<entradas>"e"</entradas>
+				<entradas>e</entradas>
 				<proximo>1</proximo>
 			</transicao>
 			
 			<transicao>
-				<entradas>"("</entradas>
+				<entradas>(</entradas>
 				<proximo>2</proximo>
 			</transicao><transicao>
-				<entradas>"{"</entradas>
+				<entradas>{</entradas>
 				<proximo>4</proximo>
 			</transicao>
 			<transicao>
-				<entradas>"["</entradas>
+				<entradas>[</entradas>
 				<proximo>6</proximo>
 			</transicao>
 		</estado>

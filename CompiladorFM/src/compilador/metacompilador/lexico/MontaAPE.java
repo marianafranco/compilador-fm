@@ -19,11 +19,11 @@ import compilador.metacompilador.estruturas.Estado;
 import compilador.metacompilador.estruturas.Transicao;
 
 
-public class MontaAFD {
+public class MontaAPE {
 	
 	private String arquivoXML = "metalexico.xml";
 	
-	public MontaAFD(){
+	public MontaAPE(){
 		
 	}
 	
@@ -125,7 +125,7 @@ public class MontaAFD {
 				
 				//System.out.println(nodes.item(i).getNodeValue()); 
 			}
-			System.out.println("[INFO] Automato montado com sucesso.");
+			System.out.println("[INFO] Automato METALEXICO montado com sucesso.");
 			return true;
 		
 		}catch(Exception e){

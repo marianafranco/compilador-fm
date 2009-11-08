@@ -2,7 +2,6 @@ package compilador.metacompilador.estruturas;
 
 public class APE {
 	
-	private String submaquinaPrincipal;
 	int numSubmaquinas;
 	private AFD submaquinas[];
 	
@@ -11,16 +10,17 @@ public class APE {
 		this.submaquinas[indice] = nova;
 	}
 	
+	public AFD getSubmaquina(String nome){
+		for (int i=this.numSubmaquinas - 1; i > 0; i--){
+			if(this.submaquinas[i].getNome().equals(nome)){
+				return this.submaquinas[i];
+			}
+		}
+		return null;
+	}
+	
 	
 	// Gets e Sets
-	
-	public String getSubmaquinaPrincipal() {
-		return submaquinaPrincipal;
-	}
-	
-	public void setSubmaquinaPrincipal(String submaquinaPrincipal) {
-		this.submaquinaPrincipal = submaquinaPrincipal;
-	}
 	
 	public int getNumSubmaquinas() {
 		return numSubmaquinas;

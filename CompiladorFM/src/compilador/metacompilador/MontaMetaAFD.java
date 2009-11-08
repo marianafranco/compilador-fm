@@ -69,10 +69,6 @@ public class MontaMetaAFD {
 				String nome = node.getNodeValue();
 				//System.out.println("Nterminal: " + nome);
 				
-				// Se primeiro nterminal, adiciona como principal no APE
-				if(i==0){
-					automato.setSubmaquinaPrincipal(nome);
-				}
 				
 				// Cria o AFD correspondente ao não terminal
 				AFD nterminal = new AFD(nome);
@@ -153,7 +149,7 @@ public class MontaMetaAFD {
 				automato.adicionaSubmaquina(nterminal, i);
 			}
 			
-			System.out.println("[INFO] Automato montado com sucesso.");
+			System.out.println("[INFO] Automato METACOMPILADOR montado com sucesso.");
 			return true;
 		
 		}catch(Exception e){

@@ -16,7 +16,7 @@ public class Lexico {
 	
 	private AFD automato;
 	
-	private MontaAFD montador;
+	private MontaAPE montador;
 	private PercorreAFD simulador;
 	private FluxoTokens fluxoTokens;
 	
@@ -31,7 +31,7 @@ public class Lexico {
 		}
 		
 		this.automato = new AFD();
-		this.montador = new MontaAFD();
+		this.montador = new MontaAPE();
 		this.simulador = new PercorreAFD();
 		this.fluxoTokens = new FluxoTokens();
 	}
@@ -43,6 +43,7 @@ public class Lexico {
 		boolean montadorOK = montador.executa(this.automato);
 		
 		if(montadorOK){
+			
 			// Simula Automato Finito Deterministico com o aquivo fonte de entrada
 			boolean simuladorOK = simulador.executa(this.automato, this.arquivoFonte, this.fluxoTokens);
 			fechaArquivoFonte();
@@ -57,6 +58,10 @@ public class Lexico {
 			fechaArquivoFonte();
 			return false;
 		}
+	}
+	
+	public FluxoTokens getFluxoTokens(){
+		return this.fluxoTokens;
 	}
 	
 	
