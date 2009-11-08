@@ -154,8 +154,12 @@ public class AFD {
 	}
 	
 	
-	public void setEstadoAtivo(int estadoID){
-		this.estadoAtivo = estadoID;
+	public void setEstadoAtivo(int estado){
+		this.estadoAtivo = estado;
+	}
+	
+	public int getEstadoAtivo(){
+		return this.estadoAtivo;
 	}
 	
 }
