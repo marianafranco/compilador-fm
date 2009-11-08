@@ -19,11 +19,11 @@ import compilador.metacompilador.estruturas.Estado;
 import compilador.metacompilador.estruturas.Transicao;
 
 
-public class MontaAPE {
+public class MontaAFD {
 	
 	private String arquivoXML = "metalexico.xml";
 	
-	public MontaAPE(){
+	public MontaAFD(){
 		
 	}
 	

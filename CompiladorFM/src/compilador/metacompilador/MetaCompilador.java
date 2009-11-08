@@ -14,7 +14,7 @@ public class MetaCompilador {
 	
 	private Reader arquivoFonte;
 	private APE automato;
-	private MontaMetaAFD montador;
+	private MontaMetaAPE montador;
 	private PercorreMetaAPE simulador;
 	
 	
@@ -28,7 +28,7 @@ public class MetaCompilador {
 		//}
 		
 		this.automato = new APE();
-		this.montador = new MontaMetaAFD();
+		this.montador = new MontaMetaAPE();
 		this.simulador = new PercorreMetaAPE();
 	}
 	
