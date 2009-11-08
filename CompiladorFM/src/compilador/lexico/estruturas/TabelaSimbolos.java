@@ -13,7 +13,7 @@ public class TabelaSimbolos {
 	
 	public void adicionaEntrada (int posicao, String nome, int tipo, int linha, int coluna) {
 		
-		System.out.println("Posicao: " + posicao + ", nome: " + nome + ", tipo: " + tipo + ", linha: " + linha + ", coluna: "+ coluna);
+		//System.out.println("Posicao: " + posicao + ", nome: " + nome + ", tipo: " + tipo + ", linha: " + linha + ", coluna: "+ coluna);
 		
 		Simbolo novo = new Simbolo(posicao, nome, tipo, linha, coluna);
 		
@@ -23,14 +23,37 @@ public class TabelaSimbolos {
 		else {
 			Simbolo temp = this.simbolo;
 						
-			for(int i = 0; i < this.entradas; i++) {
-				temp.proximo = temp;
+			for(int i = 1; i < this.entradas; i++) {
+				temp = temp.proximo;
 			}
 			
-			this.simbolo = novo;
+			temp.proximo = novo;
 		}
 		
 		this.entradas++;
+		
+	}
+	
+	public Simbolo recuperaEntrada (int posicao) {
+		
+		if (this.entradas == 0) {
+			return null;
+		}
+		else {
+			Simbolo temp = this.simbolo;
+			if(temp.getId() == posicao) {
+				return temp;
+			}
+			for (int i = 2; i <= this.entradas; i++) {
+				temp = temp.getproximo();
+				if(temp.getId() == posicao) {
+					return temp;
+				}
+			}
+			
+			return null;
+		}
+		
 	}
 	
 	public int getEntradas() {
