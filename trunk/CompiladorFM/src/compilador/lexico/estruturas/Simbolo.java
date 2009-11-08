@@ -10,9 +10,18 @@ public class Simbolo {
 	public Simbolo proximo;
 	
 	public Simbolo (int id, String nome, int tipo, int coluna, int linha) {
+		this.id = id;
 		this.nome = nome;
 		this.tipo = tipo;
 		this.coluna = coluna;
 		this.linha = linha;
+	}
+	
+	public int getId () {
+		return this.id;
+	}
+	
+	public Simbolo getproximo () {
+		return this.proximo;
 	}
 }

@@ -8,7 +8,9 @@ import java.io.Reader;
 import compilador.exceptions.ArquivoNaoEcontradoException;
 import compilador.lexico.estruturas.AFD;
 import compilador.lexico.estruturas.FluxoTokens;
+import compilador.lexico.estruturas.Simbolo;
 import compilador.lexico.estruturas.TabelaSimbolos;
+import compilador.lexico.estruturas.Token;
 
 
 public class Lexico {
@@ -52,6 +54,20 @@ public class Lexico {
 			fechaArquivoFonte();
 			
 			if(simuladorOK){
+				/*System.out.println("[INFO] Automato executado com sucesso");
+				Token temp = this.fluxoTokens.recuperaToken();
+				while (temp != null) {
+					System.out.println("Token: " + temp.getValor() + ", id: " + temp.getIndice());
+					temp = this.fluxoTokens.recuperaToken();
+				}
+				System.out.println("[INFO] Automato executado com sucesso");
+				int i = 1;
+				Simbolo temp2 = this.tabelaSimbolos.recuperaEntrada(i);
+				while (temp2 != null) {
+					i++;
+					System.out.println("Id: " + temp2.getId());
+					temp2 = this.tabelaSimbolos.recuperaEntrada(i);
+				}*/
 				return true;
 			}else{
 				return false;
