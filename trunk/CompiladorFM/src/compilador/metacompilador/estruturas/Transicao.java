@@ -13,7 +13,7 @@ public class Transicao {
 		}
 	}
 	
-	public int proximoEstado (char entrada) {
+	public int proximoEstado(char entrada) {
 		
 		int proximo = -1;
 		
@@ -22,6 +22,19 @@ public class Transicao {
 				proximo = this.proximo;
 			}
 		}
+		return proximo;
+	}
+	
+	
+	public int proximoEstado(String entrada){
+		
+		int proximo = -1;
+		String transicao =  new String(this.entrada);
+		
+		if(transicao.equals(this.entrada)){
+			proximo = this.proximo;
+		}
+		
 		return proximo;
 	}
 	

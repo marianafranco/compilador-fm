@@ -84,6 +84,17 @@ public class AFD {
 	}
 	
 	
+	public void percorre(String atual){
+		// Pega o indice do estado atual
+		int estadoAtual = procuraEstado(this.estadoAtivo);
+		
+		// Pega o próximo estado
+		int proximoEstado = this.estados[estadoAtual].proximoEstado(atual);
+		
+		this.estadoAtivo = proximoEstado;
+	}
+	
+	
 	public boolean transicaoFinal(char proximo){
 		// Pega o indice do estado atual
 		int estadoAtual = procuraEstado(this.estadoAtivo);

@@ -13,11 +13,9 @@ import compilador.exceptions.ArquivoNaoEcontradoException;
 public class MetaCompilador {
 	
 	private Reader arquivoFonte;
-	
 	private APE automato;
-	
 	private MontaMetaAFD montador;
-	//private PercorreMetaAFD simulador;
+	private PercorreMetaAPE simulador;
 	
 	
 	//public MetaCompilador(String nomeArquivo) throws ArquivoNaoEcontradoException{
@@ -31,7 +29,7 @@ public class MetaCompilador {
 		
 		this.automato = new APE();
 		this.montador = new MontaMetaAFD();
-		//this.simulador = new PercorreMetaAFD();
+		this.simulador = new PercorreMetaAPE();
 	}
 	
 	
@@ -47,19 +45,21 @@ public class MetaCompilador {
 				Lexico lex = new Lexico("gramatica.txt");
 				boolean lexOK = lex.executa();
 				
-				// Simula Automato Finito Deterministico com o aquivo fonte de entrada
-				//boolean simuladorOK = simulador.executa(this.automato, this.arquivoFonte, this.fluxoTokens, this.tabelaSimbolos);
-				boolean simuladorOK = true;
-				//fechaArquivoFonte();
-				
-				if(simuladorOK){
-					return true;
+				if(lexOK){
+					// Simula o Automato de Pilha Estruturado
+					boolean simuladorOK = simulador.executa(this.automato, lex.getFluxoTokens());
+					
+					if(simuladorOK){
+						return true;
+					}else{
+						return false;
+					}
+					
 				}else{
 					return false;
 				}
-				
+			
 			}else{
-				//fechaArquivoFonte();
 				return false;
 			}
 		}catch(Exception e){

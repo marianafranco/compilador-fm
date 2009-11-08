@@ -39,6 +39,20 @@ public class Estado {
 	}
 	
 	
+	public int proximoEstado (String entrada) {
+		int proximo = -1;
+		
+		for (int i = 0; this.transicoes.length > i; i++) {
+			proximo = this.transicoes[i].proximoEstado(entrada);
+			if (proximo != -1) {
+				return proximo;
+			}
+		}
+		
+		return proximo;
+	}
+	
+	
 	// Gets e Sets
 	
 	public void setNumTransicoes(int numTransicoes){
