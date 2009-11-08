@@ -72,6 +72,23 @@ public class AFD {
 		}
 	}
 	
+	public boolean temTransicao (String atual) {
+		// Pega o indice do estado atual
+		int estadoAtual = procuraEstado(this.estadoAtivo);
+		
+		// Verifica se existe transicao
+		int proximoEstado = this.estados[estadoAtual].proximoEstado(atual);
+		
+		// Se nao existe
+		if (proximoEstado == -1) {
+			return false;
+		
+		// Se existe transicao, retorna true
+		}else {
+			return true;
+		}
+	}
+	
 	
 	public void percorre(char atual){
 		// Pega o indice do estado atual
