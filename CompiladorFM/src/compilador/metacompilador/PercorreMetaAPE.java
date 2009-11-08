@@ -31,65 +31,125 @@ public class PercorreMetaAPE {
 		AFD wirth = automato.getSubmaquina("WIRTH");
 		AFD expr = automato.getSubmaquina("EXPR");
 		
-		Pilha conteudoPilha = new Pilha(0, "WIRTH");
+		AFD submaquina;
+		String tokenValor = "";
+		Pilha conteudoPilha; 
 		
-		pilha.push(conteudoPilha);
+		// Inicializa pilha
+		pilha.push(new Pilha(0, "WIRTH"));
 		
 		// Enquanto não chegamos ao final dos tokens
-		while(tokensTokens.getTamanho() > 0 && !pilha.empty()){
-			proxToken = tokensTokens.recuperaToken();
+		while(tokensTokens.getTamanho() >= 0 && !pilha.empty()){
+			//proxToken = tokensTokens.recuperaToken();
 			
-			// percorre autômato
-			conteudoPilha = (Pilha)pilha.pop();
+			conteudoPilha = (Pilha) pilha.pop();
+			System.out.println("pilha: (" + conteudoPilha.getEstado() + ", " + conteudoPilha.getSubmaquina() + ")");
+			System.out.println("token " + token.getValor());
 			
 			// se autômato WIRTH
 			if(conteudoPilha.getSubmaquina().equals("WIRTH")){
-				wirth.setEstadoAtivo(conteudoPilha.getEstado());
-				
-				switch (token.getTipo()){
-				
-				case Tipo.NTERM:
-					if(wirth.temTransicao("NTERM")){
-						wirth.percorre("NTERM");
-					}else{
-						System.out.println("[ERRO] Não tem transição com " + token.getValor());
-					}
-					break;
-				case Tipo.TERM:	
-				
-					
-				case Tipo.ESPECIAL:
-				
-				
-					
-				case Tipo.DESCONHECIDO:
-				
-				}
-				
-				// se for nterminal ou terminal, não usa o valor direto
-				wirth.percorre(token.getValor());
-			
+				submaquina = wirth;
 				
 			// se autômato EXPR
-			}else if (conteudoPilha.getSubmaquina().equals("EXPR")){
-				
-			
+			}else if(conteudoPilha.getSubmaquina().equals("EXPR")){
+				submaquina = expr;
 				
 			// se não é WIRTH nem EXPR -> ERRO
 			}else{
+				// TODO Acrescentar mensagem de erro 
 				return false;
 			}
 			
+			submaquina.setEstadoAtivo(conteudoPilha.getEstado());
 			
-			// verifica se é final
+			switch(token.getTipo()){
 			
-			// se é final retira da pilha
+			case Tipo.NTERM:
+				tokenValor = "NTERM";
+				break;
+			case Tipo.TERM:
+				tokenValor = "TERM";
+				break;
+			case Tipo.ESPECIAL:
+				tokenValor = token.getValor();
+				break;
+			case Tipo.DESCONHECIDO:
+				// TODO tratar erro
+				System.out.println("[ERRO] Não tem transição com " + token.getValor());
+				return false;
+			}
 			
-			// senão atualiza topo com o novo estado
+			if(submaquina.temTransicao(tokenValor)){
+				submaquina.percorre(tokenValor);
+				
+				// verifica se é final
+				if(!submaquina.estadoAtivoFinal()){
+					// senão atualiza topo com o novo estado
+					conteudoPilha.setEstado(submaquina.getEstadoAtivo());
+					pilha.push(new Pilha(conteudoPilha.getEstado(), conteudoPilha.getSubmaquina()));
+					//System.out.println("empilha: (" + conteudoPilha.getEstado() + ", " + conteudoPilha.getSubmaquina() + ")");
+					
+					if(tokensTokens.getTamanho() > 0){
+						token = tokensTokens.recuperaToken();
+					}
+					
+				}else{
+					
+					if(tokensTokens.getTamanho() > 0){
+						token = tokensTokens.recuperaToken();
+						
+						switch (token.getTipo()){
+						case Tipo.NTERM:
+							tokenValor =  "NTERM";
+							break;
+						case Tipo.TERM:
+							tokenValor = "TERM";
+							break;
+						case Tipo.ESPECIAL:
+							tokenValor = token.getValor();
+							break;
+						case Tipo.DESCONHECIDO:
+							// TODO tratar erro
+							System.out.println("[ERRO] Não tem transição com " + token.getValor());
+							return false;
+						}
+						
+						// Se existir transição com o próximo, reempilha o estado atual
+						if(expr.temTransicao(tokenValor)){
+							conteudoPilha.setEstado(expr.getEstadoAtivo());
+							pilha.push(new Pilha(conteudoPilha.getEstado(), conteudoPilha.getSubmaquina()));
+							//System.out.println("empilha: (" + conteudoPilha.getEstado() + ", " + conteudoPilha.getSubmaquina() + ")");
+						
+						// Senão, reincializa a pilha se pilha vazia  
+						}else{
+							if(pilha.empty()){
+								pilha.push(new Pilha(0, "WIRTH"));
+								//System.out.println("empilha: (" + conteudoPilha.getEstado() + ", " + conteudoPilha.getSubmaquina() + ")");
+							}else{
+								System.out.println("entrou no final sem transição com o proximo");
+								//pilha.pop();
+							}
+						}
+					}
+				}
+				
+			}else if(submaquina.temTransicao("EXPR")){
+				// empilha (proxEstado, submaquina) e (0, expr)
+				submaquina.percorre("EXPR");
+				conteudoPilha.setEstado(submaquina.getEstadoAtivo());
+				pilha.push(new Pilha(conteudoPilha.getEstado(), conteudoPilha.getSubmaquina()));
+				//System.out.println("empilha: (" + conteudoPilha.getEstado() + ", " + conteudoPilha.getSubmaquina() + ")");
+				pilha.push(new Pilha(0, "EXPR"));
+				//System.out.println("empilha: (" + conteudoPilha.getEstado() + ", " + conteudoPilha.getSubmaquina() + ")");
+				
+			}else{
+				// TODO tratar erro
+				System.out.println("[ERRO] Não tem transição o NTERM " + token.getValor());
+				return false;
+			}
+			
 		}
 		
-		
-		
-		return false;
+		return true;
 	}
 }

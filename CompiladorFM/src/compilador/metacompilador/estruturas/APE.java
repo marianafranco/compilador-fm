@@ -11,7 +11,7 @@ public class APE {
 	}
 	
 	public AFD getSubmaquina(String nome){
-		for (int i=this.numSubmaquinas - 1; i > 0; i--){
+		for (int i = this.numSubmaquinas - 1; i >= 0; i--){
 			if(this.submaquinas[i].getNome().equals(nome)){
 				return this.submaquinas[i];
 			}

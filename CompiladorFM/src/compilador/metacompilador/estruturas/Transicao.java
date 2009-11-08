@@ -31,7 +31,7 @@ public class Transicao {
 		int proximo = -1;
 		String transicao =  new String(this.entrada);
 		
-		if(transicao.equals(this.entrada)){
+		if(transicao.equals(entrada)){
 			proximo = this.proximo;
 		}
 		
