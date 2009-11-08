@@ -1,0 +1,14 @@
+ClassBase = { ClassDefn }.
+ClassDefn = "class" ClassName "(" [ ClassName { "," ClassName } ] ")" "extends" ClassName [ "{" { PropDefn } { MethodDefn } "}" ] [ "is" ClassMod { "and" ClassMod } ].
+ClassMod = "final" | "saturated" | "abstract".
+PropDefn = ClassName PropName ";".
+MethodDefn = "method" MethodName "(" [ ParamDecl { "," ParamDecl } ] ")" ( "{" { Assignment } Continue "}" | "is" "abstract" ).
+ParamDecl = ClassName PropName.
+Assignment = QualName "=" Expr ";".
+Continue = "goto" PropName "." MethodName "(" [ Expr { "," Expr } ] ")" ";".
+Expr = ConstrExpr | QualName.
+ConstrExpr = "new" ( ClassName | Constant ) "(" [ ClassName { "," ClassName } ] ")".
+QualName = PropName { "." PropName }.
+ClassName = Id | Constant.
+MethodName = Id | Constant.
+PropName = Id | Constant.

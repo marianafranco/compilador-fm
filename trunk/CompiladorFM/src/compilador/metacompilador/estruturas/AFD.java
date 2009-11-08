@@ -11,11 +11,14 @@ public class AFD {
 	private Estado estados[];
 	
 	
+	public AFD () {
+		this.estadoAtivo = -1;
+	}
+	
 	public AFD (String nome) {
 		this.nome = nome;
 		this.estadoAtivo = -1;
 	}
-	
 	
 	public void adicionaEstado (Estado adicionado, boolean inicial, int indice) {
 		if (inicial == true) {
@@ -42,8 +45,17 @@ public class AFD {
 		return -1;
 	}
 	
+	public int getTipo(){
+		int estadoAtual = procuraEstado(this.estadoAtivo);
+		return this.estados[estadoAtual].getTipo();
+	}
 	
-	public boolean temTransicao (char atual) throws CaractereInvalidoException {
+	public boolean estadoAtivoFinal(){
+		int estadoAtual = procuraEstado(this.estadoAtivo);
+		return this.estados[estadoAtual].getAceitacao();
+	}
+	
+	public boolean temTransicao (char atual) {
 		// Pega o indice do estado atual
 		int estadoAtual = procuraEstado(this.estadoAtivo);
 		
@@ -52,18 +64,10 @@ public class AFD {
 		
 		// Se nao existe
 		if (proximoEstado == -1) {
-			// Verifica se o estado atual é de aceitacao
-			if (this.estados[estadoAtual].getAceitacao() == true) {
-				return false;
-			}
-			else {
-				throw new CaractereInvalidoException("Transicao incorreta, imprimir linha e coluna e dar erro");
-				//System.out.println("Transicao incorreta, imprimir linha e coluna e dar erro");
-				//return false;
-			}
-		}
+			return false;
+		
 		// Se existe transicao, retorna true
-		else {
+		}else {
 			return true;
 		}
 	}
