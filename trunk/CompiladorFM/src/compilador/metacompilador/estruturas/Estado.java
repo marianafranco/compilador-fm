@@ -1,5 +1,7 @@
 package compilador.metacompilador.estruturas;
 
+import java.util.Vector;
+
 import compilador.metacompilador.estruturas.Transicao;
 
 public class Estado {
@@ -7,29 +9,31 @@ public class Estado {
 	private int id;
 	private boolean aceitacao;
 	private int tipo;
-	private int numTransicoes;
-	private Transicao transicoes[];
+	private Vector<Transicao> transicoes;
 	
 	public Estado(int id, boolean aceitacao) {
 		this.id = id;
 		this.aceitacao = aceitacao;
+		this.transicoes = new Vector<Transicao>();
 	}
 	
 	public Estado(int id, boolean aceitacao, int tipo) {
 		this.id = id;
 		this.aceitacao = aceitacao;
 		this.tipo = tipo;
+		this.transicoes = new Vector<Transicao>();
 	}
 	
-	public void adicionaTransicao (Transicao nova, int indice) {
-		this.transicoes[indice] = nova;
+	
+	public void adicionaTransicao (Transicao nova) {
+		this.transicoes.add(nova);
 	}
 	
 	public int proximoEstado (char entrada) {
 		int proximo = -1;
 		
-		for (int i = 0; this.transicoes.length > i; i++) {
-			proximo = this.transicoes[i].proximoEstado(entrada);
+		for (int i = 0; this.transicoes.size() > i; i++) {
+			proximo = this.transicoes.get(i).proximoEstado(entrada);
 			if (proximo != -1) {
 				return proximo;
 			}
@@ -42,8 +46,8 @@ public class Estado {
 	public int proximoEstado (String entrada) {
 		int proximo = -1;
 		
-		for (int i = 0; this.transicoes.length > i; i++) {
-			proximo = this.transicoes[i].proximoEstado(entrada);
+		for (int i = 0; this.transicoes.size() > i; i++) {
+			proximo = this.transicoes.get(i).proximoEstado(entrada);
 			if (proximo != -1) {
 				return proximo;
 			}
@@ -52,13 +56,15 @@ public class Estado {
 		return proximo;
 	}
 	
+	public int getTamanho(){
+		return this.transicoes.size();
+	}
+	
+	public Transicao getTransicao(int indice){
+		return this.transicoes.get(indice);
+	}
 	
 	// Gets e Sets
-	
-	public void setNumTransicoes(int numTransicoes){
-		this.numTransicoes = numTransicoes;
-		this.transicoes = new Transicao [this.numTransicoes];
-	}
 	
 	public int getId () {
 		return this.id;
@@ -66,6 +72,10 @@ public class Estado {
 	
 	public boolean getAceitacao () {
 		return this.aceitacao;
+	}
+	
+	public void setAceitação(boolean aceita){
+		this.aceitacao = aceita;
 	}
 	
 	public int getTipo () {

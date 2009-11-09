@@ -57,7 +57,6 @@ public class MontaMetaAPE {
 			Object result = expr.evaluate(doc, XPathConstants.NODESET);
 			NodeList nodes = (NodeList) result;
 			
-			automato.setNumSubmaquinas(nodes.getLength());
 			
 			// Adiciona cada nterminais
 			for (int i = 0; i < nodes.getLength(); i++) {
@@ -77,10 +76,6 @@ public class MontaMetaAPE {
 				expr = xpath.compile("./estado");
 				result = expr.evaluate(nodes.item(i), XPathConstants.NODESET);
 				NodeList nodesEstado = (NodeList) result;
-				
-				// Seta o número de estados existentes para inicializar o 
-				// vetor de estados
-				nterminal.setNumEstados(nodesEstado.getLength());
 				
 				//System.out.println("NumEstados: " + nodesEstado.getLength());
 				
@@ -110,9 +105,6 @@ public class MontaMetaAPE {
 					result = expr.evaluate(nodesEstado.item(j), XPathConstants.NODESET);
 					NodeList nodesTransicao = (NodeList) result;
 					
-					// Seta o número de transições existente para inicializar o 
-					// vetor de transições
-					estado.setNumTransicoes(nodesTransicao.getLength());
 					
 					// Adiciona cada transição ao estado
 					for (int k = 0; k < nodesTransicao.getLength(); k++) {
@@ -137,16 +129,16 @@ public class MontaMetaAPE {
 						Transicao transicao = new Transicao(proximo, entrada);
 						
 						// Adiciona a transição ao estado
-						estado.adicionaTransicao(transicao, k);
+						estado.adicionaTransicao(transicao);
 					}
 					
 					// Adiciona o estado no automato
-					nterminal.adicionaEstado(estado, j);
+					nterminal.adicionaEstado(estado);
 					
 				}
 				
 				// Adiciona o nterminal ao APE
-				automato.adicionaSubmaquina(nterminal, i);
+				automato.adicionaSubmaquina(nterminal);
 			}
 			
 			System.out.println("[INFO] Automato METACOMPILADOR montado com sucesso.");

@@ -1,42 +1,52 @@
 package compilador.metacompilador.estruturas;
 
+import java.util.Vector;
+
 public class APE {
 	
-	int numSubmaquinas;
-	private AFD submaquinas[];
+	private Vector<AFD> submaquinas;
 	
+	public APE(){
+		this.submaquinas = new Vector<AFD>();
+	}
 	
-	public void adicionaSubmaquina (AFD nova, int indice) {
-		this.submaquinas[indice] = nova;
+	public void adicionaSubmaquina (AFD nova) {
+		this.submaquinas.add(nova);
 	}
 	
 	public AFD getSubmaquina(String nome){
-		for (int i = this.numSubmaquinas - 1; i >= 0; i--){
-			if(this.submaquinas[i].getNome().equals(nome)){
-				return this.submaquinas[i];
+		for (int i = this.submaquinas.size() - 1; i >= 0; i--){
+			if(this.submaquinas.get(i).getNome().equals(nome)){
+				return this.submaquinas.get(i);
 			}
 		}
 		return null;
 	}
 	
-	
-	// Gets e Sets
-	
-	public int getNumSubmaquinas() {
-		return numSubmaquinas;
-	}
-	
-	public void setNumSubmaquinas(int numSubmaquinas) {
-		this.numSubmaquinas = numSubmaquinas;
-		this.submaquinas = new AFD [this.numSubmaquinas];
-	}
-	
-	public AFD[] getSubmaquinas() {
-		return submaquinas;
-	}
-	
-	public void setSubmaquinas(AFD[] submaquinas) {
-		this.submaquinas = submaquinas;
+	public void imprime(){
+		for(int i=0 ; i < this.submaquinas.size(); i++){
+			AFD submaquina = this.submaquinas.get(i);
+			System.out.println((i+1) + "." + submaquina.getNome());
+			
+			System.out.print("\t final: ");
+			for(int j=0; j < submaquina.getTamanho(); j++){
+				if(submaquina.getEstadoIndice(j).getAceitacao()){
+					System.out.print( submaquina.getEstadoIndice(j).getId() + ", ");
+				}
+			}
+			System.out.println();
+			
+			for(int j=0; j < submaquina.getTamanho(); j++){
+				Estado estado = submaquina.getEstadoIndice(j);
+				
+				for(int k=0; k < estado.getTamanho(); k++){
+					System.out.print("\t (" + estado.getId() + ", " + estado.getTransicao(k).getEntrada() +")");
+					System.out.print(" -> " + estado.getTransicao(k).getProximo());
+					System.out.println();
+				}
+			}
+			
+		}
 	}
 	
 }

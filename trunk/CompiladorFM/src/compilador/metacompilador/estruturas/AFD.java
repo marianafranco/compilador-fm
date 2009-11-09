@@ -1,5 +1,7 @@
 package compilador.metacompilador.estruturas;
 
+import java.util.Vector;
+
 import compilador.metacompilador.estruturas.Estado;
 import compilador.exceptions.CaractereInvalidoException;
 
@@ -7,52 +9,66 @@ public class AFD {
 
 	private String nome;
 	private int estadoAtivo;
-	private int numEstados;
-	private Estado estados[];
+	private Vector<Estado> estados;
 	
 	
 	public AFD () {
 		this.estadoAtivo = -1;
+		this.estados = new Vector<Estado>();
 	}
 	
 	public AFD (String nome) {
 		this.nome = nome;
 		this.estadoAtivo = -1;
+		this.estados = new Vector<Estado>();
 	}
 	
-	public void adicionaEstado (Estado adicionado, boolean inicial, int indice) {
+	public void adicionaEstado (Estado adicionado, boolean inicial) {
 		if (inicial == true) {
 			this.estadoAtivo = adicionado.getId();
 		}
-		this.estados[indice] = adicionado;
+		this.estados.add(adicionado);
 	}
 	
 	
-	public void adicionaEstado (Estado adicionado, int indice) {
+	public void adicionaEstado (Estado adicionado) {
 		if (adicionado.getId() == 0) {
 			this.estadoAtivo = adicionado.getId();
 		}
-		this.estados[indice] = adicionado;
+		this.estados.add(adicionado);
 	}
 	
 	
 	public int procuraEstado (int id) {	
-		for (int i = 0; this.estados.length > i; i++) {
-			if (this.estados[i].getId() == id) {
+		for (int i = 0; this.estados.size() > i; i++) {
+			if (this.estados.get(i).getId() == id) {
 				return i;
 			}
 		}
 		return -1;
 	}
 	
+	public Estado getEstado(int id){
+		for (int i = 0; this.estados.size() > i; i++) {
+			if (this.estados.get(i).getId() == id) {
+				return this.estados.get(i);
+			}
+		}
+		return null;
+	}
+	
+	public Estado getEstadoIndice(int indice){
+		return this.estados.get(indice);
+	}
+	
 	public int getTipo(){
 		int estadoAtual = procuraEstado(this.estadoAtivo);
-		return this.estados[estadoAtual].getTipo();
+		return this.estados.get(estadoAtual).getTipo();
 	}
 	
 	public boolean estadoAtivoFinal(){
 		int estadoAtual = procuraEstado(this.estadoAtivo);
-		return this.estados[estadoAtual].getAceitacao();
+		return this.estados.get(estadoAtual).getAceitacao();
 	}
 	
 	public boolean temTransicao (char atual) {
@@ -60,7 +76,7 @@ public class AFD {
 		int estadoAtual = procuraEstado(this.estadoAtivo);
 		
 		// Verifica se existe transicao
-		int proximoEstado = this.estados[estadoAtual].proximoEstado(atual);
+		int proximoEstado = this.estados.get(estadoAtual).proximoEstado(atual);
 		
 		// Se nao existe
 		if (proximoEstado == -1) {
@@ -77,7 +93,7 @@ public class AFD {
 		int estadoAtual = procuraEstado(this.estadoAtivo);
 		
 		// Verifica se existe transicao
-		int proximoEstado = this.estados[estadoAtual].proximoEstado(atual);
+		int proximoEstado = this.estados.get(estadoAtual).proximoEstado(atual);
 		
 		// Se nao existe
 		if (proximoEstado == -1) {
@@ -95,7 +111,7 @@ public class AFD {
 		int estadoAtual = procuraEstado(this.estadoAtivo);
 		
 		// Pega o próximo estado
-		int proximoEstado = this.estados[estadoAtual].proximoEstado(atual);
+		int proximoEstado = this.estados.get(estadoAtual).proximoEstado(atual);
 		
 		this.estadoAtivo = proximoEstado;
 	}
@@ -106,7 +122,7 @@ public class AFD {
 		int estadoAtual = procuraEstado(this.estadoAtivo);
 		
 		// Pega o próximo estado
-		int proximoEstado = this.estados[estadoAtual].proximoEstado(atual);
+		int proximoEstado = this.estados.get(estadoAtual).proximoEstado(atual);
 		
 		this.estadoAtivo = proximoEstado;
 	}
@@ -117,7 +133,7 @@ public class AFD {
 		int estadoAtual = procuraEstado(this.estadoAtivo);
 		
 		// Verifica se existe transicao
-		int proximoEstado = this.estados[estadoAtual].proximoEstado(proximo);
+		int proximoEstado = this.estados.get(estadoAtual).proximoEstado(proximo);
 		
 		// Se nao existe
 		if (proximoEstado == -1) {
@@ -127,7 +143,7 @@ public class AFD {
 		// Se existe transicao
 		else {
 			// Verifica se o estado é de aceitacao
-			if (this.estados[proximoEstado].getAceitacao() == true) {
+			if (this.estados.get(proximoEstado).getAceitacao() == true) {
 				return true;
 			}else{
 				return false;
@@ -135,6 +151,9 @@ public class AFD {
 		}
 	}
 	
+	public int getTamanho(){
+		return this.estados.size();
+	}
 	
 	// Gets e Sets
 	
@@ -142,17 +161,9 @@ public class AFD {
 		return nome;
 	}
 
-
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	
-	
-	public void setNumEstados(int numEstados){
-		this.numEstados = numEstados;
-		this.estados = new Estado [this.numEstados];
-	}
-	
 	
 	public void setEstadoAtivo(int estado){
 		this.estadoAtivo = estado;
