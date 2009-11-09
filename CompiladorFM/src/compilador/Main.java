@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import compilador.lexico.Lexico;
 import compilador.metacompilador.MetaCompilador;
+import compilador.metacompilador.estruturas.APE;
 
 public class Main {
 
@@ -28,8 +29,9 @@ public class Main {
 			String codFonte = args[0];
 			
 			try{
+				APE newAutomato = new APE();
 				MetaCompilador meta = new MetaCompilador();
-				meta.executa();
+				meta.executa(newAutomato);
 				
 				//Lexico lex = new Lexico(codFonte);
 				//lex.executa();

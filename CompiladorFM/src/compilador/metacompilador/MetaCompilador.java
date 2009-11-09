@@ -33,7 +33,7 @@ public class MetaCompilador {
 	}
 	
 	
-	public boolean executa() {
+	public boolean executa(APE newAutomato) {
 		
 		try{
 			// Monta o Automato Finito Deterministico
@@ -47,7 +47,10 @@ public class MetaCompilador {
 				
 				if(lexOK){
 					// Simula o Automato de Pilha Estruturado
-					boolean simuladorOK = simulador.executa(this.automato, lex.getFluxoTokens());
+					boolean simuladorOK = simulador.executa(this.automato, lex.getFluxoTokens(), newAutomato);
+					
+					System.out.println("## Automato ##");
+					newAutomato.imprime();
 					
 					if(simuladorOK){
 						return true;

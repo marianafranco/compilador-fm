@@ -1,11 +1,11 @@
 package compilador.metacompilador.estruturas;
 
-public class Pilha {
+public class PilhaEstadoSubmaquina {
 
 	int estado;
 	String submaquina;
 	
-	public Pilha (int estado, String submaquina){
+	public PilhaEstadoSubmaquina (int estado, String submaquina){
 		this.estado = estado;
 		this.submaquina = submaquina;
 	}

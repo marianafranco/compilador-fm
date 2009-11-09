@@ -39,4 +39,12 @@ public class Transicao {
 	}
 	
 	
+	public int getProximo(){
+		return this.proximo;
+	}
+	
+	public String getEntrada(){
+		return new String(this.entrada);
+	}
+	
 }
