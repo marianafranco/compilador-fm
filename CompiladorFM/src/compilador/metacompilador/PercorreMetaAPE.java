@@ -286,7 +286,7 @@ public class PercorreMetaAPE {
 						estado = new Estado(1, true);
 						submaquina.adicionaEstado(estado);
 					}else{
-						submaquina.getEstado(1).setAceitação(true);
+						submaquina.getEstado(1).setAceitacao(true);
 					}
 					
 					//System.out.println("ENTROU");

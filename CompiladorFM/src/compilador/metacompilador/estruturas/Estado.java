@@ -74,7 +74,7 @@ public class Estado {
 		return this.aceitacao;
 	}
 	
-	public void setAceitação(boolean aceita){
+	public void setAceitacao(boolean aceita){
 		this.aceitacao = aceita;
 	}
 	
