@@ -253,19 +253,8 @@ public class PercorreMetaAPE {
 					}else{
 						submaquina.getEstado(this.cs).adicionaTransicao(new Transicao(this.ns, "e"));	// gera transição vazia
 					}
-					
-					// Gera a volta??? 
-					// Verifica se ja não existe o estado antes de criar
-					if(submaquina.procuraEstado(this.ns) == -1){
-						estado = new Estado(this.ns, false);
-						estado.adicionaTransicao(new Transicao(this.cs, "e"));	// gera transição vazia
-						submaquina.adicionaEstado(estado);
-					}else{
-						submaquina.getEstado(this.ns).adicionaTransicao(new Transicao(this.cs, "e"));	// gera transição vazia
-					}
-					
-					this.pilhaGeraAPE.push(new PilhaEstados(this.cs, this.ns));
-					//this.cs = this.ns;
+					this.pilhaGeraAPE.push(new PilhaEstados(this.ns, this.ns));
+					this.cs = this.ns;
 					this.ns ++;
 					
 				// G
@@ -292,16 +281,14 @@ public class PercorreMetaAPE {
 						submaquina.getEstado(this.cs).adicionaTransicao(new Transicao(this.pilhaGeraAPE.peek().getR(), "e"));	// gera transição vazia
 					}
 					
-					while(!this.pilhaGeraAPE.empty()){
-						// Verifica se ja não existe o estado antes de criar
-						if(submaquina.procuraEstado(this.pilhaGeraAPE.peek().getR()) == -1){
-							estado = new Estado(this.pilhaGeraAPE.peek().getR(), true);
-							submaquina.adicionaEstado(estado);
-						}else{
-							submaquina.getEstado(this.pilhaGeraAPE.peek().getR()).setAceitação(true);
-						}
-						this.pilhaGeraAPE.pop();
+					// Coloca o estado 1 como final
+					if(submaquina.procuraEstado(1) == -1){
+						estado = new Estado(1, true);
+						submaquina.adicionaEstado(estado);
+					}else{
+						submaquina.getEstado(1).setAceitação(true);
 					}
+					
 					//System.out.println("ENTROU");
 					automato.adicionaSubmaquina(submaquina);
 				}
