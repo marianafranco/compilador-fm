@@ -3,13 +3,13 @@ programa = { "estrut"
            "{" tipo identificador [ "[" numero "]" ] ";" 
            { tipo identificador [ "[" numero "]" ] ";" } "}" }
            { tipo identificador 
-		   "(" [ tipo identificador [ "[" numero "]" ]] 
+		   "(" [ tipo identificador [ "[" numero "]" ] 
 		   { "," tipo identificador [ "[" numero "]" ] } ] ")"
 		   "{" {comando} 
-		   "retorno" ( identificador [ "[" ( numero | expressão ) "]" ] 
-		   | expressão | numero | """ seq_caracteres """ 
+		   "retorno" ( identificador [ "[" ( numero | expressao ) "]" ] 
+		   | expressao | numero | """ seq_caracteres """ 
 		   | booleano ) ";" "}" }
-		   "principal" "(" [ tipo identificador [ "[" numero "]" ] ]
+		   "principal" "(" [ tipo identificador [ "[" numero "]" ]
 		   { "," tipo identificador [ "[" numero "]" ] } ] ")"
 		   "{" {comando} "}" .
 		   
@@ -17,50 +17,50 @@ programa = { "estrut"
 comando = [ 
 		  tipo identificador [ "[" numero "]" ] ";" 
 		  | 
-		  identificador [ "[" ( numero | expressão ) "]" ]  "=" 
-		  ( expressão | """ seq_caracteres """ | booleano )";" 
+		  identificador [ "[" ( numero | expressao ) "]" ]  "=" 
+		  ( expressao | """ seq_caracteres """ | booleano )";" 
 		  | 
 	  	  "enquanto" 
-	  	  "(" expressão (">" | "<" | ">=" | "<=" | "==" | "!=") 
-	  	  expressão ")" "{" { comando } "}"
+	  	  "(" expressao (">" | "<" | ">=" | "<=" | "==" | "!=") 
+	  	  expressao ")" "{" { comando } "}"
 		  | 
-		  "se" "(" expressão (">" | "<" | ">=" | "<=" | "==" | "!=") 
-		  expressão ")" "{" { comando } "}" 
-		  [ "senão" "{" { comando } "}" ] 
+		  "se" "(" expressao (">" | "<" | ">=" | "<=" | "==" | "!=") 
+		  expressao ")" "{" { comando } "}" 
+		  [ "senao" "{" { comando } "}" ] 
 		  | 
-		  identificador "(" [ expressão {"," expressão} ] ")" ";" 
+		  identificador "(" [ expressao {"," expressao} ] ")" ";" 
 		  | 
 		  "entrada" ">>" identificador 
-		  [ "[" ( numero | expressão ) "]" ] ";" 
+		  [ "[" ( numero | expressao ) "]" ] ";" 
 		  | 
-		  "saida" << ( expressão | """ seq_caracteres """ )";" 
+		  "saida" "<<" ( expressao | """ seq_caracteres """ )";" 
 		  ] .
 
 
-expressão = ( identificador [ "[" ( numero | expressão ) "]" ] 
+expressao = ( identificador [ "[" ( numero | expressao ) "]" ] 
 			| identificador "(" 
-			[ ( expressão | """ seq_caracteres """ | booleano ) 
-			{"," ( expressão | """ seq_caracteres """ 
+			[ ( expressao | """ seq_caracteres """ | booleano ) 
+			{"," ( expressao | """ seq_caracteres """ 
 			| booleano ) } ] ")" 
-			| numero | "(" expressão ")" ) 
+			| numero | "(" expressao ")" ) 
 			{ ( "*" | "/" ) 
-			( identificador [ "[" ( numero | expressão ) "]" ] 
+			( identificador [ "[" ( numero | expressao ) "]" ] 
 			| identificador "(" 
-			[ ( expressão | """ seq_caracteres """ | booleano ) 
-			{"," ( expressão | """ seq_caracteres """ 
+			[ ( expressao | """ seq_caracteres """ | booleano ) 
+			{"," ( expressao | """ seq_caracteres """ 
 			| booleano ) } ] ")" 
-			| numero | "(" expressão ")" ) } 
+			| numero | "(" expressao ")" ) } 
 			{ ( "+" | "-" ) 
-			( identificador [ "[" ( numero | expressão ) "]" ] 
+			( identificador [ "[" ( numero | expressao ) "]" ] 
 			| identificador "(" 
-			[ ( expressão | """ seq_caracteres """ | booleano ) 
-			{"," ( expressão | """ seq_caracteres """ 
+			[ ( expressao | """ seq_caracteres """ | booleano ) 
+			{"," ( expressao | """ seq_caracteres """ 
 			| booleano ) } ] ")" 
-			| numero | "(" expressão ")" ) 
+			| numero | "(" expressao ")" ) 
 			{ ( "*" | "/" ) 
-			( identificador [ "[" ( numero | expressão ) "]" ] 
+			( identificador [ "[" ( numero | expressao ) "]" ] 
 			| identificador "(" 
-			[ ( expressão | """ seq_caracteres """ | booleano ) 
-			{"," ( expressão | """ seq_caracteres """ 
+			[ ( expressao | """ seq_caracteres """ | booleano ) 
+			{"," ( expressao | """ seq_caracteres """ 
 			| booleano ) } ] ")" 
-			| numero | "(" expressão ")" ) } } .
+			| numero | "(" expressao ")" ) } } .
