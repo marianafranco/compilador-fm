@@ -5,12 +5,12 @@ import java.io.IOException;
 import java.io.FileReader;
 import java.io.Reader;
 
+import compilador.estruturas.AFD;
+import compilador.estruturas.FluxoTokens;
+import compilador.estruturas.Simbolo;
+import compilador.estruturas.TabelaSimbolos;
+import compilador.estruturas.Token;
 import compilador.exceptions.ArquivoNaoEcontradoException;
-import compilador.lexico.estruturas.AFD;
-import compilador.lexico.estruturas.FluxoTokens;
-import compilador.lexico.estruturas.Simbolo;
-import compilador.lexico.estruturas.TabelaSimbolos;
-import compilador.lexico.estruturas.Token;
 
 
 public class Lexico {
@@ -38,19 +38,17 @@ public class Lexico {
 		this.automato = new AFD();
 		this.montador = new MontaAFD();
 		this.simulador = new PercorreAFD();
-		this.tabelaSimbolos = new TabelaSimbolos();
-		this.fluxoTokens = new FluxoTokens();
 	}
 	
 	
-	public boolean executa(){
+	public boolean executa(TabelaSimbolos tabelaSimbolos, FluxoTokens fluxoTokens){
 		
 		// Monta o Automato Finito Deterministico
 		boolean montadorOK = montador.executa(this.automato);
 		
 		if(montadorOK){
 			// Simula Automato Finito Deterministico com o aquivo fonte de entrada
-			boolean simuladorOK = simulador.executa(this.automato, this.arquivoFonte, this.fluxoTokens, this.tabelaSimbolos);
+			boolean simuladorOK = simulador.executa(this.automato, this.arquivoFonte, fluxoTokens, tabelaSimbolos);
 			fechaArquivoFonte();
 			
 			if(simuladorOK){

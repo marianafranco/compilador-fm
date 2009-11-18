@@ -14,9 +14,9 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import compilador.lexico.estruturas.AFD;
-import compilador.lexico.estruturas.Estado;
-import compilador.lexico.estruturas.Transicao;
+import compilador.estruturas.AFD;
+import compilador.estruturas.Estado;
+import compilador.estruturas.Transicao;
 
 
 public class MontaAFD {
@@ -56,8 +56,6 @@ public class MontaAFD {
 			Object result = expr.evaluate(doc, XPathConstants.NODESET);
 			NodeList nodes = (NodeList) result;
 			
-			automato.setNumEstados(nodes.getLength());
-			
 			// Adiciona cada estado no AFD
 			for (int i = 0; i < nodes.getLength(); i++) {
 				
@@ -89,11 +87,7 @@ public class MontaAFD {
 				expr = xpath.compile("./transicao");
 				result = expr.evaluate(nodes.item(i), XPathConstants.NODESET);
 				NodeList nodesTransicao = (NodeList) result;
-				
-				// Seta o número de transições existente para inicializar o 
-				// vetor de transições
-				estado.setNumTransicoes(nodesTransicao.getLength());
-				
+	
 				// Adiciona cada transição ao estado
 				for (int j = 0; j < nodesTransicao.getLength(); j++) {
 					
@@ -117,11 +111,11 @@ public class MontaAFD {
 					Transicao transicao = new Transicao(proximo, entrada);
 					
 					// Adiciona a transição ao estado
-					estado.adicionaTransicao(transicao, j);
+					estado.adicionaTransicao(transicao);
 				}
 				
 				// Adiciona o estado no automato
-				automato.adicionaEstado(estado, i);
+				automato.adicionaEstado(estado);
 				
 				//System.out.println(nodes.item(i).getNodeValue()); 
 			}

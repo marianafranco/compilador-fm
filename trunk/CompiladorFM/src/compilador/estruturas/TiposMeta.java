@@ -1,6 +1,6 @@
-package compilador.metacompilador.estruturas;
+package compilador.estruturas;
 
-public final class Tipo {
+public final class TiposMeta {
 	
 	public static final int DESCONHECIDO = 0;
 	public static final int TERM = 1;

@@ -1,4 +1,4 @@
-package compilador.lexico.estruturas;
+package compilador.estruturas;
 
 public class PalavrasReservadas {
 	

@@ -14,9 +14,9 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import compilador.metacompilador.estruturas.AFD;
-import compilador.metacompilador.estruturas.Estado;
-import compilador.metacompilador.estruturas.Transicao;
+import compilador.estruturas.AFD;
+import compilador.estruturas.Estado;
+import compilador.estruturas.Transicao;
 
 
 public class MontaAFD {

@@ -2,15 +2,15 @@ package compilador.metacompilador;
 
 import java.util.Stack;
 
-import compilador.metacompilador.estruturas.AFD;
-import compilador.metacompilador.estruturas.APE;
-import compilador.metacompilador.estruturas.Estado;
-import compilador.metacompilador.estruturas.FluxoTokens;
-import compilador.metacompilador.estruturas.PilhaEstadoSubmaquina;
-import compilador.metacompilador.estruturas.PilhaEstados;
-import compilador.metacompilador.estruturas.Tipo;
-import compilador.metacompilador.estruturas.Token;
-import compilador.metacompilador.estruturas.Transicao;
+import compilador.estruturas.AFD;
+import compilador.estruturas.APE;
+import compilador.estruturas.Estado;
+import compilador.estruturas.FluxoTokens;
+import compilador.estruturas.PilhaEstadoSubmaquina;
+import compilador.estruturas.PilhaEstados;
+import compilador.estruturas.TiposMeta;
+import compilador.estruturas.Token;
+import compilador.estruturas.Transicao;
 
 
 public class PercorreMetaAPE {
@@ -77,16 +77,16 @@ public class PercorreMetaAPE {
 			
 			switch(token.getTipo()){
 			
-			case Tipo.NTERM:
+			case TiposMeta.NTERM:
 				tokenValor = "NTERM";
 				break;
-			case Tipo.TERM:
+			case TiposMeta.TERM:
 				tokenValor = "TERM";
 				break;
-			case Tipo.ESPECIAL:
+			case TiposMeta.ESPECIAL:
 				tokenValor = token.getValor();
 				break;
-			case Tipo.DESCONHECIDO:
+			case TiposMeta.DESCONHECIDO:
 				// TODO tratar erro
 				System.out.println("[ERRO] Não tem transição com " + token.getValor());
 				return false;
@@ -116,16 +116,16 @@ public class PercorreMetaAPE {
 						token = tokensTokens.recuperaToken();
 						
 						switch (token.getTipo()){
-						case Tipo.NTERM:
+						case TiposMeta.NTERM:
 							tokenValor =  "NTERM";
 							break;
-						case Tipo.TERM:
+						case TiposMeta.TERM:
 							tokenValor = "TERM";
 							break;
-						case Tipo.ESPECIAL:
+						case TiposMeta.ESPECIAL:
 							tokenValor = token.getValor();
 							break;
-						case Tipo.DESCONHECIDO:
+						case TiposMeta.DESCONHECIDO:
 							// TODO tratar erro
 							System.out.println("[ERRO] Não tem transição com " + token.getValor());
 							return false;
@@ -173,7 +173,7 @@ public class PercorreMetaAPE {
 	private void geraAPE(APE automato, String submaquinaWirth, Token token){
 		
 		// IN
-		if(submaquinaWirth.equals("WIRTH") && token.getTipo() == Tipo.NTERM){
+		if(submaquinaWirth.equals("WIRTH") && token.getTipo() == TiposMeta.NTERM){
 			submaquina = new AFD(token.getValor());
 			this.cs = 0;
 			this.ns = 1;
@@ -183,7 +183,7 @@ public class PercorreMetaAPE {
 		}else{
 			switch(token.getTipo()){
 			// A
-			case Tipo.TERM:
+			case TiposMeta.TERM:
 				// Verifica se ja não existe o estado antes de criar
 				if(submaquina.procuraEstado(this.cs) == -1){
 					estado = new Estado(this.cs, false);
@@ -197,7 +197,7 @@ public class PercorreMetaAPE {
 				break;
 				
 			// B
-			case Tipo.NTERM:
+			case TiposMeta.NTERM:
 				// Verifica se ja não existe o estado antes de criar
 				if(submaquina.procuraEstado(this.cs) == -1){
 					estado = new Estado(this.cs, false);
@@ -210,7 +210,7 @@ public class PercorreMetaAPE {
 				this.ns ++;
 				break;
 				
-			case Tipo.ESPECIAL:
+			case TiposMeta.ESPECIAL:
 				
 				// C
 				if(token.getValor().equals("|")){

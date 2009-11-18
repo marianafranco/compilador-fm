@@ -1,6 +1,6 @@
-package compilador.lexico.estruturas;
+package compilador.estruturas;
 
-import compilador.lexico.estruturas.Simbolo;
+import compilador.estruturas.Simbolo;
 
 public class TabelaSimbolos {
 

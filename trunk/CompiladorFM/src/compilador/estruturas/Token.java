@@ -1,4 +1,4 @@
-package compilador.metacompilador.estruturas;
+package compilador.estruturas;
 
 public class Token {
 	
@@ -22,7 +22,7 @@ public class Token {
 	// Gets e Sets
 	
 	public String getValor() {
-		return valor;
+		return this.valor;
 	}
 
 	public void setValor(String valor) {
