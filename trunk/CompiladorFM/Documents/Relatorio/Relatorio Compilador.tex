@@ -90,7 +90,7 @@ breaklines=true                 % sets automatic line breaking
 \paragraph{}	% linha em branco
 
 % -- Simplificação da Gramática
-\subsection{Simplificação da Gramática}
+\subsection{Simplificação da Gramática} \label{sub:simplificacao}
 
 Para permitir a implementação do autômato de pilha estruturado, método que será utilizado para a construção do analisador sintático, a descrição em notação de Wirth mostrada anteriormente foi reduzida, agrupando os não-terminais essenciais à linguagem.
 
@@ -319,20 +319,26 @@ int a [100];
 
 
 %*******************************************
-% META-ANALISADOR
+% Descrição do analisador sintático
 %*******************************************
-\section{Meta-analisador}
+\section{Descrição do analisador sintático}
 
-Para facilitar o processo de obtenção dos autômatos, submáquinas, referentes aos não terminais de nossa linguagem, foi criado um meta-analisador que, a partir da gramática na notação de Wirth, automatiza a geração dos reconhecedores sintáticos. O desenvolvimento do meta-analisador seguiu as etapas apresentadas em \cite{metacompilador}.
+O analisador sintático consiste de um autômato de pilha estruturado criado automaticamente por um meta-analisador a partir da descrição simplificada da gramática na notação de Wirth apresentada no item \ref{sub:simplificacao}.
 
-Assim, procuramos utilizar o mesmo esquema criado para gerar o autômato na parte léxica do projeto, ou seja, primeiro descrever o autômato em XML e depois monta-lo na estrutura utilizada para sua representação dentro do compilador.
+
+% META-ANALISADOR
+\subsection{Meta-analisador}
+
+Para facilitar o processo de obtenção do autômato de pilha estruturado e de suas submáquinas, referentes aos não-terminais de nossa linguagem, foi criado um meta-analisador que, a partir da gramática na notação de Wirth, automatiza a geração do reconhecedor sintático. O desenvolvimento do meta-analisador seguiu as etapas apresentadas em \cite{metacompilador}.
+
+Assim, no desenvolvimento do meta-analisador, procuramos utilizar o mesmo esquema criado para gerar o autômato na parte léxica do projeto, ou seja, primeiro descrever o autômato em XML e depois monta-lo na estrutura utilizada para sua representação dentro do compilador.
 
 Algumas modificações foram feitas no XML de entrada e na estrutura utilizada para representar o autômato.
 
 % XML
-\subsection{XML}
+\subsubsection{XML}
 
-Para conseguir representar o autômato de pilha estruturado, representativo da gramática de wirth, constituido das submáquinas WIRTH e EXPR, utilizamos a seguinte estrutura:
+Para conseguir representar o autômato de pilha estruturado representativo da gramática de Wirth, constituído das submáquinas WIRTH e EXPR, utilizamos a seguinte estrutura:
 
 \begin{verbbox}
 <gramatica>
@@ -356,16 +362,20 @@ Para conseguir representar o autômato de pilha estruturado, representativo da gr
 \begin{figure}[!h]
 \centering 
 \theverbbox[t]\\
-\caption{Estrutura do autômato da gramática de Wirth descrito em XML \label{xml}}
+\caption{Estrutura em XML do autômato da gramática de Wirth} 
+\label{xml_metacompilador}
 \end{figure}
 \end{center}
 
+Assim, através dessa estrutura, definimos no arquivo \textbf{metacompilador.xml} as duas submáquinas WIRTH e EXPR, responsável pelo reconhecimento das gramáticas em notação de Wirth.
+
+
 % Estrutura do autômato
-\subsection{Estrutura do autômato}
+\subsubsection{Estrutura do autômato}
 
 Além das estruturas já apresentadas no item \ref{subsub:estrutura}, criamos uma classe APE (Autômato de Pilha Estruturado), que armazena a lista de submáquinas descritas pela classe AFD (Autômato Finito Determinístico).
 
-Assim, quando a classe responsável por montar o autômato, MontaMetaAPE, 
+Assim, quando a classe responsável por montar o autômato, MontaMetaAPE,  
 
 
 
