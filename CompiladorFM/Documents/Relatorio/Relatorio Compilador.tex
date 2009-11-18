@@ -9,7 +9,7 @@
 \usepackage{indentfirst} % primeiro parágrado indendado
 \usepackage{listings}	 % para colocar código fonte
 \usepackage{verbatimbox}
-
+\usepackage[pdftex,a4paper]{hyperref} % para criar links no pdf
 
 \title{PCS2056 - Linguagens e Compiladores\\Compilador FM} 
 \author{Felipe Giunte Yoshida N$^o$USP 4978231\\Mariana Ramos Franco N$^o$USP 5179364} 
@@ -182,7 +182,7 @@ Tag \emph{tipo} & Significado\\
 
 No exemplo da figura \ref{xml}, é mostrado apenas um estado, inicial, que não finaliza tokens. Ao receber um número, há uma transição para o estado 1, que não é mostrado.
 
-\subsubsection{Estrutura do autômato}
+\subsubsection{Estrutura do autômato} \label{subsub:estrutura}
 
 Podemos ver na figura \ref{classes_afd} o diagrama de classes da estrutura em qual o autômato do arquivo XML é transformado. Temos basicamente três classes: AFD (autômatos), Estado e Transição. Iremos descrever a partir de agora cada uma destas classes, seus métodos e atributos. Como os \emph{gets} e \emph{sets} não necessitam de explicação, serão ignorados.
 
@@ -300,7 +300,7 @@ flut d = 3.21;
 123b
 b123
 int a [100];
-$
+
 \end{verbbox}
 \begin{center}
 \begin{figure}[!h]
@@ -313,6 +313,59 @@ $
 \subsubsection{Resultado}
 
 \lstinputlisting[label=resultado]{TesteLexico.txt}
+
+
+\paragraph{}  % linha em branco
+
+
+%*******************************************
+% META-ANALISADOR
+%*******************************************
+\section{Meta-analisador}
+
+Para facilitar o processo de obtenção dos autômatos, submáquinas, referentes aos não terminais de nossa linguagem, foi criado um meta-analisador que, a partir da gramática na notação de Wirth, automatiza a geração dos reconhecedores sintáticos. O desenvolvimento do meta-analisador seguiu as etapas apresentadas em \cite{metacompilador}.
+
+Assim, procuramos utilizar o mesmo esquema criado para gerar o autômato na parte léxica do projeto, ou seja, primeiro descrever o autômato em XML e depois monta-lo na estrutura utilizada para sua representação dentro do compilador.
+
+Algumas modificações foram feitas no XML de entrada e na estrutura utilizada para representar o autômato.
+
+% XML
+\subsection{XML}
+
+Para conseguir representar o autômato de pilha estruturado, representativo da gramática de wirth, constituido das submáquinas WIRTH e EXPR, utilizamos a seguinte estrutura:
+
+\begin{verbbox}
+<gramatica>
+	 <nterminal>
+	 	<nome>WIRTH</nome>
+	    <estado>
+          <id>0</id>
+          <final>false</final>
+          <transicao>
+              <entradas>NTERM</entradas>
+              <proximo>2</proximo>
+          </transicao>
+          [Outras transições]
+     	</estado>
+     	[Outros estados]
+     </nterminal>
+     [Outros não-terminais]
+</gramatica>
+\end{verbbox}
+\begin{center}
+\begin{figure}[!h]
+\centering 
+\theverbbox[t]\\
+\caption{Estrutura do autômato da gramática de Wirth descrito em XML \label{xml}}
+\end{figure}
+\end{center}
+
+% Estrutura do autômato
+\subsection{Estrutura do autômato}
+
+Além das estruturas já apresentadas no item \ref{subsub:estrutura}, criamos uma classe APE (Autômato de Pilha Estruturado), que armazena a lista de submáquinas descritas pela classe AFD (Autômato Finito Determinístico).
+
+Assim, quando a classe responsável por montar o autômato, MontaMetaAPE, 
 
 
 
@@ -374,6 +427,8 @@ $
 \emph{Compiladores: Princípios, técnicas e ferramentas}, 
 2$^{a}$ edição, Pearson, 2008
 
+\bibitem{metacompilador} Neto, J. J., Parientem C. B., Leonardi F.: \emph{Compiler Construction: A Pedagogical Approach}. Proceedings of the
+ICIE. Buenos Aires. 1999. [disponível para download em www.pcs.usp.br/~lta]
 \end{thebibliography}
 
 \end{document} 
