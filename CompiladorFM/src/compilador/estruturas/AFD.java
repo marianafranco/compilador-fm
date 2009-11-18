@@ -1,8 +1,8 @@
-package compilador.metacompilador.estruturas;
+package compilador.estruturas;
 
 import java.util.Vector;
 
-import compilador.metacompilador.estruturas.Estado;
+import compilador.estruturas.Estado;
 import compilador.exceptions.CaractereInvalidoException;
 
 public class AFD {

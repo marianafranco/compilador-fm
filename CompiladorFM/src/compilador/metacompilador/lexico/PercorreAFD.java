@@ -3,8 +3,8 @@ package compilador.metacompilador.lexico;
 import java.io.FileReader;
 import java.io.IOException;
 
-import compilador.metacompilador.estruturas.FluxoTokens;
-import compilador.metacompilador.estruturas.AFD;
+import compilador.estruturas.FluxoTokens;
+import compilador.estruturas.AFD;
 
 public class PercorreAFD {
 

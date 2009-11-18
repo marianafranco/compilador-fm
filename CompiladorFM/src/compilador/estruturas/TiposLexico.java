@@ -1,6 +1,6 @@
-package compilador.lexico.estruturas;
+package compilador.estruturas;
 
-public final class Tipo {
+public final class TiposLexico {
 	
 	public static final int DESCONHECIDO = 0;
 	public static final int NUMERO = 1;

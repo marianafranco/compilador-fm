@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.FileReader;
 import java.io.Reader;
 
-import compilador.metacompilador.estruturas.APE;
+import compilador.estruturas.APE;
 import compilador.metacompilador.lexico.Lexico;
 import compilador.exceptions.ArquivoNaoEcontradoException;
 

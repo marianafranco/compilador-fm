@@ -6,8 +6,8 @@ import java.io.FileReader;
 import java.io.Reader;
 
 import compilador.exceptions.ArquivoNaoEcontradoException;
-import compilador.metacompilador.estruturas.AFD;
-import compilador.metacompilador.estruturas.FluxoTokens;
+import compilador.estruturas.AFD;
+import compilador.estruturas.FluxoTokens;
 
 
 public class Lexico {

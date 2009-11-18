@@ -1,8 +1,8 @@
-package compilador.metacompilador.estruturas;
+package compilador.estruturas;
 
 import java.util.LinkedList;
 
-import compilador.metacompilador.estruturas.Token;
+import compilador.estruturas.Token;
 
 public class FluxoTokens {
 	

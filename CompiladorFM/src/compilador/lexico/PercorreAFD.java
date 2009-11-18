@@ -3,11 +3,11 @@ package compilador.lexico;
 import java.io.IOException;
 import java.io.Reader;
 
-import compilador.lexico.estruturas.AFD;
-import compilador.lexico.estruturas.FluxoTokens;
-import compilador.lexico.estruturas.TabelaSimbolos;
-import compilador.lexico.estruturas.Tipo;
-import compilador.lexico.estruturas.PalavrasReservadas;
+import compilador.estruturas.AFD;
+import compilador.estruturas.FluxoTokens;
+import compilador.estruturas.PalavrasReservadas;
+import compilador.estruturas.TabelaSimbolos;
+import compilador.estruturas.TiposLexico;
 
 public class PercorreAFD {
 
@@ -108,11 +108,11 @@ public class PercorreAFD {
 		//System.out.println("TOKEN = " + token);
 		
 		// Caso seja um numero ou um caracter, nao e necessaria uma entrada na tabela
-		if (tipo == Tipo.NUMERO || tipo == Tipo.ESPECIAL) {
+		if (tipo == TiposLexico.NUMERO || tipo == TiposLexico.ESPECIAL) {
 			tokensTokens.adicionaToken(token, -1);
 		}
 		// Se for uma string, talvez colocamos na tabela
-		else if (tipo == Tipo.NOME) {
+		else if (tipo == TiposLexico.NOME) {
 			
 			PalavrasReservadas temp = new PalavrasReservadas();
 			

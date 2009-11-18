@@ -1,8 +1,8 @@
-package compilador.metacompilador.estruturas;
+package compilador.estruturas;
 
 import java.util.Vector;
 
-import compilador.metacompilador.estruturas.Transicao;
+import compilador.estruturas.Transicao;
 
 public class Estado {
 	

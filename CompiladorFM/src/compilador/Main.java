@@ -3,13 +3,16 @@ package compilador;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import compilador.estruturas.FluxoTokens;
+import compilador.estruturas.TabelaSimbolos;
 import compilador.lexico.Lexico;
 import compilador.metacompilador.MetaCompilador;
-import compilador.metacompilador.estruturas.APE;
+import compilador.estruturas.APE;
+import compilador.semantico.PercorreAPE;
 
 public class Main {
 
-	private static int debug = 1;
+	private static int debug = 1;	
 	
 	
 	/**
@@ -29,12 +32,19 @@ public class Main {
 			String codFonte = args[0];
 			
 			try{
+				TabelaSimbolos tabelaSimbolos = new TabelaSimbolos();
+				FluxoTokens fluxoTokens = new FluxoTokens();
+				
 				APE newAutomato = new APE();
 				MetaCompilador meta = new MetaCompilador();
 				meta.executa(newAutomato);
 				
-				//Lexico lex = new Lexico(codFonte);
-				//lex.executa();
+				Lexico lex = new Lexico(codFonte);
+				lex.executa(tabelaSimbolos, fluxoTokens);
+				
+				PercorreAPE gerador = new PercorreAPE();
+				gerador.geraCodigo(newAutomato, fluxoTokens);
+				
 			}catch(Exception e){
 				//e.printStackTrace();
 			}

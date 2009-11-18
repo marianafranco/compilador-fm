@@ -1,4 +1,4 @@
-package compilador.metacompilador.estruturas;
+package compilador.estruturas;
 
 import java.util.Vector;
 
