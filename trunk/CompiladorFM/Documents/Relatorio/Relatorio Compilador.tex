@@ -329,18 +329,22 @@ O analisador sintático consiste de um autômato de pilha estruturado criado autom
 % META-ANALISADOR
 \subsection{Meta-analisador}
 
-Para facilitar o processo de obtenção do autômato de pilha estruturado e de suas submáquinas, referentes aos não-terminais de nossa linguagem, foi criado um meta-analisador que, a partir da gramática na notação de Wirth, automatiza a geração do reconhecedor sintático. O desenvolvimento do meta-analisador seguiu as etapas apresentadas em \cite{metacompilador}.
+Para facilitar o processo de obtenção do autômato de pilha estruturado e de suas submáquinas, referentes aos não-terminais de nossa linguagem, foi criado um meta-analisador que, a partir da gramática na notação de Wirth, automatiza a geração do reconhecedor sintático. O desenvolvimento do meta-analisador seguiu as etapas apresentadas em \cite{metacompilador} .
 
 Assim, no desenvolvimento do meta-analisador, procuramos utilizar o mesmo esquema criado para gerar o autômato na parte léxica do projeto, ou seja, primeiro descrever o autômato em XML e depois monta-lo na estrutura utilizada para sua representação dentro do compilador.
 
 Algumas modificações foram feitas no XML de entrada e na estrutura utilizada para representar o autômato.
 
+% MONTAGEM DO META-ANALISADOR
+\subsection{Montagem do meta-analisador}
+
 % XML
 \subsubsection{XML}
 
-Para conseguir representar o autômato de pilha estruturado representativo da gramática de Wirth, constituído das submáquinas WIRTH e EXPR, utilizamos a seguinte estrutura:
+Para conseguir representar o autômato de pilha estruturado representativo da gramática de Wirth, constituído das submáquinas WIRTH e EXPR, utilizamos a estrutura XML apresentada à seguir:
 
-\begin{verbbox}
+\lstset{language=XML}
+\begin{lstlisting}
 <gramatica>
 	 <nterminal>
 	 	<nome>WIRTH</nome>
@@ -357,17 +361,28 @@ Para conseguir representar o autômato de pilha estruturado representativo da gra
      </nterminal>
      [Outros não-terminais]
 </gramatica>
-\end{verbbox}
-\begin{center}
-\begin{figure}[!h]
-\centering 
-\theverbbox[t]\\
-\caption{Estrutura em XML do autômato da gramática de Wirth} 
-\label{xml_metacompilador}
-\end{figure}
-\end{center}
+\end{lstlisting}
+
 
 Assim, através dessa estrutura, definimos no arquivo \textbf{metacompilador.xml} as duas submáquinas WIRTH e EXPR, responsável pelo reconhecimento das gramáticas em notação de Wirth.
+
+
+\begin{figure}[ht]
+	\begin{center}
+		\includegraphics[scale=0.50]{fig_wirth.png}
+		\caption{Submáquina WIRTH}
+		\label{fig:wirth}
+	\end{center}
+\end{figure}
+
+
+\begin{figure}[ht]
+	\begin{center}
+		\includegraphics[scale=0.50]{fig_expr.png}
+		\caption{Submáquina EXPR}
+		\label{fig:expr}
+	\end{center}
+\end{figure}
 
 
 % Estrutura do autômato
