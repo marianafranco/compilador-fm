@@ -4,6 +4,7 @@ import java.util.Stack;
 import compilador.estruturas.PilhaEstados;
 import compilador.estruturas.APE;
 import compilador.estruturas.FluxoTokens;
+import compilador.estruturas.TiposMeta;
 import compilador.estruturas.Token;
 import compilador.estruturas.PilhaEstadoSubmaquina;
 import compilador.estruturas.AFD;
@@ -71,19 +72,16 @@ public class PercorreAPE {
 			
 			switch(token.getTipo()){
 			
-			case TiposLexico.NUMERO:
-				tokenValor = "NUMERO";
+			case TiposMeta.NTERM:
+				tokenValor = "NTERM";
 				break;
-			case TiposLexico.NOME:
-				tokenValor = "NOME";
+			case TiposMeta.TERM:
+				tokenValor = "TERM";
 				break;
-			case TiposLexico.ESPECIAL:
+			case TiposMeta.ESPECIAL:
 				tokenValor = token.getValor();
 				break;
-			case TiposLexico.COMENTARIO:
-				tokenValor = "NOME";
-				break;
-			case TiposLexico.DESCONHECIDO:
+			case TiposMeta.DESCONHECIDO:
 				// TODO tratar erro
 				System.out.println("[ERRO] Não tem transição com " + token.getValor());
 				return false;
