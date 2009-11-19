@@ -21,6 +21,14 @@ public class Simbolo {
 		return this.id;
 	}
 	
+	public int getTipo () {
+		return this.tipo;
+	}
+	
+	public String getNome () {
+		return this.nome;
+	}
+	
 	public Simbolo getproximo () {
 		return this.proximo;
 	}

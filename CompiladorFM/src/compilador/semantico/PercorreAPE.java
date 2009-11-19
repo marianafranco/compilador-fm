@@ -6,6 +6,8 @@ import compilador.estruturas.APE;
 import compilador.estruturas.FluxoTokens;
 import compilador.estruturas.Token;
 import compilador.estruturas.PilhaEstadoSubmaquina;
+import compilador.estruturas.AFD;
+import compilador.estruturas.TiposLexico;
 
 public class PercorreAPE {
 	
@@ -22,7 +24,6 @@ public class PercorreAPE {
 	public boolean geraCodigo(APE automato, FluxoTokens tokensTokens) {
 		
 		Token token;
-		Token proxToken;
 		
 		Stack pilha = new Stack<PilhaEstadoSubmaquina>();
 		
@@ -32,55 +33,36 @@ public class PercorreAPE {
 		
 		token = tokensTokens.recuperaToken();
 		
-		
-		// Tirar
-		return true;
-	}
-	
-}
-
-/*
-import compilador.metacompilador.estruturas.AFD;
-import compilador.metacompilador.estruturas.Estado;
-import compilador.metacompilador.estruturas.Tipo;
-import compilador.metacompilador.estruturas.Transicao;
-
-	private AFD submaquina;		
-	private Estado estado;
-	
-	public boolean executa(APE automato, FluxoTokens tokensTokens, APE newAutomato){
-		
-		token = tokensTokens.recuperaToken();
-		
-		AFD wirth = automato.getSubmaquina("WIRTH");
-		AFD expr = automato.getSubmaquina("EXPR");
+		AFD progr = automato.getSubmaquina("programa");
+		AFD comando = automato.getSubmaquina("comando");
+		AFD expr = automato.getSubmaquina("expressao");
 		
 		AFD submaquina;
 		String tokenValor = "";
 		PilhaEstadoSubmaquina conteudoPilha; 
-		AFD newSubmaquina = new AFD();	// usada para a criação do novo APE
 		
 		// Inicializa pilha
-		pilha.push(new PilhaEstadoSubmaquina(0, "WIRTH"));
+		pilha.push(new PilhaEstadoSubmaquina(0, "programa"));
 		
 		// Enquanto não chegamos ao final dos tokens
 		while(tokensTokens.getTamanho() >= 0 && !pilha.empty()){
-			//proxToken = tokensTokens.recuperaToken();
 			
 			conteudoPilha = (PilhaEstadoSubmaquina) pilha.pop();
-			//System.out.println("pilha: (" + conteudoPilha.getEstado() + ", " + conteudoPilha.getSubmaquina() + ")");
-			//System.out.println("token " + token.getValor());
 			
-			// se autômato WIRTH
-			if(conteudoPilha.getSubmaquina().equals("WIRTH")){
-				submaquina = wirth;
+			// se autômato PROGR
+			if(conteudoPilha.getSubmaquina().equals("programa")){
+				submaquina = progr;
 				
-			// se autômato EXPR
-			}else if(conteudoPilha.getSubmaquina().equals("EXPR")){
+			// se autômato COMANDO
+			}else if(conteudoPilha.getSubmaquina().equals("comando")){
+				submaquina = comando;
+				
+			}// se autômato EXPR
+			else if(conteudoPilha.getSubmaquina().equals("expressao")){
 				submaquina = expr;
-				
 			// se não é WIRTH nem EXPR -> ERRO
-			}else{
+			}
+			else{
 				// TODO Acrescentar mensagem de erro 
 				return false;
 			}
@@ -89,16 +71,19 @@ import compilador.metacompilador.estruturas.Transicao;
 			
 			switch(token.getTipo()){
 			
-			case Tipo.NTERM:
-				tokenValor = "NTERM";
+			case TiposLexico.NUMERO:
+				tokenValor = "NUMERO";
 				break;
-			case Tipo.TERM:
-				tokenValor = "TERM";
+			case TiposLexico.NOME:
+				tokenValor = "NOME";
 				break;
-			case Tipo.ESPECIAL:
+			case TiposLexico.ESPECIAL:
 				tokenValor = token.getValor();
 				break;
-			case Tipo.DESCONHECIDO:
+			case TiposLexico.COMENTARIO:
+				tokenValor = "NOME";
+				break;
+			case TiposLexico.DESCONHECIDO:
 				// TODO tratar erro
 				System.out.println("[ERRO] Não tem transição com " + token.getValor());
 				return false;
@@ -107,7 +92,7 @@ import compilador.metacompilador.estruturas.Transicao;
 			if(submaquina.temTransicao(tokenValor)){
 				
 				// Gerar as transições no AFD
-				geraAPE(newAutomato, conteudoPilha.getSubmaquina(), token);
+				//geraAPE(newAutomato, conteudoPilha.getSubmaquina(), token);
 				
 				submaquina.percorre(tokenValor);
 				
@@ -116,7 +101,6 @@ import compilador.metacompilador.estruturas.Transicao;
 					// senão atualiza topo com o novo estado
 					conteudoPilha.setEstado(submaquina.getEstadoAtivo());
 					pilha.push(new PilhaEstadoSubmaquina(conteudoPilha.getEstado(), conteudoPilha.getSubmaquina()));
-					//System.out.println("empilha: (" + conteudoPilha.getEstado() + ", " + conteudoPilha.getSubmaquina() + ")");
 					
 					if(tokensTokens.getTamanho() > 0){
 						token = tokensTokens.recuperaToken();
@@ -127,35 +111,32 @@ import compilador.metacompilador.estruturas.Transicao;
 					if(tokensTokens.getTamanho() > 0){
 						token = tokensTokens.recuperaToken();
 						
-						switch (token.getTipo()){
-						case Tipo.NTERM:
+				/*		switch (token.getTipo()){
+						case TiposLexico.NTERM:
 							tokenValor =  "NTERM";
 							break;
-						case Tipo.TERM:
+						case TiposLexico.TERM:
 							tokenValor = "TERM";
 							break;
-						case Tipo.ESPECIAL:
+						case TiposLexico.ESPECIAL:
 							tokenValor = token.getValor();
 							break;
-						case Tipo.DESCONHECIDO:
+						case TiposLexico.DESCONHECIDO:
 							// TODO tratar erro
 							System.out.println("[ERRO] Não tem transição com " + token.getValor());
 							return false;
-						}
+						}*/
 						
 						// Se existir transição com o próximo, reempilha o estado atual
 						if(expr.temTransicao(tokenValor)){
 							conteudoPilha.setEstado(expr.getEstadoAtivo());
 							pilha.push(new PilhaEstadoSubmaquina(conteudoPilha.getEstado(), conteudoPilha.getSubmaquina()));
-							//System.out.println("empilha: (" + conteudoPilha.getEstado() + ", " + conteudoPilha.getSubmaquina() + ")");
 						
 						// Senão, reincializa a pilha se pilha vazia  
 						}else{
 							if(pilha.empty()){
 								pilha.push(new PilhaEstadoSubmaquina(0, "WIRTH"));
-								//System.out.println("empilha: (" + conteudoPilha.getEstado() + ", " + conteudoPilha.getSubmaquina() + ")");
 							}else{
-								//System.out.println("entrou no final sem transição com o proximo");
 							}
 						}
 					}
@@ -166,9 +147,7 @@ import compilador.metacompilador.estruturas.Transicao;
 				submaquina.percorre("EXPR");
 				conteudoPilha.setEstado(submaquina.getEstadoAtivo());
 				pilha.push(new PilhaEstadoSubmaquina(conteudoPilha.getEstado(), conteudoPilha.getSubmaquina()));
-				//System.out.println("empilha: (" + conteudoPilha.getEstado() + ", " + conteudoPilha.getSubmaquina() + ")");
 				pilha.push(new PilhaEstadoSubmaquina(0, "EXPR"));
-				//System.out.println("empilha: (" + conteudoPilha.getEstado() + ", " + conteudoPilha.getSubmaquina() + ")");
 				
 			}else{
 				// TODO tratar erro
@@ -177,8 +156,25 @@ import compilador.metacompilador.estruturas.Transicao;
 			}
 			
 		}
-		
+			
+		System.out.println("OK!!!");
 		return true;
+	}
+	
+}
+
+/*
+import compilador.metacompilador.estruturas.Estado;
+import compilador.metacompilador.estruturas.Transicao;
+
+	private AFD submaquina;		
+	private Estado estado;
+	
+	public boolean executa(APE automato, FluxoTokens tokensTokens, APE newAutomato){
+	
+		Token proxToken;	
+		AFD newSubmaquina = new AFD();	// usada para a criação do novo APE
+	
 	}
 	
 	
