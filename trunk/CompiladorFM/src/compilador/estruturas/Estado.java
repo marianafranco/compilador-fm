@@ -29,6 +29,17 @@ public class Estado {
 		this.transicoes.add(nova);
 	}
 	
+	
+	public void removeTransicao(int i){
+		this.transicoes.remove(i);	
+	}
+	
+	
+	public void removeTransicao(Transicao trans){
+		this.transicoes.remove(trans);
+	}
+	
+	
 	public int proximoEstado (char entrada) {
 		int proximo = -1;
 		

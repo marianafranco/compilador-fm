@@ -1,14 +1,66 @@
-ClassBase = { ClassDefn }.
-ClassDefn = "class" ClassName "(" [ ClassName { "," ClassName } ] ")" "extends" ClassName [ "{" { PropDefn } { MethodDefn } "}" ] [ "is" ClassMod { "and" ClassMod } ].
-ClassMod = "final" | "saturated" | "abstract".
-PropDefn = ClassName PropName ";".
-MethodDefn = "method" MethodName "(" [ ParamDecl { "," ParamDecl } ] ")" ( "{" { Assignment } Continue "}" | "is" "abstract" ).
-ParamDecl = ClassName PropName.
-Assignment = QualName "=" Expr ";".
-Continue = "goto" PropName "." MethodName "(" [ Expr { "," Expr } ] ")" ";".
-Expr = ConstrExpr | QualName.
-ConstrExpr = "new" ( ClassName | Constant ) "(" [ ClassName { "," ClassName } ] ")".
-QualName = PropName { "." PropName }.
-ClassName = Id | Constant.
-MethodName = Id | Constant.
-PropName = Id | Constant.
+
+programa = { "estrut" 
+           "{" tipo identificador [ "[" numero "]" ] ";" 
+           { tipo identificador [ "[" numero "]" ] ";" } "}" }
+           { tipo identificador 
+		   "(" [ tipo identificador [ "[" numero "]" ] 
+		   { "," tipo identificador [ "[" numero "]" ] } ] ")"
+		   "{" {comando} 
+		   "retorno" ( identificador [ "[" ( numero | expressao ) "]" ] 
+		   | expressao | numero | """ seq_caracteres """ 
+		   | booleano ) ";" "}" }
+		   "principal" "(" [ tipo identificador [ "[" numero "]" ]
+		   { "," tipo identificador [ "[" numero "]" ] } ] ")"
+		   "{" {comando} "}" .
+		   
+		   
+comando = [ 
+		  tipo identificador [ "[" numero "]" ] ";" 
+		  | 
+		  identificador [ "[" ( numero | expressao ) "]" ]  "=" 
+		  ( expressao | """ seq_caracteres """ | booleano )";" 
+		  | 
+	  	  "enquanto" 
+	  	  "(" expressao (">" | "<" | ">=" | "<=" | "==" | "!=") 
+	  	  expressao ")" "{" { comando } "}"
+		  | 
+		  "se" "(" expressao (">" | "<" | ">=" | "<=" | "==" | "!=") 
+		  expressao ")" "{" { comando } "}" 
+		  [ "senao" "{" { comando } "}" ] 
+		  | 
+		  identificador "(" [ expressao {"," expressao} ] ")" ";" 
+		  | 
+		  "entrada" ">>" identificador 
+		  [ "[" ( numero | expressao ) "]" ] ";" 
+		  | 
+		  "saida" "<<" ( expressao | """ seq_caracteres """ )";" 
+		  ] .
+
+
+expressao = ( identificador [ "[" ( numero | expressao ) "]" ] 
+			| identificador "(" 
+			[ ( expressao | """ seq_caracteres """ | booleano ) 
+			{"," ( expressao | """ seq_caracteres """ 
+			| booleano ) } ] ")" 
+			| numero | "(" expressao ")" ) 
+			{ ( "*" | "/" ) 
+			( identificador [ "[" ( numero | expressao ) "]" ] 
+			| identificador "(" 
+			[ ( expressao | """ seq_caracteres """ | booleano ) 
+			{"," ( expressao | """ seq_caracteres """ 
+			| booleano ) } ] ")" 
+			| numero | "(" expressao ")" ) } 
+			{ ( "+" | "-" ) 
+			( identificador [ "[" ( numero | expressao ) "]" ] 
+			| identificador "(" 
+			[ ( expressao | """ seq_caracteres """ | booleano ) 
+			{"," ( expressao | """ seq_caracteres """ 
+			| booleano ) } ] ")" 
+			| numero | "(" expressao ")" ) 
+			{ ( "*" | "/" ) 
+			( identificador [ "[" ( numero | expressao ) "]" ] 
+			| identificador "(" 
+			[ ( expressao | """ seq_caracteres """ | booleano ) 
+			{"," ( expressao | """ seq_caracteres """ 
+			| booleano ) } ] ")" 
+			| numero | "(" expressao ")" ) } } .

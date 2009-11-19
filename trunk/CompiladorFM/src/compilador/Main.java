@@ -38,12 +38,13 @@ public class Main {
 				APE newAutomato = new APE();
 				MetaCompilador meta = new MetaCompilador();
 				meta.executa(newAutomato);
+				newAutomato.imprime();
 				
 				Lexico lex = new Lexico(codFonte);
 				lex.executa(tabelaSimbolos, fluxoTokens);
 				
-				PercorreAPE gerador = new PercorreAPE();
-				gerador.geraCodigo(newAutomato, fluxoTokens);
+				//PercorreAPE gerador = new PercorreAPE();
+				//gerador.geraCodigo(newAutomato, fluxoTokens);
 				
 			}catch(Exception e){
 				//e.printStackTrace();
