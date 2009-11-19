@@ -13,7 +13,7 @@
 			<proximo>3</proximo>
 		</transicao>
 		<transicao>
-			<entradas>abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789</entradas>
+			<entradas>abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_</entradas>
 			<proximo>4</proximo>
 		</transicao>
 	</estado>
@@ -23,11 +23,28 @@
 		<tipo>0</tipo>
 		<transicao>
 			<entradas>abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789</entradas>
-			<proximo>1</proximo>
+			<proximo>5</proximo>
+		</transicao>
+		<transicao>
+			<entradas>!@#$%*()_+-={}[];.,/?\|&lt;&gt;&amp;_</entradas>
+			<proximo>5</proximo>
+		</transicao>
+		<transicao>
+			<entradas>"</entradas>
+			<proximo>5</proximo>
+		</transicao>
+	</estado>
+	<estado>
+		<id>5</id>
+		<final>false</final>
+		<tipo>0</tipo>
+		<transicao>
+			<entradas>abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789</entradas>
+			<proximo>5</proximo>
 		</transicao>
 		<transicao>
 			<entradas>!@#$%*()_+-={}[];.,/?\|&lt;&gt;&amp;</entradas>
-			<proximo>1</proximo>
+			<proximo>5</proximo>
 		</transicao>
 		<transicao>
 			<entradas>"</entradas>
@@ -49,7 +66,7 @@
 		<final>true</final>
 		<tipo>3</tipo>
 		<transicao>
-			<entradas>abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789</entradas>
+			<entradas>abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_</entradas>
 			<proximo>4</proximo>
 		</transicao>
 	</estado>

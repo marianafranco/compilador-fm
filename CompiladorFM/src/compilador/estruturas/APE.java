@@ -23,6 +23,7 @@ public class APE {
 		return null;
 	}
 	
+	// Imprime as submáquinas, seus estados e transições
 	public void imprime(){
 		for(int i=0 ; i < this.submaquinas.size(); i++){
 			AFD submaquina = this.submaquinas.get(i);
@@ -45,7 +46,33 @@ public class APE {
 					System.out.println();
 				}
 			}
+		}
+	}
+	
+	// Minimiza o autômato retirando as transições em vazio
+	void minimiza(){
+		for(int i=0 ; i < this.submaquinas.size(); i++){
+			AFD submaquina = this.submaquinas.get(i);
 			
+			for(int j=0; j < submaquina.getTamanho(); j++){
+				Estado estado = submaquina.getEstadoIndice(j);
+				
+				for(int k=0; k < estado.getTamanho(); k++){
+					
+					// Se transição vazia
+					if(estado.getTransicao(k).getEntrada().toString().equals("e")){
+						
+						estado.removeTransicao(k);
+						Estado proximoEstado = submaquina.getEstadoIndice(estado.getTransicao(k).getProximo());
+						
+						while(proximoEstado.proximoEstado("e")!= -1){
+							
+							
+							proximoEstado = submaquina.getEstado(proximoEstado.proximoEstado("e"));
+						}
+					}
+				}
+			}
 		}
 	}
 	
