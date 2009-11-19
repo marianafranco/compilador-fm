@@ -22,8 +22,8 @@ public class Lexico {
 	private MontaAFD montador;
 	private PercorreAFD simulador;
 	
-	private TabelaSimbolos tabelaSimbolos;
-	private FluxoTokens fluxoTokens;
+	//private TabelaSimbolos tabelaSimbolos;
+	//private FluxoTokens fluxoTokens;
 	
 	
 	
@@ -53,18 +53,18 @@ public class Lexico {
 			
 			if(simuladorOK){
 				/*System.out.println("[INFO] Automato executado com sucesso");
-				Token temp = this.fluxoTokens.recuperaToken();
+				Token temp = fluxoTokens.recuperaToken();
 				while (temp != null) {
-					System.out.println("Token: " + temp.getValor() + ", id: " + temp.getIndice());
-					temp = this.fluxoTokens.recuperaToken();
+					System.out.println("Token: " + temp.getValor() + ", id: " + temp.getTipo());
+					temp = fluxoTokens.recuperaToken();
 				}
 				System.out.println("[INFO] Automato executado com sucesso");
 				int i = 1;
-				Simbolo temp2 = this.tabelaSimbolos.recuperaEntrada(i);
+				Simbolo temp2 = tabelaSimbolos.recuperaEntrada(i);
 				while (temp2 != null) {
 					i++;
-					System.out.println("Id: " + temp2.getId());
-					temp2 = this.tabelaSimbolos.recuperaEntrada(i);
+					System.out.println("Id: " + temp2.getId() + ", tipo: " + temp2.getTipo());
+					temp2 = tabelaSimbolos.recuperaEntrada(i);
 				}*/
 				return true;
 			}else{

@@ -49,8 +49,8 @@ public class MetaCompilador {
 					// Simula o Automato de Pilha Estruturado
 					boolean simuladorOK = simulador.executa(this.automato, lex.getFluxoTokens(), newAutomato);
 					
-					System.out.println("## Automato ##");
-					newAutomato.imprime();
+					//System.out.println("## Automato ##");
+					//newAutomato.imprime();
 					
 					if(simuladorOK){
 						return true;
