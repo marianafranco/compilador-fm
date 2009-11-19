@@ -321,7 +321,7 @@ int a [100];
 %*******************************************
 % Descrição do analisador sintático
 %*******************************************
-\section{Descrição do analisador sintático}
+\section{Projeto do analisador sintático}
 
 O analisador sintático consiste de um autômato de pilha estruturado criado automaticamente por um meta-analisador a partir da descrição simplificada da gramática na notação de Wirth apresentada no item \ref{sub:simplificacao}.
 
@@ -329,7 +329,7 @@ O analisador sintático consiste de um autômato de pilha estruturado criado autom
 % META-ANALISADOR
 \subsection{Meta-analisador}
 
-Para facilitar o processo de obtenção do autômato de pilha estruturado e de suas submáquinas, referentes aos não-terminais de nossa linguagem, foi criado um meta-analisador que, a partir da gramática na notação de Wirth, automatiza a geração do reconhecedor sintático. O desenvolvimento do meta-analisador seguiu as etapas apresentadas em \cite{metacompilador} .
+Para facilitar o processo de obtenção do autômato de pilha estruturado e de suas submáquinas, referentes aos não-terminais de nossa linguagem, foi criado um meta-analisador que, a partir da gramática na notação de Wirth, automatiza a geração do reconhecedor sintático. O desenvolvimento do meta-analisador seguiu o método apresentado em \cite{metacompilador} .
 
 Assim, no desenvolvimento do meta-analisador, procuramos utilizar o mesmo esquema criado para gerar o autômato na parte léxica do projeto, ou seja, primeiro descrever o autômato em XML e depois monta-lo na estrutura utilizada para sua representação dentro do compilador.
 
@@ -390,11 +390,16 @@ Assim, através dessa estrutura, definimos no arquivo \textbf{metacompilador.xml}
 
 Além das estruturas já apresentadas no item \ref{subsub:estrutura}, criamos uma classe APE (Autômato de Pilha Estruturado), que armazena a lista de submáquinas descritas pela classe AFD (Autômato Finito Determinístico).
 
-Assim, quando a classe responsável por montar o autômato, MontaMetaAPE,  
+Assim, a clase MontaMetaAPE, a partir do XML mostrado no item anterior, cria para cada não-terminal (WIRTH e EXPR) uma submáquina através da classe AFD, e ao final, estas submáquinas são adicionadas à um objeto da classe APE. 
 
+% SIMULAÇÂO DO AUTÔMATO
+\subsection{Simulação do autômato}
 
+% Léxico
+\subsubsection{Léxico}
 
-%\section{Projeto do analisador sintático e das rotinas semânticas}
+Antes de simular o autômato de pilha estruturado da gramática de Wirth, é necessário tratar o arquivo de entrada 
+
 
 %\subsection{Lógica do Reconhecimento sintático}
 
