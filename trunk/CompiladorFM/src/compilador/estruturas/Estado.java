@@ -39,6 +39,14 @@ public class Estado {
 		this.transicoes.remove(trans);
 	}
 	
+	public void removeTransicao(String entrada){
+		for (int i = 0; this.transicoes.size() > i; i++) {
+			if (this.transicoes.get(i).proximoEstado(entrada) != -1) {
+				this.transicoes.remove(i);
+				return;
+			}
+		}
+	}
 	
 	public int proximoEstado (char entrada) {
 		int proximo = -1;

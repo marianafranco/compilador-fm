@@ -50,26 +50,24 @@ public class APE {
 	}
 	
 	// Minimiza o autômato retirando as transições em vazio
-	void minimiza(){
+	public void minimiza(){
 		for(int i=0 ; i < this.submaquinas.size(); i++){
 			AFD submaquina = this.submaquinas.get(i);
 			
 			for(int j=0; j < submaquina.getTamanho(); j++){
 				Estado estado = submaquina.getEstadoIndice(j);
 				
-				for(int k=0; k < estado.getTamanho(); k++){
+				// Enquanto tiver transição vazia
+				while(estado.proximoEstado("e") != -1){
+					Estado proximoEstado = submaquina.getEstado(estado.proximoEstado("e"));
+					estado.removeTransicao("e");
 					
-					// Se transição vazia
-					if(estado.getTransicao(k).getEntrada().toString().equals("e")){
-						
-						estado.removeTransicao(k);
-						Estado proximoEstado = submaquina.getEstadoIndice(estado.getTransicao(k).getProximo());
-						
-						while(proximoEstado.proximoEstado("e")!= -1){
-							
-							
-							proximoEstado = submaquina.getEstado(proximoEstado.proximoEstado("e"));
-						}
+					if(proximoEstado.getAceitacao()){
+						estado.setAceitacao(true);
+					}
+					
+					for(int t=0; t < proximoEstado.getTamanho(); t++){
+						estado.adicionaTransicao(proximoEstado.getTransicao(t));
 					}
 				}
 			}
