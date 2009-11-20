@@ -98,7 +98,7 @@ Para permitir a implementação do autômato de pilha estruturado, método que será 
 
 \paragraph{}	% linha em branco
 
-\section{Descrição do analisador léxico}
+\section{Descrição do analisador léxico} \label{sec:lexico}
 
 A função desta etapa do compilador é receber o código fonte como entrada, dividi-lo em tokens e preencher parte da tabela de símbolos. Para esta funcionalidade, implementamos o autômato finito representado na figura \ref{AFD}, que recebe cada caractere do código fonte e cada vez que volta ao estado inicial, pode escrever um token na estrutura de fluxo de tokens e pode também colocar uma entrada na tabela de símbolos.
 
@@ -378,7 +378,7 @@ Assim, através dessa estrutura, definimos no arquivo \textbf{metacompilador.xml}
 
 \begin{figure}[ht]
 	\begin{center}
-		\includegraphics[scale=0.50]{fig_expr.png}
+		\includegraphics[scale=0.60]{fig_expr.png}
 		\caption{Submáquina EXPR}
 		\label{fig:expr}
 	\end{center}
@@ -392,13 +392,28 @@ Além das estruturas já apresentadas no item \ref{subsub:estrutura}, criamos uma 
 
 Assim, a clase MontaMetaAPE, a partir do XML mostrado no item anterior, cria para cada não-terminal (WIRTH e EXPR) uma submáquina através da classe AFD, e ao final, estas submáquinas são adicionadas à um objeto da classe APE. 
 
-% SIMULAÇÂO DO AUTÔMATO
-\subsection{Simulação do autômato}
+
 
 % Léxico
 \subsubsection{Léxico}
 
-Antes de simular o autômato de pilha estruturado da gramática de Wirth, é necessário tratar o arquivo de entrada 
+Antes de simular o autômato de pilha estruturado da gramática de Wirth, é necessário tratar o arquivo de entrada \textbf{gramatica.txt}, que contêm a descrição da nossa linguagem.
+
+Assim, usando o mesmo método utilizado no item \ref{sec:lexico}, trocamos o autômato responsável por identificar o tipo de cada token (TERM, NTERM, ESPECIAL), pelo apresentado na figura \ref{fig:meta_lexico}.
+
+\begin{figure}[ht]
+	\begin{center}
+		\includegraphics[scale=0.70]{fig_lexico.png}
+		\caption{Autômato finito usado no léxico}
+		\label{fig:meta_lexico}
+	\end{center}
+\end{figure}
+
+
+% SIMULAÇÂO DO AUTÔMATO
+\subsection{Simulação do autômato}
+
+
 
 
 %\subsection{Lógica do Reconhecimento sintático}
