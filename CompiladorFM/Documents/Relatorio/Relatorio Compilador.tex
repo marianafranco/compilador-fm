@@ -336,7 +336,7 @@ Assim, no desenvolvimento do meta-analisador, procuramos utilizar o mesmo esquem
 Algumas modificações foram feitas no XML de entrada e na estrutura utilizada para representar o autômato.
 
 % MONTAGEM DO META-ANALISADOR
-\subsection{Montagem do meta-analisador}
+\subsection{Montagem do meta-analisador} \label{sub:monta_meta}
 
 % XML
 \subsubsection{XML}
@@ -388,30 +388,42 @@ Assim, através dessa estrutura, definimos no arquivo \textbf{metacompilador.xml}
 % Estrutura do autômato
 \subsubsection{Estrutura do autômato}
 
-Além das estruturas já apresentadas no item \ref{subsub:estrutura}, criamos uma classe APE (Autômato de Pilha Estruturado), que armazena a lista de submáquinas descritas pela classe AFD (Autômato Finito Determinístico).
+Além das estruturas já apresentadas no item \ref{subsub:estrutura}, criamos uma classe \textbf{APE} (Autômato de Pilha Estruturado), que armazena a lista de submáquinas descritas pela classe \textbf{AFD} (Autômato Finito Determinístico).
 
-Assim, a clase MontaMetaAPE, a partir do XML mostrado no item anterior, cria para cada não-terminal (WIRTH e EXPR) uma submáquina através da classe AFD, e ao final, estas submáquinas são adicionadas à um objeto da classe APE. 
+Assim, a clase \textbf{MontaMetaAPE}, a partir do XML mostrado no item anterior, cria para cada não-terminal (WIRTH e EXPR) uma submáquina através da classe \textbf{AFD}, e ao final, estas submáquinas são adicionadas à um objeto da classe \textbf{APE}. 
 
 
 
 % Léxico
-\subsubsection{Léxico}
+\subsubsection{Léxico} \label{subsub:meta_lexico}
 
 Antes de simular o autômato de pilha estruturado da gramática de Wirth, é necessário tratar o arquivo de entrada \textbf{gramatica.txt}, que contêm a descrição da nossa linguagem.
 
-Assim, usando o mesmo método utilizado no item \ref{sec:lexico}, trocamos o autômato responsável por identificar o tipo de cada token (TERM, NTERM, ESPECIAL), pelo apresentado na figura \ref{fig:meta_lexico}.
+Assim, usando o mesmo método utilizado no item \ref{sec:lexico}, trocamos o autômato responsável por identificar o tipo de cada token (TERM, NTERM, ESPECIAL), pelo apresentado na figura \ref{fig:meta_lexico} e descrito no arquivo \textbf{metalexico.xml}.
 
 \begin{figure}[ht]
 	\begin{center}
 		\includegraphics[scale=0.70]{fig_lexico.png}
-		\caption{Autômato finito usado no léxico}
+		\caption{Autômato finito usado na parte léxica do meta-analisador}
 		\label{fig:meta_lexico}
 	\end{center}
 \end{figure}
 
 
 % SIMULAÇÂO DO AUTÔMATO
-\subsection{Simulação do autômato}
+\subsection{Funcionamento do meta-analisador}
+
+A classe \textbf{MetaCompilador}, através do método \textbf{executa}, é responsável por efetuar as ações do meta-analisador.
+
+Assim, primeiramente, é montado o meta-analisador através da classe \textbf{MontaMetaAPE}, como já apresentado no item \ref{sub:monta_meta}.
+
+Depois disso, executa-se o léxico (item \ref{subsub:meta_lexico}) que lê o arquivo de entrada \textbf{gramatica.txt} para criar o fluxo de tokens.
+
+Esse fluxo de tokens é então usado através da classe \textbf{PercorreMetaAPE} para criar o autômato de pilha estruturado da nossa linguagem. Para isso, a classe \textbf{PercorreMetaAPE} implementa as ações semânticas apresentadas em \cite{metacompilador}.
+
+Em seguida, o objeto da classe \textbf{APE} obtido é minimizado, retirando as transições em vazio, através do seu método \textbf{minimiza}. 
+
+Obtemos, assim, o autômato de pilha estruturado da linguagem FM.
 
 
 
