@@ -108,7 +108,10 @@ public class PercorreAFD {
 		//System.out.println("TOKEN = " + token);
 		
 		// Caso seja um numero ou um caracter, nao e necessaria uma entrada na tabela
-		if (tipo == TiposLexico.NUMERO || tipo == TiposLexico.ESPECIAL) {
+		if (tipo == TiposLexico.NUMERO) {
+			tokensTokens.adicionaToken(token, -1);
+		}
+		else if (tipo == TiposLexico.ESPECIAL) {
 			tokensTokens.adicionaToken(token, -1);
 		}
 		// Se for uma string, talvez colocamos na tabela
