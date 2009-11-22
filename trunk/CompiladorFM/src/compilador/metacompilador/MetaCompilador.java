@@ -36,7 +36,7 @@ public class MetaCompilador {
 	public boolean executa(APE newAutomato) {
 		
 		try{
-			// Monta o Automato Finito Deterministico
+			// Monta o Automato de Pilha Estruturado
 			boolean montadorOK = montador.executa(this.automato);
 			
 			if(montadorOK){
