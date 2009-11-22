@@ -109,7 +109,7 @@ public class PercorreAFD {
 		
 		// Caso seja um numero ou um caracter, nao e necessaria uma entrada na tabela
 		if (tipo == TiposLexico.NUMERO) {
-			tokensTokens.adicionaToken(token, -1);
+			tokensTokens.adicionaToken(token, -2);
 		}
 		else if (tipo == TiposLexico.ESPECIAL) {
 			tokensTokens.adicionaToken(token, -1);
