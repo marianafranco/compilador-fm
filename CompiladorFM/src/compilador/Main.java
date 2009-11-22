@@ -42,8 +42,8 @@ public class Main {
 				Lexico lex = new Lexico(codFonte);
 				lex.executa(tabelaSimbolos, fluxoTokens);
 				
-				//PercorreAPE gerador = new PercorreAPE();
-				//gerador.geraCodigo(newAutomato, fluxoTokens);
+				PercorreAPE gerador = new PercorreAPE();
+				gerador.geraCodigo(newAutomato, fluxoTokens, tabelaSimbolos);
 				
 			}catch(Exception e){
 				//e.printStackTrace();

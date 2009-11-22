@@ -56,6 +56,28 @@ public class TabelaSimbolos {
 		
 	}
 	
+	public boolean estaNaTabela (String nome) {
+		
+		if (this.entradas == 0) {
+			return false;
+		}
+		else {
+			Simbolo temp = this.simbolo;
+			if(temp.getNome() == nome) {
+				return true;
+			}
+			for (int i = 2; i <= this.entradas; i++) {
+				temp = temp.getproximo();
+				if(temp.getNome() == nome) {
+					return true;
+				}
+			}
+			
+			return false;
+		}
+		
+	}
+	
 	public int getEntradas() {
 		return this.entradas;
 	}
