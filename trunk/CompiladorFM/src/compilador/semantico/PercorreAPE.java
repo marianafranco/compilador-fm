@@ -4,6 +4,7 @@ import java.util.Stack;
 import compilador.estruturas.PilhaEstados;
 import compilador.estruturas.APE;
 import compilador.estruturas.FluxoTokens;
+import compilador.estruturas.TiposLexico;
 import compilador.estruturas.TiposMeta;
 import compilador.estruturas.Token;
 import compilador.estruturas.PilhaEstadoSubmaquina;
@@ -37,30 +38,53 @@ public class PercorreAPE {
 		AFD progr = automato.getSubmaquina("programa");
 		AFD comando = automato.getSubmaquina("comando");
 		AFD expr = automato.getSubmaquina("expressao");
+		AFD tipo = automato.getSubmaquina("tipo");
+		AFD ident = automato.getSubmaquina("identificador");
+		AFD numero = automato.getSubmaquina("numero");
+		AFD booleano = automato.getSubmaquina("booleano");
+		AFD letra = automato.getSubmaquina("letra");
+		AFD digito = automato.getSubmaquina("digito");
 		
-		AFD submaquina;
-		String tokenValor = "";
+		AFD submaquina = new AFD();
 		PilhaEstadoSubmaquina conteudoPilha; 
 		
 		// Inicializa pilha
 		pilha.push(new PilhaEstadoSubmaquina(0, "programa"));
 		
+		boolean fimTokensEFinal = true;
+		
 		// Enquanto não chegamos ao final dos tokens
-		while(tokensTokens.getTamanho() >= 0 && !pilha.empty()){
+		while(fimTokensEFinal) {
 			
 			conteudoPilha = (PilhaEstadoSubmaquina) pilha.pop();
 			
 			// se autômato PROGR
 			if(conteudoPilha.getSubmaquina().equals("programa")){
 				submaquina = progr;
-				
 			// se autômato COMANDO
 			}else if(conteudoPilha.getSubmaquina().equals("comando")){
 				submaquina = comando;
-				
 			}// se autômato EXPR
 			else if(conteudoPilha.getSubmaquina().equals("expressao")){
 				submaquina = expr;
+			// se não é WIRTH nem EXPR -> ERRO
+			}else if(conteudoPilha.getSubmaquina().equals("tipo")){
+				submaquina = tipo;
+			}// se autômato EXPR
+			else if(conteudoPilha.getSubmaquina().equals("identificador")){
+				submaquina = ident;
+			// se não é WIRTH nem EXPR -> ERRO
+			}else if(conteudoPilha.getSubmaquina().equals("numero")){
+				submaquina = numero;
+			}// se autômato EXPR
+			else if(conteudoPilha.getSubmaquina().equals("booleano")){
+				submaquina = booleano;
+			// se não é WIRTH nem EXPR -> ERRO
+			}else if(conteudoPilha.getSubmaquina().equals("letra")){
+				submaquina = letra;
+			}// se autômato EXPR
+			else if(conteudoPilha.getSubmaquina().equals("digito")){
+				submaquina = digito;
 			// se não é WIRTH nem EXPR -> ERRO
 			}
 			else{
@@ -69,237 +93,86 @@ public class PercorreAPE {
 			}
 			
 			submaquina.setEstadoAtivo(conteudoPilha.getEstado());
+			boolean getNewToken = false;
+			String aPercorrer = "";
 			
-			switch(token.getTipo()){
+			// Checagem do numero de possiveis mudanas de estado
+			int possiveisTransicoes = 0;
+			if (submaquina.temTransicao('"' + token.getValor() + '"')) {
+				possiveisTransicoes++;
+				aPercorrer = '"' + token.getValor() + '"';
+				
+				if(tokensTokens.getTamanho() > 0){
+					getNewToken = true;
+				}
+			}
+			if (submaquina.temTransicao("programa") && progr.temTransicao('"' + token.getValor() + '"')) {
+				possiveisTransicoes++;
+				aPercorrer = "programa";
+			}
+			if (submaquina.temTransicao("comando") && comando.temTransicao('"' + token.getValor() + '"')) {
+				possiveisTransicoes++;
+				aPercorrer = "comando";
+			}
+			if (submaquina.temTransicao("expressao") && expr.temTransicao('"' + token.getValor() + '"')) {
+				possiveisTransicoes++;
+				aPercorrer = "expressao";
+			}
+			if (submaquina.temTransicao("tipo") && tipo.temTransicao('"' + token.getValor() + '"')) {
+				possiveisTransicoes++;
+				aPercorrer = "tipo";
+			}
+			if (submaquina.temTransicao("identificador") && ident.temTransicao('"' + token.getValor() + '"')) {
+				possiveisTransicoes++;
+				aPercorrer = "identificador";
+			}
+			if (submaquina.temTransicao("numero") && numero.temTransicao('"' + token.getValor() + '"')) {
+				possiveisTransicoes++;
+				aPercorrer = "numero";
+			}
+			if (submaquina.temTransicao("booleano") && booleano.temTransicao('"' + token.getValor() + '"')) {
+				possiveisTransicoes++;
+				aPercorrer = "booleano";
+			}
+			if (submaquina.temTransicao("letra") && letra.temTransicao('"' + token.getValor() + '"')) {
+				possiveisTransicoes++;
+				aPercorrer = "letra";
+			}
+			if (submaquina.temTransicao("digito") && digito.temTransicao('"' + token.getValor() + '"')) {
+				possiveisTransicoes++;
+				aPercorrer = "digito";
+			}
 			
-			case TiposMeta.NTERM:
-				tokenValor = "NTERM";
-				break;
-			case TiposMeta.TERM:
-				tokenValor = "TERM";
-				break;
-			case TiposMeta.ESPECIAL:
-				tokenValor = token.getValor();
-				break;
-			case TiposMeta.DESCONHECIDO:
-				// TODO tratar erro
-				System.out.println("[ERRO] Não tem transição com " + token.getValor());
+			if (possiveisTransicoes == 1) {
+				submaquina.percorre(aPercorrer);
+				conteudoPilha.setEstado(submaquina.getEstadoAtivo());
+				// Caso
+				if (!submaquina.estadoAtivoFinal() || submaquina.temTransicao('"' + token.getValor() + '"')) {
+					pilha.push(new PilhaEstadoSubmaquina(conteudoPilha.getEstado(), conteudoPilha.getSubmaquina()));
+					if (aPercorrer == "programa" || aPercorrer == "comando" || aPercorrer == "expressao" || 
+							aPercorrer == "tipo" || aPercorrer == "identificador" || aPercorrer == "numero" || 
+							aPercorrer == "booleano" || aPercorrer == "letra" || aPercorrer == "digito") {
+						pilha.push(new PilhaEstadoSubmaquina(0, aPercorrer));
+					}
+				}
+				if (getNewToken == true) {
+					token = tokensTokens.recuperaToken();
+				}
+			}
+			else {
+				System.out.println("[ERRO] N‹o h‡ transicoes possiveis ou exite mais de uma transicao");
 				return false;
 			}
 			
-			if(submaquina.temTransicao(tokenValor)){
-				
-				// Gerar as transições no AFD
-				//geraAPE(newAutomato, conteudoPilha.getSubmaquina(), token);
-				
-				submaquina.percorre(tokenValor);
-				
-				// verifica se é final
-				if(!submaquina.estadoAtivoFinal()){
-					// senão atualiza topo com o novo estado
-					conteudoPilha.setEstado(submaquina.getEstadoAtivo());
-					pilha.push(new PilhaEstadoSubmaquina(conteudoPilha.getEstado(), conteudoPilha.getSubmaquina()));
-					
-					if(tokensTokens.getTamanho() > 0){
-						token = tokensTokens.recuperaToken();
-					}
-					
-				}else{
-					
-					if(tokensTokens.getTamanho() > 0){
-						token = tokensTokens.recuperaToken();
-						
-				/*		switch (token.getTipo()){
-						case TiposLexico.NTERM:
-							tokenValor =  "NTERM";
-							break;
-						case TiposLexico.TERM:
-							tokenValor = "TERM";
-							break;
-						case TiposLexico.ESPECIAL:
-							tokenValor = token.getValor();
-							break;
-						case TiposLexico.DESCONHECIDO:
-							// TODO tratar erro
-							System.out.println("[ERRO] Não tem transição com " + token.getValor());
-							return false;
-						}*/
-						
-						// Se existir transição com o próximo, reempilha o estado atual
-						if(expr.temTransicao(tokenValor)){
-							conteudoPilha.setEstado(expr.getEstadoAtivo());
-							pilha.push(new PilhaEstadoSubmaquina(conteudoPilha.getEstado(), conteudoPilha.getSubmaquina()));
-						
-						// Senão, reincializa a pilha se pilha vazia  
-						}else{
-							if(pilha.empty()){
-								pilha.push(new PilhaEstadoSubmaquina(0, "WIRTH"));
-							}else{
-							}
-						}
-					}
-				}
-				
-			}else if(submaquina.temTransicao("EXPR")){
-				// empilha (proxEstado, submaquina) e (0, expr)
-				submaquina.percorre("EXPR");
-				conteudoPilha.setEstado(submaquina.getEstadoAtivo());
-				pilha.push(new PilhaEstadoSubmaquina(conteudoPilha.getEstado(), conteudoPilha.getSubmaquina()));
-				pilha.push(new PilhaEstadoSubmaquina(0, "EXPR"));
-				
-			}else{
-				// TODO tratar erro
-				System.out.println("[ERRO] Não tem transição o NTERM " + token.getValor());
-				return false;
+			// Verifica se a pilha est‡ vazia e o estado Ž final
+			if (tokensTokens.getTamanho() == 0 && submaquina.estadoAtivoFinal()) {
+				fimTokensEFinal = false;
 			}
 			
 		}
-			
-		System.out.println("OK!!!");
+		
+		System.out.println("[INFO] Codigo aceito!");
 		return true;
 	}
 	
 }
-
-/*
-import compilador.metacompilador.estruturas.Estado;
-import compilador.metacompilador.estruturas.Transicao;
-
-	private AFD submaquina;		
-	private Estado estado;
-	
-	public boolean executa(APE automato, FluxoTokens tokensTokens, APE newAutomato){
-	
-		Token proxToken;	
-		AFD newSubmaquina = new AFD();	// usada para a criação do novo APE
-	
-	}
-	
-	
-	private void geraAPE(APE automato, String submaquinaWirth, Token token){
-		
-		// IN
-		if(submaquinaWirth.equals("WIRTH") && token.getTipo() == Tipo.NTERM){
-			submaquina = new AFD(token.getValor());
-			this.cs = 0;
-			this.ns = 1;
-			this.pilhaGeraAPE.push(new PilhaEstados(this.cs, this.ns));
-			this.ns ++;
-			
-		}else{
-			switch(token.getTipo()){
-			// A
-			case Tipo.TERM:
-				// Verifica se ja não existe o estado antes de criar
-				if(submaquina.procuraEstado(this.cs) == -1){
-					estado = new Estado(this.cs, false);
-					estado.adicionaTransicao(new Transicao(this.ns, token.getValor()));
-					submaquina.adicionaEstado(estado);
-				}else{
-					submaquina.getEstado(this.cs).adicionaTransicao(new Transicao(this.ns, token.getValor()));
-				}
-				this.cs = this.ns;
-				this.ns ++;
-				break;
-				
-			// B
-			case Tipo.NTERM:
-				// Verifica se ja não existe o estado antes de criar
-				if(submaquina.procuraEstado(this.cs) == -1){
-					estado = new Estado(this.cs, false);
-					estado.adicionaTransicao(new Transicao(this.ns, token.getValor()));
-					submaquina.adicionaEstado(estado);
-				}else{
-					submaquina.getEstado(this.cs).adicionaTransicao(new Transicao(this.ns, token.getValor()));
-				}
-				this.cs = this.ns;
-				this.ns ++;
-				break;
-				
-			case Tipo.ESPECIAL:
-				
-				// C
-				if(token.getValor().equals("|")){
-					PilhaEstados conteudoPilha = this.pilhaGeraAPE.peek();
-					// Verifica se ja não existe o estado antes de criar
-					if(submaquina.procuraEstado(this.cs) == -1){
-						estado = new Estado(this.cs, false);
-						estado.adicionaTransicao(new Transicao(conteudoPilha.getR(), "e"));	// gera transição vazia
-						submaquina.adicionaEstado(estado);
-					}else{
-						submaquina.getEstado(this.cs).adicionaTransicao(new Transicao(conteudoPilha.getR(), "e"));	// gera transição vazia
-					}
-					this.cs = conteudoPilha.getL();
-					
-				// D
-				}else if(token.getValor().equals("(")){
-					this.pilhaGeraAPE.push(new PilhaEstados(this.cs, this.ns));
-					this.ns ++;
-					
-				// E
-				}else if(token.getValor().equals("[")){
-					// Verifica se ja não existe o estado antes de criar
-					if(submaquina.procuraEstado(this.cs) == -1){
-						estado = new Estado(this.cs, false);
-						estado.adicionaTransicao(new Transicao(this.ns, "e"));	// gera transição vazia
-						submaquina.adicionaEstado(estado);
-					}else{
-						submaquina.getEstado(this.cs).adicionaTransicao(new Transicao(this.ns, "e"));	// gera transição vazia
-					}
-					this.pilhaGeraAPE.push(new PilhaEstados(this.cs, this.ns));
-					this.ns ++;
-					
-				// F
-				}else if(token.getValor().equals("{")){
-					// Verifica se ja não existe o estado antes de criar
-					if(submaquina.procuraEstado(this.cs) == -1){
-						estado = new Estado(this.cs, false);
-						estado.adicionaTransicao(new Transicao(this.ns, "e"));	// gera transição vazia
-						submaquina.adicionaEstado(estado);
-					}else{
-						submaquina.getEstado(this.cs).adicionaTransicao(new Transicao(this.ns, "e"));	// gera transição vazia
-					}
-					this.pilhaGeraAPE.push(new PilhaEstados(this.ns, this.ns));
-					this.cs = this.ns;
-					this.ns ++;
-					
-				// G
-				}else if(token.getValor().equals(")") || token.getValor().equals("]") || token.getValor().equals("}")){
-					// Verifica se ja não existe o estado antes de criar
-					if(submaquina.procuraEstado(this.cs) == -1){
-						estado = new Estado(this.cs, false);
-						estado.adicionaTransicao(new Transicao(this.pilhaGeraAPE.peek().getR(), "e"));	// gera transição vazia
-						submaquina.adicionaEstado(estado);
-					}else{
-						submaquina.getEstado(this.cs).adicionaTransicao(new Transicao(this.pilhaGeraAPE.peek().getR(), "e"));	// gera transição vazia
-					}
-					this.cs = this.pilhaGeraAPE.pop().getR();
-					
-				// H
-				}else if(token.getValor().equals(".")){
-					
-					// Verifica se ja não existe o estado antes de criar
-					if(submaquina.procuraEstado(this.cs) == -1){
-						estado = new Estado(this.cs, false);
-						estado.adicionaTransicao(new Transicao(this.pilhaGeraAPE.peek().getR(), "e"));	// gera transição vazia
-						submaquina.adicionaEstado(estado);
-					}else{
-						submaquina.getEstado(this.cs).adicionaTransicao(new Transicao(this.pilhaGeraAPE.peek().getR(), "e"));	// gera transição vazia
-					}
-					
-					// Coloca o estado 1 como final
-					if(submaquina.procuraEstado(1) == -1){
-						estado = new Estado(1, true);
-						submaquina.adicionaEstado(estado);
-					}else{
-						submaquina.getEstado(1).setAceitacao(true);
-					}
-					
-					//System.out.println("ENTROU");
-					automato.adicionaSubmaquina(submaquina);
-				}
-				break;
-			}
-		}
-	}
-*/
