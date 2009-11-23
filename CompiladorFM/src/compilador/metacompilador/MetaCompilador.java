@@ -18,15 +18,7 @@ public class MetaCompilador {
 	private PercorreMetaAPE simulador;
 	
 	
-	//public MetaCompilador(String nomeArquivo) throws ArquivoNaoEcontradoException{
 	public MetaCompilador(){
-		
-		//try{
-		//	this.arquivoFonte = new FileReader(nomeArquivo);
-		//}catch (Exception e){
-		//	throw new ArquivoNaoEcontradoException("O arquivo " + nomeArquivo + " nao foi encontrado.");
-		//}
-		
 		this.automato = new APE();
 		this.montador = new MontaMetaAPE();
 		this.simulador = new PercorreMetaAPE();
@@ -50,8 +42,7 @@ public class MetaCompilador {
 					boolean simuladorOK = simulador.executa(this.automato, lex.getFluxoTokens(), newAutomato);
 					
 					newAutomato.minimiza();
-					System.out.println("## Automato ##");
-					newAutomato.imprime();
+					//newAutomato.imprime();
 					
 					if(simuladorOK){
 						return true;

@@ -4,4 +4,5 @@ principal (inteiro teste) {
 	se (teste == 3) {
 		teste = 2;
 	}
+	teste = teste + 1;
 }

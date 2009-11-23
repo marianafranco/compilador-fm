@@ -28,7 +28,6 @@ public class PercorreAPE {
 	private boolean temTransicao (String token, int tokenTipo, AFD submaquina, APE automato) {
 		
 		submaquina.setEstadoAtivo(0);
-		AFD progr = automato.getSubmaquina("programa");
 		AFD comando = automato.getSubmaquina("comando");
 		AFD expr = automato.getSubmaquina("expressao");
 		AFD tipo = automato.getSubmaquina("tipo");
@@ -95,10 +94,12 @@ public class PercorreAPE {
 		// Enquanto não chegamos ao final dos tokens
 		while(fimTokensEFinal) {
 			
-			// Desempilha m‡quina
+			// Desempilha maquina
 			conteudoPilha = (PilhaEstadoSubmaquina) pilha.pop();
+			System.out.println("pilha: (" + conteudoPilha.getEstado() + ", " + conteudoPilha.getSubmaquina() + ")");
+			System.out.println("token: " + token.getValor());
 			
-			// Identifica qual a m‡quina que estava empilhada
+			// Identifica qual a maquina que estava empilhada
 			if(conteudoPilha.getSubmaquina().equals("programa")){
 				submaquina = progr;
 			}
@@ -119,15 +120,16 @@ public class PercorreAPE {
 				return false;
 			}
 			
-			// Seta o estado ativo da m‡quina e zera o estado das outras maquinas
+			// Seta o estado ativo da maquina
 			submaquina.setEstadoAtivo(conteudoPilha.getEstado());
 			
-			// Vari‡veis de identificacao
+			// Variaveis de identificacao
 			boolean getNewToken = false;
 			String aPercorrer = "";
 			int possiveisTransicoes = 0;
 			
 			// Verifica quais as possiveis transicoes a partir do estado atual
+			// Se terminal
 			if (submaquina.temTransicao('"' + token.getValor() + '"')) {
 				possiveisTransicoes++;
 				aPercorrer = '"' + token.getValor() + '"';
@@ -135,32 +137,38 @@ public class PercorreAPE {
 				if(tokensTokens.getTamanho() > 0){
 					getNewToken = true;
 				}
-			}
-			if (submaquina.temTransicao("comando") && temTransicao (token.getValor(), token.getTipo(), comando, automato)) {
+				
+			// Se chamada para submáquina "comando"
+			}else if (submaquina.temTransicao("comando") && temTransicao(token.getValor(), token.getTipo(), comando, automato)) {
 				possiveisTransicoes++;
 				aPercorrer = "comando";
-			}
-			if (submaquina.temTransicao("expressao") && temTransicao (token.getValor(), token.getTipo(), expr, automato)) {
+			
+			// Se chamada para submáquina "expressao"
+			}else if (submaquina.temTransicao("expressao") && temTransicao (token.getValor(), token.getTipo(), expr, automato)) {
 				possiveisTransicoes++;
 				aPercorrer = "expressao";
-			}
-			if (submaquina.temTransicao("tipo") && temTransicao (token.getValor(), token.getTipo(), tipo, automato)) {
+			
+			// Se chamada para submáquina "tipo"
+			}else if (submaquina.temTransicao("tipo") && temTransicao (token.getValor(), token.getTipo(), tipo, automato)) {
 				possiveisTransicoes++;
 				aPercorrer = "tipo";
-			}
-			if (submaquina.temTransicao("booleano") && temTransicao (token.getValor(), token.getTipo(), booleano, automato)) {
+			
+			// Se chamada para submáquina "booleano"
+			}else if (submaquina.temTransicao("booleano") && temTransicao (token.getValor(), token.getTipo(), booleano, automato)) {
 				possiveisTransicoes++;
 				aPercorrer = "booleano";
-			}
-			if (submaquina.temTransicao("identificador") && tabelaDeSimbolos.estaNaTabela(token.getValor())) {
+			
+			// Se identificador
+			}else if (submaquina.temTransicao("identificador") && tabelaDeSimbolos.estaNaTabela(token.getValor())) {
 				possiveisTransicoes++;
 				aPercorrer = "identificador";
 				
 				if(tokensTokens.getTamanho() > 0){
 					getNewToken = true;
 				}
-			}
-			if (submaquina.temTransicao("numero") && token.getTipo() == -2) {
+			
+			// Se número
+			}else if (submaquina.temTransicao("numero") && token.getTipo() == -2) {
 				possiveisTransicoes++;
 				aPercorrer = "numero";
 				
@@ -169,6 +177,7 @@ public class PercorreAPE {
 				}
 			}
 			
+			submaquina.setEstadoAtivo(conteudoPilha.getEstado());
 			// Caso haja apenas uma transicao possivel, realiza a mesma
 			if (possiveisTransicoes == 1) {
 				// Percorre submaquina
@@ -182,23 +191,22 @@ public class PercorreAPE {
 				// Empilha submaquina, caso ela nao tenha terminado
 				if (!submaquina.estadoAtivoFinal() || submaquina.temTransicao('"' + token.getValor() + '"')) {
 					pilha.push(new PilhaEstadoSubmaquina(conteudoPilha.getEstado(), conteudoPilha.getSubmaquina()));
-					// Empilha nova maquina, caso a transicao Ž de um nao-terminal
+					
+					// Empilha nova maquina, caso transicao de um nao-terminal
 					if (aPercorrer == "programa" || aPercorrer == "comando" || aPercorrer == "expressao" || 
 							aPercorrer == "tipo" || aPercorrer == "booleano") {
 						pilha.push(new PilhaEstadoSubmaquina(0, aPercorrer));
 					}
 				}
 				
-			}
-			
 			// Caso haja mais de uma possivel transicao ou nenhuma, ha um erro
-			else {
-				System.out.println("[ERRO] N‹o h‡ transicoes possiveis ou existe mais de uma transicao");
+			} else{
+				System.out.println("[ERRO] Caractere inesperado '" + token.getValor() + "' na linha " + token.getLinha() + ".");
 				return false;
 			}
 			
-			// Verifica se a pilha est‡ vazia e o estado Ž final
-			if (tokensTokens.getTamanho() == 0 && submaquina.estadoAtivoFinal()) {
+			// Verifica se a pilha esta vazia e o estado é final
+			if (tokensTokens.getTamanho() == 0 && submaquina.estadoAtivoFinal() && pilha.empty()) {
 				fimTokensEFinal = false;
 			}
 			

@@ -40,11 +40,12 @@ public class AFD {
 	
 	
 	public int procuraEstado (int id) {	
-		for (int i = 0; this.estados.size() > i; i++) {
+		for (int i = 0; i < this.estados.size(); i++) {
 			if (this.estados.get(i).getId() == id) {
 				return i;
 			}
 		}
+		//System.out.println("[ERRO] Não encontrou o estado:" + id);
 		return -1;
 	}
 	
@@ -150,6 +151,18 @@ public class AFD {
 			}
 		}
 	}
+	
+	
+	public int getNextEstadoID(){
+		int nextID = 0;
+		for(int i = 0; i < this.estados.size(); i++){
+			if(this.estados.get(i).getId() > nextID){
+				nextID = this.estados.get(i).getId();
+			}
+		}
+		return nextID + 1;
+	}
+	
 	
 	public int getTamanho(){
 		return this.estados.size();

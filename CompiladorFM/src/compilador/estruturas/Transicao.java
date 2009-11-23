@@ -39,6 +39,16 @@ public class Transicao {
 	}
 	
 	
+	// Gets e Sets
+	
+	public void setProximo(int proximo) {
+		this.proximo = proximo;
+	}
+
+	public void setEntrada(char[] entrada) {
+		this.entrada = entrada;
+	}
+
 	public int getProximo(){
 		return this.proximo;
 	}

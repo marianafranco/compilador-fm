@@ -53,7 +53,6 @@ public class PercorreMetaAPE {
 		
 		// Enquanto não chegamos ao final dos tokens
 		while(tokensTokens.getTamanho() >= 0 && !pilha.empty()){
-			//proxToken = tokensTokens.recuperaToken();
 			
 			conteudoPilha = (PilhaEstadoSubmaquina) pilha.pop();
 			//System.out.println("pilha: (" + conteudoPilha.getEstado() + ", " + conteudoPilha.getSubmaquina() + ")");

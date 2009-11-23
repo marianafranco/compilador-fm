@@ -37,5 +37,8 @@ public class Token {
 		this.tipo = tipo;
 	}
 	
+	public int getLinha(){
+		return this.linha;
+	}
 	
 }
