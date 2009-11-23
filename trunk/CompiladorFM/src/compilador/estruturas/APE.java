@@ -25,6 +25,7 @@ public class APE {
 	
 	// Imprime as submáquinas, seus estados e transições
 	public void imprime(){
+		System.out.println("## Automato ##");
 		for(int i=0 ; i < this.submaquinas.size(); i++){
 			AFD submaquina = this.submaquinas.get(i);
 			System.out.println((i+1) + "." + submaquina.getNome());
@@ -51,6 +52,8 @@ public class APE {
 	
 	// Minimiza o autômato retirando as transições em vazio
 	public void minimiza(){
+		
+		// Minimiza
 		for(int i=0 ; i < this.submaquinas.size(); i++){
 			AFD submaquina = this.submaquinas.get(i);
 			
@@ -72,6 +75,48 @@ public class APE {
 				}
 			}
 		}
+		
+		// Eliminação do não-determinismo
+		for(int i=0 ; i < this.submaquinas.size(); i++){
+			AFD submaquina = this.submaquinas.get(i);
+			
+			for(int j=0; j < submaquina.getTamanho(); j++){
+				Estado estado = submaquina.getEstadoIndice(j);
+				
+				if(estado.naoDeterminismo()){
+					//System.out.println("Estado (" + estado.getId() + ", " + submaquina.getNome() +") nao-deterministico!!");
+					
+					Vector<Transicao> transicoes = estado.getNaoDeterminismo();
+					
+					Transicao a = transicoes.elementAt(0);
+					Transicao b = transicoes.elementAt(1);
+					
+					//System.out.println("Entrada: " + a.getEntrada() + " / " + b.getEntrada());
+					
+					Estado novoEstado = new Estado(submaquina.getNextEstadoID(), false);
+					
+					//System.out.println("Proximo A: " + submaquina.getEstado(a.getProximo()).getId());
+					//System.out.println("Proximo B: " + submaquina.getEstado(b.getProximo()).getId());
+					
+					novoEstado.adicionaTransicao(submaquina.getEstado(a.getProximo()).getTransicoes());
+					novoEstado.adicionaTransicao(submaquina.getEstado(b.getProximo()).getTransicoes());
+					
+					estado.removeTransicao(a);
+					estado.removeTransicao(b);
+					estado.adicionaTransicao(new Transicao(novoEstado.getId(), b.getEntrada()));
+					
+					if(submaquina.getEstado(a.getProximo()).getAceitacao() || submaquina.getEstado(a.getProximo()).getAceitacao()){
+						novoEstado.setAceitacao(true);
+					}
+					
+					submaquina.adicionaEstado(novoEstado);
+					j--;
+					
+					//System.out.println("Criou o estado: " + novoEstado.getId());
+				}
+			}
+		}
+		
 	}
 	
 }

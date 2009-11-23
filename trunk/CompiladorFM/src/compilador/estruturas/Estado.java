@@ -29,6 +29,22 @@ public class Estado {
 		this.transicoes.add(nova);
 	}
 	
+	public void adicionaTransicao (Vector<Transicao> transicoes) {
+		boolean jaExiste = false;
+		for(int i=0; i < transicoes.size(); i++){
+			for(int j=0; j < this.transicoes.size(); j++){
+				if(transicoes.get(i).getEntrada().equals(this.transicoes.get(j).getEntrada())){
+					if(transicoes.get(i).getProximo() == this.transicoes.get(j).getProximo()){
+						jaExiste = true;
+					}
+				}
+			}
+			
+			if(!jaExiste){
+				this.transicoes.add(new Transicao(transicoes.get(i).getProximo(), transicoes.get(i).getEntrada()));
+			}
+		}
+	}
 	
 	public void removeTransicao(int i){
 		this.transicoes.remove(i);	
@@ -47,6 +63,32 @@ public class Estado {
 			}
 		}
 	}
+	
+	public boolean naoDeterminismo(){
+		boolean naoDeterminismo = false;
+		for (int i = 0; this.transicoes.size() > i; i++) {
+			for(int j= i+1; this.transicoes.size() > j; j++){
+				if (this.transicoes.get(i).getEntrada().equals(this.transicoes.get(j).getEntrada())){
+					naoDeterminismo = true;
+				}
+			}
+		}
+		return naoDeterminismo;
+	}
+	
+	public Vector<Transicao> getNaoDeterminismo(){
+		Vector<Transicao> naoDeterminismo = new Vector<Transicao>();
+		for (int i = 0; this.transicoes.size() > i; i++) {
+			for(int j= i+1; this.transicoes.size() > j; j++){
+				if (this.transicoes.get(i).getEntrada().equals(this.transicoes.get(j).getEntrada())){
+					naoDeterminismo.add(this.transicoes.get(i));
+					naoDeterminismo.add(this.transicoes.get(j));
+				}
+			}
+		}
+		return naoDeterminismo;
+	}
+	
 	
 	public int proximoEstado (char entrada) {
 		int proximo = -1;
@@ -75,6 +117,7 @@ public class Estado {
 		return proximo;
 	}
 	
+	
 	public int getTamanho(){
 		return this.transicoes.size();
 	}
@@ -100,4 +143,9 @@ public class Estado {
 	public int getTipo () {
 		return this.tipo;
 	}
+
+	public Vector<Transicao> getTransicoes() {
+		return transicoes;
+	}
+	
 }

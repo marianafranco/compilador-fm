@@ -46,7 +46,7 @@ public class Main {
 				gerador.geraCodigo(newAutomato, fluxoTokens, tabelaSimbolos);
 				
 			}catch(Exception e){
-				//e.printStackTrace();
+				e.printStackTrace();
 			}
 			
 		}
