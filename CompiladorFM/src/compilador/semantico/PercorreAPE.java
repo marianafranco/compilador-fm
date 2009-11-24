@@ -5,12 +5,10 @@ import compilador.estruturas.PilhaEstados;
 import compilador.estruturas.APE;
 import compilador.estruturas.FluxoTokens;
 import compilador.estruturas.TiposLexico;
-import compilador.estruturas.TiposMeta;
 import compilador.estruturas.Token;
 import compilador.estruturas.PilhaEstadoSubmaquina;
 import compilador.estruturas.AFD;
 import compilador.estruturas.TabelaSimbolos;
-import compilador.estruturas.TiposLexico;
 
 public class PercorreAPE {
 	

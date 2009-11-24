@@ -59,7 +59,12 @@ public class PercorreAFD {
 							// Faz o automato andar para o proximo estado
 							automato.percorre((char) atual);
 							
-							// Verifica se tem transicao com o proximo caracteres
+							// Se tem transição com espaço (string), adiciona o proximo ao token
+							if (proximo == ' ' && automato.temTransicao((char) proximo)){
+								token = token + (char) proximo;
+							}
+							
+							// Verifica se tem transicao com o proximo caractere
 							if (automato.temTransicao((char) proximo)) {
 								
 								// Se a transicao nao é para um estado final
@@ -110,11 +115,12 @@ public class PercorreAFD {
 		
 		// Caso seja um numero ou um caracter, nao e necessaria uma entrada na tabela
 		if (tipo == TiposLexico.NUMERO) {
-			tokensTokens.adicionaToken(token, tipo);
+			tokensTokens.adicionaToken(token, tipo, linha, coluna);
 		}
 		else if (tipo == TiposLexico.ESPECIAL) {
-			tokensTokens.adicionaToken(token, tipo);
+			tokensTokens.adicionaToken(token, tipo, linha, coluna);
 		}
+		
 		// Se for uma string, talvez colocamos na tabela
 		else if (tipo == TiposLexico.NOME) {
 			
@@ -122,11 +128,16 @@ public class PercorreAFD {
 			
 			int posicao = tabelaSimbolos.getEntradas();
 			if (temp.reservada(token) == false) {
-				tokensTokens.adicionaToken(token, tipo);
-				tabelaSimbolos.adicionaEntrada (posicao, token.toString(), tipo, linha, coluna);
+				tokensTokens.adicionaToken(token, tipo, linha, coluna);
+				
+				// Se não esta na tabela de simbolos, adicionamos
+				if(!tabelaSimbolos.estaNaTabela(token)){
+					tabelaSimbolos.adicionaEntrada (posicao, token, tipo, linha, coluna);
+					//System.out.println("SIMBOLO = " + token);
+				}
 			}
 			else {
-				tokensTokens.adicionaToken(token, TiposLexico.RESERVADO);
+				tokensTokens.adicionaToken(token, TiposLexico.RESERVADO, linha, coluna);
 			}
 			
 		// Se for uma string

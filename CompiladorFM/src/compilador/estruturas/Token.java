@@ -41,4 +41,7 @@ public class Token {
 		return this.linha;
 	}
 	
+	public int getColuna(){
+		return this.coluna;
+	}
 }
