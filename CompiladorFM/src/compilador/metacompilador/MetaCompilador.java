@@ -1,30 +1,54 @@
 package compilador.metacompilador;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.FileReader;
 import java.io.Reader;
 
 import compilador.estruturas.APE;
 import compilador.metacompilador.lexico.Lexico;
-import compilador.exceptions.ArquivoNaoEcontradoException;
 
-
+/**
+ * MetaCompilador: Responsável por criar o autômato de pilha estruturado da linguagem FM
+ * a partir da sua descrição em notação de Wirth.
+ * 
+ * @author Felipe Yoshida, Mariana R. Franco
+ *
+ */
 public class MetaCompilador {
 	
-	private Reader arquivoFonte;
+	/**
+	 * arquivo texto que contém a descrição em notação de Wirth para a linguagem FM.
+	 */
+	private static String arquivoFonte = "gramatica.txt";
+	
+	/**
+	 * reconhecedor para a notação de Wirth.
+	 */
 	private APE automato;
+	
+	/**
+	 * monta o reconhecedor para a notação de Wirth.
+	 */
 	private MontaMetaAPE montador;
+	
+	/**
+	 * percorre o reconhecedor para criar um APE da linguagem FM. 
+	 */
 	private PercorreMetaAPE simulador;
 	
 	
+	/**
+	 * Método construtor.
+	 */
 	public MetaCompilador(){
 		this.automato = new APE();
 		this.montador = new MontaMetaAPE();
 		this.simulador = new PercorreMetaAPE();
 	}
-	
-	
+		
+	/**
+	 * Cria o APE da linguagem FM a partir da sua descrição na notação de Wirth. 
+	 * @param newAutomato	objeto APE que irá descrever a linguagem FM.
+	 * @return true/false dependendo do sucesso na criação do APE para a linguagem FM.
+	 */
 	public boolean executa(APE newAutomato) {
 		
 		try{
@@ -34,7 +58,7 @@ public class MetaCompilador {
 			if(montadorOK){
 				
 				// Lexico
-				Lexico lex = new Lexico("gramatica.txt");
+				Lexico lex = new Lexico(arquivoFonte);
 				boolean lexOK = lex.executa();
 				
 				if(lexOK){
@@ -60,18 +84,7 @@ public class MetaCompilador {
 		}catch(Exception e){
 			e.printStackTrace();
 			return false;
-		}
-		
-	}
-	
-	
-	public void fechaArquivoFonte(){
-		try{
-			this.arquivoFonte.close();
-		}catch(Exception e){
-			//e.printStackTrace();
-			System.out.println("[ERRO] Impossivel fechar o arquivo fonte.");
-		}
+		}	
 	}
 
 }

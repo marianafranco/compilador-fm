@@ -1,17 +1,26 @@
 package compilador;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 
 import compilador.estruturas.FluxoTokens;
 import compilador.estruturas.TabelaSimbolos;
 import compilador.lexico.Lexico;
 import compilador.metacompilador.MetaCompilador;
 import compilador.estruturas.APE;
+import compilador.exceptions.ArquivoNaoEcontradoException;
 import compilador.semantico.PercorreAPE;
 
+/**
+ * Main: Controla a execução do compilador.
+ * 
+ * @author Felipe Yoshida, Mariana R. Franco
+ *
+ */
 public class Main {
-
+	
+	/**
+	 * flag que indica se as mensagens de debug serão monstradas ou não.
+	 */
 	private static int debug = 1;	
 	
 	
@@ -19,7 +28,6 @@ public class Main {
 	 * Ponto de entrada do compilador.
 	 * 
 	 * @param args argumentos de linha de comando
-	 * @throws FileNotFoundException 
 	 */
 	public static void main(String[] args) {
 		
@@ -32,25 +40,31 @@ public class Main {
 			String codFonte = args[0];
 			
 			try{
+				// Cria a tabela de simbolos e o fluxo de tokens
 				TabelaSimbolos tabelaSimbolos = new TabelaSimbolos();
 				FluxoTokens fluxoTokens = new FluxoTokens();
 				
+				// Cria o autômato de pilha estruturado da linguagem
 				APE newAutomato = new APE();
 				MetaCompilador meta = new MetaCompilador();
 				meta.executa(newAutomato);
 				
+				// Executa o léxico, preenchendo a tabela de simbolos e o
+				// fluxo de tokens.
 				Lexico lex = new Lexico(codFonte);
 				lex.executa(tabelaSimbolos, fluxoTokens);
 				
+				// Percorre o autômato gerando o código em MVN
 				PercorreAPE gerador = new PercorreAPE();
 				gerador.geraCodigo(newAutomato, fluxoTokens, tabelaSimbolos);
 				
+			}catch(ArquivoNaoEcontradoException e){
+				System.out.println("[INFO] Compilador finalizador com ERROS.");
 			}catch(Exception e){
 				e.printStackTrace();
-			}
-			
+			}	
 		}
-
+		
 	}
 	
 	

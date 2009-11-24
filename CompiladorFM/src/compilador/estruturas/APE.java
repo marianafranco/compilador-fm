@@ -2,18 +2,40 @@ package compilador.estruturas;
 
 import java.util.Vector;
 
+/**
+ * APE: Estrutura utilizada para representar um autômato de pilha estruturado. 
+ * 
+ * @author Felipe Yoshida, Mariana R. Franco
+ *
+ */
 public class APE {
 	
+	/**
+	 * vetor de submaquinas.
+	 */
 	private Vector<AFD> submaquinas;
 	
+	
+	/**
+	 * Método construtor.
+	 */
 	public APE(){
 		this.submaquinas = new Vector<AFD>();
 	}
 	
+	/**
+	 * Adiciona uma submaquina ao autômato de pilha estruturado.
+	 * @param nova	submáquina (AFD) que sera adicionada. 
+	 */
 	public void adicionaSubmaquina (AFD nova) {
 		this.submaquinas.add(nova);
 	}
 	
+	/**
+	 * Recupera a submáquina através do seu nome.
+	 * @param nome	nome da submáquina que se deseja recuperar.
+	 * @return	submáquina (AFD) desejada, ou nulo
+	 */
 	public AFD getSubmaquina(String nome){
 		for (int i = this.submaquinas.size() - 1; i >= 0; i--){
 			if(this.submaquinas.get(i).getNome().equals(nome)){
@@ -23,7 +45,10 @@ public class APE {
 		return null;
 	}
 	
-	// Imprime as submáquinas, seus estados e transições
+	
+	/**
+	 * Imprime as submáquinas, seus estados e transições
+	 */
 	public void imprime(){
 		System.out.println("## Automato ##");
 		for(int i=0 ; i < this.submaquinas.size(); i++){
@@ -50,7 +75,9 @@ public class APE {
 		}
 	}
 	
-	// Minimiza o autômato retirando as transições em vazio
+	/**
+	 * Minimiza o autômato retirando as transições em vazio
+	 */
 	public void minimiza(){
 		
 		// Minimiza
@@ -115,8 +142,7 @@ public class APE {
 					//System.out.println("Criou o estado: " + novoEstado.getId());
 				}
 			}
-		}
-		
+		}	
 	}
 	
 }
