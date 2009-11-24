@@ -21,12 +21,16 @@
 			<entradas>/</entradas>
 			<proximo>4</proximo>
 		</transicao>
+        
         <transicao>
 			<entradas>=&lt;&gt;</entradas>
 			<proximo>5</proximo>
 		</transicao>
-	</estado>
-	<estado>
+        <transicao>
+        	<entradas>&quot;</entradas>
+        	<proximo>8</proximo>
+        </transicao>
+    </estado><estado>
 		<id>1</id>
 		<final>true</final>
         <tipo>1</tipo>
@@ -81,4 +85,30 @@
 		<final>true</final>
         <tipo>3</tipo>
 	</estado>
+    <estado>
+    	<id>8</id>
+    	<final>false</final>
+    	<tipo>0</tipo>
+    	<transicao>
+    		<entradas>abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</entradas>
+    		<proximo>8</proximo>
+    	</transicao>
+    	<transicao>
+    		<entradas>0123456789</entradas>
+    		<proximo>8</proximo>
+    	</transicao>
+    	<transicao>
+    		<entradas>.,;+-*/ ()[]{}=&lt;&gt;</entradas>
+    		<proximo>8</proximo>
+    	</transicao>
+    	<transicao>
+    		<entradas>&quot;</entradas>
+    		<proximo>9</proximo>
+    	</transicao>
+    </estado>
+    <estado>
+    	<id>9</id>
+    	<final>true</final>
+    	<tipo>5</tipo>
+    </estado>
 </gramatica>

@@ -52,10 +52,13 @@ public class PercorreAPE {
 			if (temTransicao (token, tokenTipo, booleano, automato))
 				return true;
 		}
-		if (submaquina.temTransicao("identificador") && tokenTipo > 0) {
+		if (submaquina.temTransicao("identificador") && tokenTipo == TiposLexico.NOME) {
 			return true;
 		}
-		if (submaquina.temTransicao("numero") && tokenTipo == -2) {
+		if (submaquina.temTransicao("numero") && tokenTipo == TiposLexico.NUMERO) {
+			return true;
+		}
+		if (submaquina.temTransicao("string") && tokenTipo == TiposLexico.STRING) {
 			return true;
 		}
 		
@@ -96,8 +99,8 @@ public class PercorreAPE {
 			
 			// Desempilha maquina
 			conteudoPilha = (PilhaEstadoSubmaquina) pilha.pop();
-			System.out.println("pilha: (" + conteudoPilha.getEstado() + ", " + conteudoPilha.getSubmaquina() + ")");
-			System.out.println("token: " + token.getValor());
+			//System.out.println("pilha: (" + conteudoPilha.getEstado() + ", " + conteudoPilha.getSubmaquina() + ")");
+			//System.out.println("token: " + token.getValor());
 			
 			// Identifica qual a maquina que estava empilhada
 			if(conteudoPilha.getSubmaquina().equals("programa")){
@@ -168,14 +171,24 @@ public class PercorreAPE {
 				}
 			
 			// Se número
-			}else if (submaquina.temTransicao("numero") && token.getTipo() == -2) {
+			}else if (submaquina.temTransicao("numero") && token.getTipo() == TiposLexico.NUMERO) {
 				possiveisTransicoes++;
 				aPercorrer = "numero";
 				
 				if(tokensTokens.getTamanho() > 0){
 					getNewToken = true;
 				}
+			
+			// Se string
+			}else if (submaquina.temTransicao("string") && token.getTipo() == TiposLexico.STRING) {
+				possiveisTransicoes++;
+				aPercorrer = "string";
+				
+				if(tokensTokens.getTamanho() > 0){
+					getNewToken = true;
+				}
 			}
+			
 			
 			submaquina.setEstadoAtivo(conteudoPilha.getEstado());
 			// Caso haja apenas uma transicao possivel, realiza a mesma
@@ -200,7 +213,7 @@ public class PercorreAPE {
 				}
 				
 			// Caso haja mais de uma possivel transicao ou nenhuma, ha um erro
-			} else{
+			}else {
 				System.out.println("[ERRO] Caractere inesperado '" + token.getValor() + "' na linha " + token.getLinha() + ".");
 				return false;
 			}

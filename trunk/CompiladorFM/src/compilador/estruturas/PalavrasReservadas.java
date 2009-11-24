@@ -2,7 +2,8 @@ package compilador.estruturas;
 
 public class PalavrasReservadas {
 	
-	private String[] palavras = {"estrut", "principal", "retorno", "inteiro", "se", "entrada", "saida", "senao"};
+	private String[] palavras = {"estrut", "principal", "retorno", "inteiro", "caracteres", "booleano",
+			"entrada", "saida", "se", "senao", "enquanto", "verdadeiro", "falso"};
 	
 	public PalavrasReservadas () {
 		
