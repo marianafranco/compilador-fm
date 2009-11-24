@@ -1,4 +1,9 @@
+inteiro funcao(inteiro param){
+	retorno param;
+}
+
 principal (inteiro teste) {
+	
 	// Comentario
 	teste = 1 + 1;
 	se (teste <= 3) {
@@ -10,5 +15,7 @@ principal (inteiro teste) {
 	b = verdadeiro;
 	
 	caracteres c;
-	c = "teste";
+	c = "teste com espaco";
+	
+	funcao(teste);
 }
