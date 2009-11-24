@@ -63,12 +63,12 @@ public class PercorreAFD {
 							if (automato.temTransicao((char) proximo)) {
 								
 								// Se a transicao nao é para um estado final
-								if(!automato.transicaoFinal((char) proximo)){
+								//if(!automato.transicaoFinal((char) proximo)){
 									// gera token e volta para o estado inicial
-									adicionaToken(tokensTokens, tabelaSimbolos, token, automato.getTipo(), linha, coluna);
-									token = "";
-									automato.setEstadoAtivo(0);
-								}
+								//	adicionaToken(tokensTokens, tabelaSimbolos, token, automato.getTipo(), linha, coluna);
+								//	token = "";
+								//	automato.setEstadoAtivo(0);
+								//}
 							}
 							else {
 								//gera token e volta para o estado inicial
@@ -106,13 +106,14 @@ public class PercorreAFD {
 			int tipo, int linha, int coluna){
 		
 		//System.out.println("TOKEN = " + token);
+		//System.out.println("TIPO = " + tipo);
 		
 		// Caso seja um numero ou um caracter, nao e necessaria uma entrada na tabela
 		if (tipo == TiposLexico.NUMERO) {
-			tokensTokens.adicionaToken(token, -2);
+			tokensTokens.adicionaToken(token, tipo);
 		}
 		else if (tipo == TiposLexico.ESPECIAL) {
-			tokensTokens.adicionaToken(token, -1);
+			tokensTokens.adicionaToken(token, tipo);
 		}
 		// Se for uma string, talvez colocamos na tabela
 		else if (tipo == TiposLexico.NOME) {
@@ -121,12 +122,16 @@ public class PercorreAFD {
 			
 			int posicao = tabelaSimbolos.getEntradas();
 			if (temp.reservada(token) == false) {
-				tokensTokens.adicionaToken(token, posicao);
+				tokensTokens.adicionaToken(token, tipo);
 				tabelaSimbolos.adicionaEntrada (posicao, token.toString(), tipo, linha, coluna);
 			}
 			else {
-				tokensTokens.adicionaToken(token, -1);
+				tokensTokens.adicionaToken(token, TiposLexico.RESERVADO);
 			}
+			
+		// Se for uma string
+		}else if (tipo == TiposLexico.STRING){
+			tokensTokens.adicionaToken(token, tipo);
 		}
 	}
 	

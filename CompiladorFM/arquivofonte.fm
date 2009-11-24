@@ -1,8 +1,14 @@
 principal (inteiro teste) {
 	// Comentario
 	teste = 1 + 1;
-	se (teste == 3) {
+	se (teste <= 3) {
 		teste = 2;
 	}
 	teste = teste + 1;
+	
+	booleano b;
+	b = verdadeiro;
+	
+	caracteres c;
+	c = "teste";
 }
