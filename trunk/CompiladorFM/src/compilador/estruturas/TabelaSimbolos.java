@@ -13,7 +13,6 @@ public class TabelaSimbolos {
 	private Simbolo simbolo;
 	private int entradas;
 	
-	
 	/**
 	 * Método construtor
 	 */
@@ -26,6 +25,26 @@ public class TabelaSimbolos {
 		
 		//System.out.println("Posicao: " + posicao + ", nome: " + nome + ", tipo: " + tipo + ", linha: " + linha + ", coluna: "+ coluna);
 		Simbolo novo = new Simbolo(posicao, nome, tipo, linha, coluna);
+		
+		if (this.entradas == 0) {
+			this.simbolo = novo;
+		
+		}else {
+			Simbolo temp = this.simbolo;
+						
+			for(int i = 1; i < this.entradas; i++) {
+				temp = temp.proximo;
+			}	
+			temp.proximo = novo;
+		}
+		this.entradas++;
+	}
+	
+	
+	public void adicionaEntrada (String nome, int tipo, int linha, int coluna) {
+		
+		//System.out.println("Posicao: " + posicao + ", nome: " + nome + ", tipo: " + tipo + ", linha: " + linha + ", coluna: "+ coluna);
+		Simbolo novo = new Simbolo(this.entradas, nome, tipo, linha, coluna);
 		
 		if (this.entradas == 0) {
 			this.simbolo = novo;

@@ -17,8 +17,7 @@ public class PercorreAFD {
 	}
 	
 	
-	public boolean executa(AFD automato, Reader arquivoFonte, FluxoTokens tokensTokens, 
-			TabelaSimbolos tabelaSimbolos){
+	public boolean executa(AFD automato, Reader arquivoFonte, FluxoTokens tokensTokens){
 		
 		try{
 			int atual; // caractere atual
@@ -77,7 +76,7 @@ public class PercorreAFD {
 							}
 							else {
 								//gera token e volta para o estado inicial
-								adicionaToken(tokensTokens, tabelaSimbolos, token, automato.getTipo(), linha, coluna);
+								adicionaToken(tokensTokens, token, automato.getTipo(), linha, coluna);
 								token = "";
 								automato.setEstadoAtivo(0);
 							}
@@ -86,7 +85,7 @@ public class PercorreAFD {
 						// Se não existe transicao com o caractere atual
 						else {
 							//gera token e volta para o estado inicial
-							adicionaToken(tokensTokens, tabelaSimbolos, token, automato.getTipo(), linha, coluna);
+							adicionaToken(tokensTokens, token, automato.getTipo(), linha, coluna);
 							token = "";
 							automato.setEstadoAtivo(0);
 						}
@@ -107,7 +106,7 @@ public class PercorreAFD {
 		}	
 	}
 	
-	public void adicionaToken(FluxoTokens tokensTokens, TabelaSimbolos tabelaSimbolos, String token, 
+	public void adicionaToken(FluxoTokens tokensTokens, String token, 
 			int tipo, int linha, int coluna){
 		
 		//System.out.println("TOKEN = " + token);
@@ -124,17 +123,9 @@ public class PercorreAFD {
 		// Se for uma string, talvez colocamos na tabela
 		else if (tipo == TiposLexico.NOME) {
 			
-			PalavrasReservadas temp = new PalavrasReservadas();
-			
-			int posicao = tabelaSimbolos.getEntradas();
-			if (temp.reservada(token) == false) {
+			// Verifica se é palavra reservada
+			if (PalavrasReservadas.reservada(token) == false) {
 				tokensTokens.adicionaToken(token, tipo, linha, coluna);
-				
-				// Se não esta na tabela de simbolos, adicionamos
-				if(!tabelaSimbolos.estaNaTabela(token)){
-					tabelaSimbolos.adicionaEntrada (posicao, token, tipo, linha, coluna);
-					//System.out.println("SIMBOLO = " + token);
-				}
 			}
 			else {
 				tokensTokens.adicionaToken(token, TiposLexico.RESERVADO, linha, coluna);
