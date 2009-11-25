@@ -16,14 +16,9 @@ import compilador.exceptions.ArquivoNaoEcontradoException;
 public class Lexico {
 	
 	private Reader arquivoFonte;
-	
 	private AFD automato;
-	
 	private MontaAFD montador;
 	private PercorreAFD simulador;
-	
-	//private TabelaSimbolos tabelaSimbolos;
-	//private FluxoTokens fluxoTokens;
 	
 	
 	
@@ -41,16 +36,19 @@ public class Lexico {
 	}
 	
 	
-	public boolean executa(TabelaSimbolos tabelaSimbolos, FluxoTokens fluxoTokens){
+	public boolean executa(FluxoTokens fluxoTokens){
 		
 		// Monta o Automato Finito Deterministico
 		boolean montadorOK = montador.executa(this.automato);
 		
 		if(montadorOK){
 			// Simula Automato Finito Deterministico com o aquivo fonte de entrada
-			boolean simuladorOK = simulador.executa(this.automato, this.arquivoFonte, fluxoTokens, tabelaSimbolos);
+			boolean simuladorOK = simulador.executa(this.automato, this.arquivoFonte, fluxoTokens);
 			fechaArquivoFonte();
 			
+			return simuladorOK;
+			
+			/*
 			if(simuladorOK){
 				if (false) {
 					System.out.println("[INFO] Automato executado com sucesso");
@@ -72,6 +70,7 @@ public class Lexico {
 			}else{
 				return false;
 			}
+			*/
 			
 		}else{
 			fechaArquivoFonte();

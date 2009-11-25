@@ -9,6 +9,11 @@ public class Simbolo {
 	private int coluna;
 	public Simbolo proximo;
 	
+	//atributos utilizados para delimitar escopo
+	private int escopoProximo;
+	private int escopoAnterior;
+	
+	
 	public Simbolo (int id, String nome, int tipo, int coluna, int linha) {
 		this.id = id;
 		this.nome = nome;
@@ -32,4 +37,22 @@ public class Simbolo {
 	public Simbolo getproximo () {
 		return this.proximo;
 	}
+
+	public int getEscopoProximo() {
+		return escopoProximo;
+	}
+
+	public void setEscopoProximo(int escopoProximo) {
+		this.escopoProximo = escopoProximo;
+	}
+
+	public int getEscopoAnterior() {
+		return escopoAnterior;
+	}
+
+	public void setEscopoAnterior(int escopoAnterior) {
+		this.escopoAnterior = escopoAnterior;
+	}
+	
+	
 }

@@ -52,11 +52,11 @@ public class Main {
 				// Executa o léxico, preenchendo a tabela de simbolos e o
 				// fluxo de tokens.
 				Lexico lex = new Lexico(codFonte);
-				lex.executa(tabelaSimbolos, fluxoTokens);
+				lex.executa(fluxoTokens);
 				
 				// Percorre o autômato gerando o código em MVN
 				PercorreAPE gerador = new PercorreAPE();
-				gerador.geraCodigo(newAutomato, fluxoTokens, tabelaSimbolos);
+				gerador.executa(newAutomato, fluxoTokens);
 				
 			}catch(ArquivoNaoEcontradoException e){
 				System.out.println("[INFO] Compilador finalizador com ERROS.");

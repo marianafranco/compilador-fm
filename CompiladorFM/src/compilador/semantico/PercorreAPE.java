@@ -1,10 +1,14 @@
 package compilador.semantico;
 
 import java.util.Stack;
+import java.util.Vector;
+
+import compilador.estruturas.PalavrasReservadas;
 import compilador.estruturas.PilhaEstados;
 import compilador.estruturas.APE;
 import compilador.estruturas.FluxoTokens;
 import compilador.estruturas.TiposLexico;
+import compilador.estruturas.TiposSimbolos;
 import compilador.estruturas.Token;
 import compilador.estruturas.PilhaEstadoSubmaquina;
 import compilador.estruturas.AFD;
@@ -16,10 +20,23 @@ public class PercorreAPE {
 	private int cs;								// estado corrente
 	private int ns;								// proximo estado
 	
+	/**
+	 * pilha usada para as chamadas de submáquina
+	 */
+	private Stack<PilhaEstadoSubmaquina> pilhaSubmaquinas;
+	
+	/**
+	 * pilha que guarda a tabela de simbolos atual
+	 */
+	private Vector<TabelaSimbolos> vetorEscopos;
+	
 	public PercorreAPE() {
 		this.pilhaGeraAPE = new Stack<PilhaEstados>();
 		this.cs = 0;
 		this.ns = 1;
+		
+		pilhaSubmaquinas = new Stack<PilhaEstadoSubmaquina>();
+		vetorEscopos = new Vector<TabelaSimbolos>();
 	}
 	
 	// Verifica se ha em alguma transicao em um dos nao terminais 
@@ -64,12 +81,16 @@ public class PercorreAPE {
 	}
 	
 	
-	public boolean geraCodigo(APE automato, FluxoTokens tokensTokens, TabelaSimbolos tabelaDeSimbolos) {
+	public boolean executa(APE automato, FluxoTokens tokensTokens) {
 		
 		Token token;
-		Stack pilha = new Stack<PilhaEstadoSubmaquina>();
+		
+		// inicializa a tabela de simbolos
+		TabelaSimbolos tabela = new TabelaSimbolos();
+		vetorEscopos.add(tabela);
 		
 		if(tokensTokens.getTamanho() < 2){
+			System.out.println("[ERRO] Arquivo fonte incorreto.");
 			return false;
 		}
 		
@@ -88,7 +109,7 @@ public class PercorreAPE {
 		PilhaEstadoSubmaquina conteudoPilha; 
 		
 		// Inicializa pilha
-		pilha.push(new PilhaEstadoSubmaquina(0, "programa"));
+		pilhaSubmaquinas.push(new PilhaEstadoSubmaquina(0, "programa"));
 		
 		boolean fimTokensEFinal = true;
 		
@@ -96,7 +117,7 @@ public class PercorreAPE {
 		while(fimTokensEFinal) {
 			
 			// Desempilha maquina
-			conteudoPilha = (PilhaEstadoSubmaquina) pilha.pop();
+			conteudoPilha = (PilhaEstadoSubmaquina) pilhaSubmaquinas.pop();
 			//System.out.println("pilha: (" + conteudoPilha.getEstado() + ", " + conteudoPilha.getSubmaquina() + ")");
 			//System.out.println("token: " + token.getValor());
 			
@@ -160,12 +181,22 @@ public class PercorreAPE {
 				aPercorrer = "booleano";
 			
 			// Se identificador
-			}else if (submaquina.temTransicao("identificador") && tabelaDeSimbolos.estaNaTabela(token.getValor())) {
+			}else if (submaquina.temTransicao("identificador") && token.getTipo() == TiposLexico.NOME) {
 				possiveisTransicoes++;
 				aPercorrer = "identificador";
 				
 				if(tokensTokens.getTamanho() > 0){
 					getNewToken = true;
+				}
+				
+				// Adiciona na tabela de simbolos
+				// Se não é palavra reservada
+				if(!PalavrasReservadas.reservada(token.getValor())){
+					// Verifica se o nome ja esta na tabela de simbolos
+					if(!tabela.estaNaTabela(token.getValor())){
+						System.out.println("SIMBOLO = " + token.getValor());
+						tabela.adicionaEntrada(token.getValor(), TiposSimbolos.DESCONHECIDO, token.getLinha(), token.getColuna());
+					}
 				}
 			
 			// Se número
@@ -195,18 +226,22 @@ public class PercorreAPE {
 				submaquina.percorre(aPercorrer);
 				// Salva estado da submaquina
 				conteudoPilha.setEstado(submaquina.getEstadoAtivo());
+				
+				// Gera código
+				geraCodigo(token, aPercorrer, tabela, submaquina);
+				
 				// Caso seja necessario, pega um novo token
 				if (getNewToken == true) {
 					token = tokensTokens.recuperaToken();
 				}
 				// Empilha submaquina, caso ela nao tenha terminado
 				if (!submaquina.estadoAtivoFinal() || submaquina.temTransicao('"' + token.getValor() + '"')) {
-					pilha.push(new PilhaEstadoSubmaquina(conteudoPilha.getEstado(), conteudoPilha.getSubmaquina()));
+					pilhaSubmaquinas.push(new PilhaEstadoSubmaquina(conteudoPilha.getEstado(), conteudoPilha.getSubmaquina()));
 					
 					// Empilha nova maquina, caso transicao de um nao-terminal
 					if (aPercorrer == "programa" || aPercorrer == "comando" || aPercorrer == "expressao" || 
 							aPercorrer == "tipo" || aPercorrer == "booleano") {
-						pilha.push(new PilhaEstadoSubmaquina(0, aPercorrer));
+						pilhaSubmaquinas.push(new PilhaEstadoSubmaquina(0, aPercorrer));
 					}
 				}
 				
@@ -217,7 +252,7 @@ public class PercorreAPE {
 			}
 			
 			// Verifica se a pilha esta vazia e o estado é final
-			if (tokensTokens.getTamanho() == 0 && submaquina.estadoAtivoFinal() && pilha.empty()) {
+			if (tokensTokens.getTamanho() == 0 && submaquina.estadoAtivoFinal() && pilhaSubmaquinas.empty()) {
 				fimTokensEFinal = false;
 			}
 			
@@ -225,6 +260,31 @@ public class PercorreAPE {
 		
 		System.out.println("[INFO] Codigo aceito!");
 		return true;
+	}
+	
+	
+	public void geraCodigo(Token token, String aPercorrer, TabelaSimbolos tabela, AFD submaquina){
+		
+		// Se submaquina <programa>
+		if(submaquina.getNome().equals("programa")){
+			
+		
+		// Se submaquina <comando>
+		}else if(submaquina.getNome().equals("comando")){
+			
+		
+		// Se submaquina <expressao>
+		}else if(submaquina.getNome().equals("expressao")){
+			
+		
+		// Se submaquina <tipo>
+		}else if(submaquina.getNome().equals("tipo")){
+			
+			
+		// Se submaquina <booleano>
+		}else if(submaquina.getNome().equals("booleano")){
+			
+		}
 	}
 	
 }
