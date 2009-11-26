@@ -1,10 +1,10 @@
 package compilador.semantico;
 
+import java.io.File;
 import java.util.Stack;
 import java.util.Vector;
 
 import compilador.estruturas.PalavrasReservadas;
-import compilador.estruturas.PilhaEstados;
 import compilador.estruturas.APE;
 import compilador.estruturas.FluxoTokens;
 import compilador.estruturas.TiposLexico;
@@ -16,9 +16,9 @@ import compilador.estruturas.TabelaSimbolos;
 
 public class PercorreAPE {
 	
-	private Stack<PilhaEstados> pilhaGeraAPE;
-	private int cs;								// estado corrente
-	private int ns;								// proximo estado
+	private String arquivoMVN;
+	
+	private File arquivoObjeto;
 	
 	/**
 	 * pilha usada para as chamadas de submáquina
@@ -30,13 +30,20 @@ public class PercorreAPE {
 	 */
 	private Vector<TabelaSimbolos> vetorEscopos;
 	
-	public PercorreAPE() {
-		this.pilhaGeraAPE = new Stack<PilhaEstados>();
-		this.cs = 0;
-		this.ns = 1;
+	/**
+	 * pilha de escopo
+	 */
+	private Stack<TabelaSimbolos> pilhaEscopos;
+	
+	
+	public PercorreAPE(String arquivoMVN) {
+		this.arquivoMVN = arquivoMVN;
+		
+		arquivoObjeto = new File(this.arquivoMVN);
 		
 		pilhaSubmaquinas = new Stack<PilhaEstadoSubmaquina>();
 		vetorEscopos = new Vector<TabelaSimbolos>();
+		pilhaEscopos = new Stack<TabelaSimbolos>();
 	}
 	
 	// Verifica se ha em alguma transicao em um dos nao terminais 
@@ -85,17 +92,11 @@ public class PercorreAPE {
 		
 		Token token;
 		
-		// inicializa a tabela de simbolos
-		TabelaSimbolos tabela = new TabelaSimbolos();
-		vetorEscopos.add(tabela);
-		
 		if(tokensTokens.getTamanho() < 2){
 			System.out.println("[ERRO] Arquivo fonte incorreto.");
 			return false;
 		}
 		
-		// Pega primeiro token
-		token = tokensTokens.recuperaToken();
 		
 		// Submaquinas temporarias
 		AFD progr = automato.getSubmaquina("programa");
@@ -106,12 +107,22 @@ public class PercorreAPE {
 		
 		// Submaquina e pilha
 		AFD submaquina;
-		PilhaEstadoSubmaquina conteudoPilha; 
+		PilhaEstadoSubmaquina conteudoPilha;
 		
 		// Inicializa pilha
 		pilhaSubmaquinas.push(new PilhaEstadoSubmaquina(0, "programa"));
 		
+		// inicializa a tabela de simbolos
+		TabelaSimbolos tabela = new TabelaSimbolos();
+		tabela.setEscopo(vetorEscopos.size());
+		vetorEscopos.add(tabela);
+		pilhaEscopos.push(tabela);
+		
+		// Pega primeiro token
+		token = tokensTokens.recuperaToken();
+		
 		boolean fimTokensEFinal = true;
+		
 		
 		// Enquanto não chegamos ao final dos tokens
 		while(fimTokensEFinal) {

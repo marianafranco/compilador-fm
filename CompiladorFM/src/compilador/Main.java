@@ -32,12 +32,14 @@ public class Main {
 	public static void main(String[] args) {
 		
 		// Caso o numero de argumentos passados seja diferente de 2
-		if(args.length != 1){ // TODO Depois mudar para 2
+		if(args.length != 2){
 			System.out.println("[ERRO] Forma de uso: compilador <fonte> <objeto>");
 		
 		}else{
 			debugMensagem("arquivo fonte: " + args[0]);
+			debugMensagem("arquivo objeto: " + args[1]);
 			String codFonte = args[0];
+			String codMVN = args[1];
 			
 			try{
 				// Cria a tabela de simbolos e o fluxo de tokens
@@ -55,7 +57,7 @@ public class Main {
 				lex.executa(fluxoTokens);
 				
 				// Percorre o autômato gerando o código em MVN
-				PercorreAPE gerador = new PercorreAPE();
+				PercorreAPE gerador = new PercorreAPE(codMVN);
 				gerador.executa(newAutomato, fluxoTokens);
 				
 			}catch(ArquivoNaoEcontradoException e){

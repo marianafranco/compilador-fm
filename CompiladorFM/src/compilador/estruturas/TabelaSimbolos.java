@@ -10,8 +10,21 @@ import compilador.estruturas.Simbolo;
  */
 public class TabelaSimbolos {
 	
+	
 	private Simbolo simbolo;
 	private int entradas;
+	
+	
+	/**
+	 * id do escopo ao qual pertence a tabela de simbolos 
+	 */
+	private int escopo;
+	
+	/**
+	 * indica o id da tabela se simbolos do escopo anterior
+	 */
+	private int escopoAnterior;
+	
 	
 	/**
 	 * Método construtor
@@ -105,7 +118,31 @@ public class TabelaSimbolos {
 		}
 	}
 	
+	
+	// Gets e Sets
+	
 	public int getEntradas() {
 		return this.entradas;
 	}
+	
+
+	public int getEscopo() {
+		return escopo;
+	}
+
+
+	public void setEscopo(int escopo) {
+		this.escopo = escopo;
+	}
+
+
+	public int getEscopoAnterior() {
+		return escopoAnterior;
+	}
+
+
+	public void setEscopoAnterior(int escopoAnterior) {
+		this.escopoAnterior = escopoAnterior;
+	}
+	
 }
