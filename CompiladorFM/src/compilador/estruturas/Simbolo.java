@@ -20,12 +20,27 @@ public class Simbolo {
 		this.posicao = null;
 	}
 	
+	
+	public boolean jaDeclarado () {
+		if (this.posicao == null) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+	
+	
 	public int getId () {
 		return this.id;
 	}
 	
 	public int getTipo () {
 		return this.tipo;
+	}
+	
+	public void setTipo(int tipo){
+		this.tipo = tipo;
 	}
 	
 	public String getNome () {
@@ -42,14 +57,5 @@ public class Simbolo {
 	
 	public void setPosicao (String posicao) {
 		this.posicao = posicao;
-	}
-
-	public boolean jaDeclarado () {
-		if (this.posicao == null) {
-			return false;
-		}
-		else {
-			return true;
-		}
 	}
 }
