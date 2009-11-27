@@ -8,7 +8,7 @@ import compilador.lexico.Lexico;
 import compilador.metacompilador.MetaCompilador;
 import compilador.estruturas.APE;
 import compilador.exceptions.ArquivoNaoEcontradoException;
-import compilador.semantico.PercorreAPE;
+import compilador.sintatico.PercorreAPE;
 
 /**
  * Main: Controla a execução do compilador.
