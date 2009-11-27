@@ -76,6 +76,43 @@ public class APE {
 	}
 	
 	/**
+	 * Imprime as submáquinas, seus estados e transições para o graphviz
+	 */
+	public void imprime_desenho(){
+		System.out.println("");
+		System.out.println("");
+		System.out.println("");
+		System.out.println("");
+		for(int i=0 ; i < this.submaquinas.size(); i++){
+			AFD submaquina = this.submaquinas.get(i);
+			System.out.println("digraph " + submaquina.getNome() + " {");
+			System.out.println("");
+			System.out.println("\tnull [shape = plaintext label=\"\"];");
+			System.out.print("\tnode [shape = doublecircle]");
+			for(int j=0; j < submaquina.getTamanho(); j++){
+				if(submaquina.getEstadoIndice(j).getAceitacao()){
+					System.out.print(" " + submaquina.getEstadoIndice(j).getId());
+				}
+			}
+			System.out.println(";");
+			System.out.println("\tnode [shape = circle];");
+			System.out.println("");
+			System.out.println("\tnull -> 0;");
+
+			for(int j=0; j < submaquina.getTamanho(); j++){
+				Estado estado = submaquina.getEstadoIndice(j);
+				
+				for(int k=0; k < estado.getTamanho(); k++){
+					System.out.print("\t" + estado.getId() + " -> " + estado.getTransicao(k).getProximo());
+					System.out.print(" [ label = " + estado.getTransicao(k).getEntrada() + " ];");
+					System.out.println();
+				}
+			}
+			System.out.println("}");
+		}
+	}
+	
+	/**
 	 * Minimiza o autômato retirando as transições em vazio
 	 */
 	public void minimiza(){
@@ -142,7 +179,34 @@ public class APE {
 					//System.out.println("Criou o estado: " + novoEstado.getId());
 				}
 			}
-		}	
+		}
+		
+		// Elimina estados n‹o alcan‡veis
+		for(int i=0 ; i < this.submaquinas.size(); i++){
+			AFD submaquina = this.submaquinas.get(i);
+			boolean[] alcancaveis = new boolean[submaquina.getTamanho()];
+			// Inicializando o vetor
+			for (int j = 0; j < submaquina.getTamanho(); j++) {
+				alcancaveis[j] = false;
+			}
+			
+			for(int j=0; j < submaquina.getTamanho(); j++){
+				Estado estado = submaquina.getEstadoIndice(j);
+				Vector<Transicao> transicoes = estado.getTransicoes();
+				
+				for (int k = 0; k < transicoes.size(); k++) {
+					alcancaveis[transicoes.elementAt(k).getProximo()] = true;
+				}
+			}
+			alcancaveis[0] = true;
+			int tamanhoOriginal = submaquina.getTamanho();
+			for(int j=0; j < tamanhoOriginal; j++){
+				if (alcancaveis[j] == false) {
+					submaquina.removeEstado(j);
+				}
+			}
+		}
+		
 	}
 	
 }

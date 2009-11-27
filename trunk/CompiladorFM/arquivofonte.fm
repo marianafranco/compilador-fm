@@ -1,21 +1,34 @@
-inteiro funcao(inteiro param){
-	retorno param;
-}
+//inteiro funcao(inteiro param){
+//	enquanto (param == 2) {
+//		param = param + 1;
+//	}
+//	retorno param;
+//}
 
-principal (inteiro teste) {
+principal () {
+	
+	inteiro var1;
+	inteiro var2;
+	booleano bool;
+//	caracteres char;
 	
 	// Comentario
-	teste = 1 + 1;
-	se (teste <= 3) {
-		teste = 2;
-	}
-	teste = teste + 1;
+//	bool = verdadeiro;
+//	char = "teste com espaco";
+//	var1 = 1;
+//	var2 = funcao(var1);
 	
-	booleano b;
-	b = verdadeiro;
+//	se (var2 <= var1) {
+//		var1 = var2;
+//	}
+//	senao {
+//		var temp;
+//		temp = 31;
+//		var1 = temp;
+//	}
 	
-	caracteres c;
-	c = "teste com espaco";
+//	var2 = var2 * var1;
 	
-	funcao(teste);
+	// saida << c;
+	
 }
