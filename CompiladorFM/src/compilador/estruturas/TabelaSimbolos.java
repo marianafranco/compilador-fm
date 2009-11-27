@@ -96,6 +96,27 @@ public class TabelaSimbolos {
 		}
 	}
 	
+	public Simbolo recuperaEntrada (String nome) {
+		
+		if (this.entradas == 0) {
+			return null;
+		
+		}else {
+			Simbolo temp = this.simbolo;
+			
+			if(temp.getNome().equals(nome)) {
+				return temp;
+			}
+			
+			for (int i = 2; i <= this.entradas; i++) {
+				temp = temp.getproximo();
+				if(temp.getNome().equals(nome)) {
+					return temp;
+				}
+			}			
+			return null;
+		}
+	}
 	
 	public boolean estaNaTabela (String nome) {
 		
@@ -144,5 +165,6 @@ public class TabelaSimbolos {
 	public void setEscopoAnterior(int escopoAnterior) {
 		this.escopoAnterior = escopoAnterior;
 	}
+
 	
 }

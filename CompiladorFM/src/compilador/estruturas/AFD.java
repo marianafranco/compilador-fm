@@ -163,6 +163,13 @@ public class AFD {
 		return nextID + 1;
 	}
 	
+	public void removeEstado (int id) {
+		for(int i = 0; i < this.estados.size(); i++){
+			if(this.estados.get(i).getId() == id){
+				estados.remove(i);
+			}
+		}
+	}
 	
 	public int getTamanho(){
 		return this.estados.size();

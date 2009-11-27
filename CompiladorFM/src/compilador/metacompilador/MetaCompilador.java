@@ -67,6 +67,7 @@ public class MetaCompilador {
 					
 					newAutomato.minimiza();
 					//newAutomato.imprime();
+					//newAutomato.imprime_desenho();
 					
 					if(simuladorOK){
 						return true;

@@ -35,6 +35,20 @@ public class PercorreAPE {
 	 */
 	private Stack<TabelaSimbolos> pilhaEscopos;
 	
+	/**
+	 * pilha de tokens para a geracao de codigo
+	 */
+	private Stack<Token> pilhaTokens;
+	
+	/**
+	 * pilha de instrucoes de 
+	 */
+	private Stack<String> pilhaDeclaracoes;
+	
+	/**
+	 * pilha de tokens para a geracao de codigo
+	 */
+	private Stack<String> pilhaInstrucoes;
 	
 	public PercorreAPE(String arquivoMVN) {
 		this.arquivoMVN = arquivoMVN;
@@ -44,6 +58,9 @@ public class PercorreAPE {
 		pilhaSubmaquinas = new Stack<PilhaEstadoSubmaquina>();
 		vetorEscopos = new Vector<TabelaSimbolos>();
 		pilhaEscopos = new Stack<TabelaSimbolos>();
+		pilhaTokens = new Stack<Token>();
+		pilhaDeclaracoes = new Stack<String>();
+		pilhaInstrucoes = new Stack<String>();
 	}
 	
 	// Verifica se ha em alguma transicao em um dos nao terminais 
@@ -52,8 +69,6 @@ public class PercorreAPE {
 		submaquina.setEstadoAtivo(0);
 		AFD comando = automato.getSubmaquina("comando");
 		AFD expr = automato.getSubmaquina("expressao");
-		AFD tipo = automato.getSubmaquina("tipo");
-		AFD booleano = automato.getSubmaquina("booleano");
 		
 		if (submaquina.temTransicao('"' + token + '"')) {
 			return true;
@@ -64,14 +79,6 @@ public class PercorreAPE {
 		}
 		if (submaquina.temTransicao("expressao")) {
 			if (temTransicao (token, tokenTipo, expr, automato))
-				return true;
-		}
-		if (submaquina.temTransicao("tipo")) {
-			if (temTransicao (token, tokenTipo, tipo, automato))
-				return true;
-		}
-		if (submaquina.temTransicao("booleano")) {
-			if (temTransicao (token, tokenTipo, booleano, automato))
 				return true;
 		}
 		if (submaquina.temTransicao("identificador") && tokenTipo == TiposLexico.NOME) {
@@ -102,8 +109,6 @@ public class PercorreAPE {
 		AFD progr = automato.getSubmaquina("programa");
 		AFD comando = automato.getSubmaquina("comando");
 		AFD expr = automato.getSubmaquina("expressao");
-		AFD tipo = automato.getSubmaquina("tipo");
-		AFD booleano = automato.getSubmaquina("booleano");
 		
 		// Submaquina e pilha
 		AFD submaquina;
@@ -117,6 +122,11 @@ public class PercorreAPE {
 		tabela.setEscopo(vetorEscopos.size());
 		vetorEscopos.add(tabela);
 		pilhaEscopos.push(tabela);
+		
+		// Empilha codigo de inicializacao
+		pilhaDeclaracoes.push("@ /0");
+		pilhaDeclaracoes.push("JP INICIO");
+		pilhaInstrucoes.push("@ /256");
 		
 		// Pega primeiro token
 		token = tokensTokens.recuperaToken();
@@ -141,12 +151,6 @@ public class PercorreAPE {
 			}
 			else if(conteudoPilha.getSubmaquina().equals("expressao")){
 				submaquina = expr;
-			}
-			else if(conteudoPilha.getSubmaquina().equals("tipo")){
-				submaquina = tipo;
-			}
-			else if(conteudoPilha.getSubmaquina().equals("booleano")){
-				submaquina = booleano;
 			}
 			else{
 				// TODO Acrescentar mensagem de erro 
@@ -180,18 +184,7 @@ public class PercorreAPE {
 			}else if (submaquina.temTransicao("expressao") && temTransicao (token.getValor(), token.getTipo(), expr, automato)) {
 				possiveisTransicoes++;
 				aPercorrer = "expressao";
-			
-			// Se chamada para subm·quina "tipo"
-			}else if (submaquina.temTransicao("tipo") && temTransicao (token.getValor(), token.getTipo(), tipo, automato)) {
-				possiveisTransicoes++;
-				aPercorrer = "tipo";
-			
-			// Se chamada para subm·quina "booleano"
-			}else if (submaquina.temTransicao("booleano") && temTransicao (token.getValor(), token.getTipo(), booleano, automato)) {
-				possiveisTransicoes++;
-				aPercorrer = "booleano";
-			
-			// Se identificador
+
 			}else if (submaquina.temTransicao("identificador") && token.getTipo() == TiposLexico.NOME) {
 				possiveisTransicoes++;
 				aPercorrer = "identificador";
@@ -239,7 +232,7 @@ public class PercorreAPE {
 				conteudoPilha.setEstado(submaquina.getEstadoAtivo());
 				
 				// Gera cÛdigo
-				geraCodigo(token, aPercorrer, tabela, submaquina);
+				geraCodigo(token, tabela, submaquina);
 				
 				// Caso seja necessario, pega um novo token
 				if (getNewToken == true) {
@@ -274,7 +267,9 @@ public class PercorreAPE {
 	}
 	
 	
-	public void geraCodigo(Token token, String aPercorrer, TabelaSimbolos tabela, AFD submaquina){
+	public void geraCodigo(Token token, TabelaSimbolos tabela, AFD submaquina){
+		
+		//System.out.println("[DEBUG] Token: " + token.getValor() + " submaquina: " + submaquina.getNome());
 		
 		// Se submaquina <programa>
 		if(submaquina.getNome().equals("programa")){
@@ -282,19 +277,35 @@ public class PercorreAPE {
 		
 		// Se submaquina <comando>
 		}else if(submaquina.getNome().equals("comando")){
-			
+			// Se acharmos uma declaração
+			if (token.getValor().equals("inteiro") || token.getValor().equals("booleano") || tabela.estaNaTabela(token.getValor())) {
+				pilhaTokens.push(token);
+			// Se acharmos o fim de um comando
+			}else if (token.getValor().equals(";")) {
+				Token ultimo = pilhaTokens.pop();
+				Token penultimo = pilhaTokens.pop();
+				// Foi declarado um inteiro ou um booleano
+				if ((penultimo.getValor().equals("inteiro") || penultimo.getValor().equals("booleano")) && tabela.estaNaTabela(ultimo.getValor())) {
+					// Caso ele nao tenha sido declarado
+					if (tabela.recuperaEntrada(ultimo.getValor()).jaDeclarado() == false) {
+						// Define proximo endereco
+						tabela.recuperaEntrada(ultimo.getValor()).setPosicao(ultimo.getValor());
+						pilhaDeclaracoes.push(ultimo.getValor() + " K /0");
+					}
+					else {
+						System.out.println("[ERRO] Variável " + ultimo.getValor() + " ja declarada!");
+					}
+				// Foi declarado um booleano
+				}else {
+					System.out.println("[ERRO] Erro na geração de código!");
+				}
+				
+			}
 		
 		// Se submaquina <expressao>
 		}else if(submaquina.getNome().equals("expressao")){
 			
 		
-		// Se submaquina <tipo>
-		}else if(submaquina.getNome().equals("tipo")){
-			
-			
-		// Se submaquina <booleano>
-		}else if(submaquina.getNome().equals("booleano")){
-			
 		}
 	}
 	

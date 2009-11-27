@@ -1,23 +1,20 @@
-programa = { "estrut" 
-           "{" tipo identificador [ "[" numero "]" ] ";" 
-           { tipo identificador [ "[" numero "]" ] ";" } "}" }
-           { tipo identificador 
-		   "(" [ tipo identificador [ "[" numero "]" ] 
-		   { "," tipo identificador [ "[" numero "]" ] } ] ")"
+programa = { ("inteiro" | "caracteres" | "booleano") identificador 
+		   "(" [ ("inteiro" | "caracteres" | "booleano") identificador [ "[" numero "]" ] 
+		   { "," ("inteiro" | "caracteres" | "booleano") identificador [ "[" numero "]" ] } ] ")"
 		   "{" {comando} 
 		   "retorno" ( identificador [ "[" ( numero | expressao ) "]" ] 
 		   | expressao | numero | string 
-		   | booleano ) ";" "}" }
-		   "principal" "(" [ tipo identificador [ "[" numero "]" ]
-		   { "," tipo identificador [ "[" numero "]" ] } ] ")"
+		   | "verdadeiro" | "falso" ) ";" "}" }
+		   "principal" "(" [ ("inteiro" | "caracteres" | "booleano") identificador [ "[" numero "]" ]
+		   { "," ("inteiro" | "caracteres" | "booleano") identificador [ "[" numero "]" ] } ] ")"
 		   "{" {comando} "}" .
 		   
 		   
 comando = [ 
-		  tipo identificador [ "[" numero "]" ] ";" 
+		  ("inteiro" | "caracteres" | "booleano") identificador [ "[" numero "]" ] ";" 
 		  | 
 		  identificador [ "[" ( numero | expressao ) "]" ]  "=" 
-		  ( expressao | string | booleano )";" 
+		  ( expressao | string | "verdadeiro" | "falso" )";" 
 		  | 
 	  	  "enquanto" 
 	  	  "(" expressao (">" | "<" | ">=" | "<=" | "==" | "!=") 
@@ -38,32 +35,28 @@ comando = [
 
 expressao = ( identificador [ "[" ( numero | expressao ) "]" ] 
 			| identificador "(" 
-			[ ( expressao | string | booleano ) 
+			[ ( expressao | string | "verdadeiro" | "falso" ) 
 			{"," ( expressao | string 
-			| booleano ) } ] ")" 
+			| "verdadeiro" | "falso" ) } ] ")" 
 			| numero | "(" expressao ")" ) 
 			{ ( "*" | "/" ) 
 			( identificador [ "[" ( numero | expressao ) "]" ] 
 			| identificador "(" 
-			[ ( expressao | string | booleano ) 
+			[ ( expressao | string | "verdadeiro" | "falso" ) 
 			{"," ( expressao | string 
-			| booleano ) } ] ")" 
+			| "verdadeiro" | "falso" ) } ] ")" 
 			| numero | "(" expressao ")" ) } 
 			{ ( "+" | "-" ) 
 			( identificador [ "[" ( numero | expressao ) "]" ] 
 			| identificador "(" 
-			[ ( expressao | string | booleano ) 
+			[ ( expressao | string | "verdadeiro" | "falso" ) 
 			{"," ( expressao | string 
-			| booleano ) } ] ")" 
+			| "verdadeiro" | "falso" ) } ] ")" 
 			| numero | "(" expressao ")" ) 
 			{ ( "*" | "/" ) 
 			( identificador [ "[" ( numero | expressao ) "]" ] 
 			| identificador "(" 
-			[ ( expressao | string | booleano ) 
+			[ ( expressao | string | "verdadeiro" | "falso" ) 
 			{"," ( expressao | string 
-			| booleano ) } ] ")" 
+			| "verdadeiro" | "falso" ) } ] ")" 
 			| numero | "(" expressao ")" ) } } .
-			
-tipo = "inteiro" | "caracteres" | "booleano" .
-
-booleano = "verdadeiro" | "falso" .
