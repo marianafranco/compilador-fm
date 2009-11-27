@@ -1,16 +1,16 @@
-//inteiro funcao(inteiro param){
+inteiro funcao(inteiro param){
 //	enquanto (param == 2) {
 //		param = param + 1;
 //	}
-//	retorno param;
-//}
+	retorno param;
+}
 
 principal () {
 	
 	inteiro var1;
 	inteiro var2;
 	booleano bool;
-//	caracteres char;
+	caracteres char;
 	
 	// Comentario
 //	bool = verdadeiro;
