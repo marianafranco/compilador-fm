@@ -5,8 +5,7 @@ programa = { ("inteiro" | "caracteres" | "booleano") identificador
 		   "retorno" ( identificador [ "[" ( numero | expressao ) "]" ] 
 		   | expressao | numero | string 
 		   | "verdadeiro" | "falso" ) ";" "}" }
-		   "principal" "(" [ ("inteiro" | "caracteres" | "booleano") identificador [ "[" numero "]" ]
-		   { "," ("inteiro" | "caracteres" | "booleano") identificador [ "[" numero "]" ] } ] ")"
+		   "principal" "(" ")"
 		   "{" {comando} "}" .
 		   
 		   
@@ -26,37 +25,25 @@ comando = [
 		  | 
 		  identificador "(" [ expressao {"," expressao} ] ")" ";" 
 		  | 
-		  "entrada" ">>" identificador 
+		  "entrada" "=" identificador 
 		  [ "[" ( numero | expressao ) "]" ] ";" 
 		  | 
-		  "saida" "<<" ( expressao | string )";" 
+		  "saida" "=" ( expressao | string )";" 
 		  ] .
 
 
 expressao = ( identificador [ "[" ( numero | expressao ) "]" ] 
-			| identificador "(" 
-			[ ( expressao | string | "verdadeiro" | "falso" ) 
-			{"," ( expressao | string 
-			| "verdadeiro" | "falso" ) } ] ")" 
+			| identificador "(" [ expressao  { "," expressao } ] ")" 
 			| numero | "(" expressao ")" ) 
 			{ ( "*" | "/" ) 
 			( identificador [ "[" ( numero | expressao ) "]" ] 
-			| identificador "(" 
-			[ ( expressao | string | "verdadeiro" | "falso" ) 
-			{"," ( expressao | string 
-			| "verdadeiro" | "falso" ) } ] ")" 
+			| identificador "(" [ expressao {"," expressao } ] ")" 
 			| numero | "(" expressao ")" ) } 
 			{ ( "+" | "-" ) 
 			( identificador [ "[" ( numero | expressao ) "]" ] 
-			| identificador "(" 
-			[ ( expressao | string | "verdadeiro" | "falso" ) 
-			{"," ( expressao | string 
-			| "verdadeiro" | "falso" ) } ] ")" 
+			| identificador "(" [ expressao {"," expressao } ] ")" 
 			| numero | "(" expressao ")" ) 
 			{ ( "*" | "/" ) 
 			( identificador [ "[" ( numero | expressao ) "]" ] 
-			| identificador "(" 
-			[ ( expressao | string | "verdadeiro" | "falso" ) 
-			{"," ( expressao | string 
-			| "verdadeiro" | "falso" ) } ] ")" 
+			| identificador "(" [ expressao {"," expressao } ] ")" 
 			| numero | "(" expressao ")" ) } } .
