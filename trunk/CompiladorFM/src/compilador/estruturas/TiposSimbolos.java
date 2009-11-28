@@ -9,4 +9,6 @@ public final class TiposSimbolos {
 	public static final int INTEIRO = 3;
 	public static final int BOOLEANO = 4;
 	public static final int STRING = 5;
+	
+	public static final int CONSTANTE = 6;
 }

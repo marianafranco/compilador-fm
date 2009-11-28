@@ -1,12 +1,10 @@
 package compilador.lexico;
 
-import java.io.IOException;
 import java.io.Reader;
 
 import compilador.estruturas.AFD;
 import compilador.estruturas.FluxoTokens;
 import compilador.estruturas.PalavrasReservadas;
-import compilador.estruturas.TabelaSimbolos;
 import compilador.estruturas.TiposLexico;
 
 public class PercorreAFD {

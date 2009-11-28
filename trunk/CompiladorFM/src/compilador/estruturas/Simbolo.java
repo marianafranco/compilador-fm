@@ -8,21 +8,24 @@ public class Simbolo {
 	private int linha;
 	private int coluna;
 	public Simbolo proximo;
-	private String posicao;
+	
+	private String endereco;
+	private int tamanho;
 	
 	
-	public Simbolo (int id, String nome, int tipo, int coluna, int linha) {
+	public Simbolo (int id, String nome, int tipo, int coluna, int linha, String end, int tamanho) {
 		this.id = id;
 		this.nome = nome;
 		this.tipo = tipo;
 		this.coluna = coluna;
 		this.linha = linha;
-		this.posicao = null;
+		this.endereco = end;
+		this.tamanho = tamanho;
 	}
 	
 	
 	public boolean jaDeclarado () {
-		if (this.posicao == null) {
+		if (this.endereco == null) {
 			return false;
 		}
 		else {
@@ -47,15 +50,27 @@ public class Simbolo {
 		return this.nome;
 	}
 	
-	public Simbolo getproximo () {
+	public Simbolo getProximo () {
 		return this.proximo;
 	}
 	
-	public String getPosicao () {
-		return this.posicao;
+	public String getEndereco () {
+		return this.endereco;
 	}
 	
-	public void setPosicao (String posicao) {
-		this.posicao = posicao;
+	public void setEndereco (String posicao) {
+		this.endereco = posicao;
 	}
+
+
+	public int getTamanho() {
+		return tamanho;
+	}
+
+
+	public void setTamanho(int tamanho) {
+		this.tamanho = tamanho;
+	}
+	
+	
 }

@@ -34,30 +34,10 @@ public class TabelaSimbolos {
 	}
 	
 	
-	public void adicionaEntrada (int posicao, String nome, int tipo, int linha, int coluna) {
+	public void adicionaEntrada (String nome, int tipo, String end, int tamanho, int linha, int coluna) {
 		
-		//System.out.println("Posicao: " + posicao + ", nome: " + nome + ", tipo: " + tipo + ", linha: " + linha + ", coluna: "+ coluna);
-		Simbolo novo = new Simbolo(posicao, nome, tipo, linha, coluna);
-		
-		if (this.entradas == 0) {
-			this.simbolo = novo;
-		
-		}else {
-			Simbolo temp = this.simbolo;
-						
-			for(int i = 1; i < this.entradas; i++) {
-				temp = temp.proximo;
-			}	
-			temp.proximo = novo;
-		}
-		this.entradas++;
-	}
-	
-	
-	public void adicionaEntrada (String nome, int tipo, int linha, int coluna) {
-		
-		//System.out.println("Posicao: " + posicao + ", nome: " + nome + ", tipo: " + tipo + ", linha: " + linha + ", coluna: "+ coluna);
-		Simbolo novo = new Simbolo(this.entradas, nome, tipo, linha, coluna);
+		//System.out.println("nome: " + nome + ", tipo: " + tipo + ", linha: " + linha + ", coluna: "+ coluna);
+		Simbolo novo = new Simbolo(this.entradas, nome, tipo, linha, coluna, end, tamanho);
 		
 		if (this.entradas == 0) {
 			this.simbolo = novo;
@@ -74,7 +54,8 @@ public class TabelaSimbolos {
 	}
 	
 	
-	public Simbolo recuperaEntrada (int posicao) {
+	
+	public Simbolo recuperaEntrada (int id) {
 		
 		if (this.entradas == 0) {
 			return null;
@@ -82,19 +63,20 @@ public class TabelaSimbolos {
 		}else {
 			Simbolo temp = this.simbolo;
 			
-			if(temp.getId() == posicao) {
+			if(temp.getId() == id) {
 				return temp;
 			}
 			
 			for (int i = 2; i <= this.entradas; i++) {
-				temp = temp.getproximo();
-				if(temp.getId() == posicao) {
+				temp = temp.getProximo();
+				if(temp.getId() == id) {
 					return temp;
 				}
 			}			
 			return null;
 		}
 	}
+	
 	
 	public Simbolo recuperaEntrada (String nome) {
 		
@@ -109,7 +91,7 @@ public class TabelaSimbolos {
 			}
 			
 			for (int i = 2; i <= this.entradas; i++) {
-				temp = temp.getproximo();
+				temp = temp.getProximo();
 				if(temp.getNome().equals(nome)) {
 					return temp;
 				}
@@ -130,7 +112,7 @@ public class TabelaSimbolos {
 			}
 			
 			for (int i = 2; i <= this.entradas; i++) {
-				temp = temp.getproximo();
+				temp = temp.getProximo();
 				if(temp.getNome().equals(nome)) {
 					return true;
 				}

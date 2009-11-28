@@ -8,7 +8,7 @@ import compilador.lexico.Lexico;
 import compilador.metacompilador.MetaCompilador;
 import compilador.estruturas.APE;
 import compilador.exceptions.ArquivoNaoEcontradoException;
-import compilador.sintatico.PercorreAPE;
+import compilador.sintatico.Sintatico;
 
 /**
  * Main: Controla a execução do compilador.
@@ -57,7 +57,7 @@ public class Main {
 				lex.executa(fluxoTokens);
 				
 				// Percorre o autômato gerando o código em MVN
-				PercorreAPE gerador = new PercorreAPE(codMVN);
+				Sintatico gerador = new Sintatico(codMVN);
 				gerador.executa(newAutomato, fluxoTokens);
 				
 			}catch(ArquivoNaoEcontradoException e){

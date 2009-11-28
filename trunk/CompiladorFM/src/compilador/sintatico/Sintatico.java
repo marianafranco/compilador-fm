@@ -1,6 +1,8 @@
-package compilador.semantico;
+package compilador.sintatico;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.Stack;
 import java.util.Vector;
 
@@ -13,55 +15,27 @@ import compilador.estruturas.Token;
 import compilador.estruturas.PilhaEstadoSubmaquina;
 import compilador.estruturas.AFD;
 import compilador.estruturas.TabelaSimbolos;
+import compilador.semantico.Semantico;
 
-public class PercorreAPE {
-	
-	private String arquivoMVN;
-	
-	private File arquivoObjeto;
+public class Sintatico {
 	
 	/**
 	 * pilha usada para as chamadas de subm·quina
 	 */
 	private Stack<PilhaEstadoSubmaquina> pilhaSubmaquinas;
 	
-	/**
-	 * pilha que guarda a tabela de simbolos atual
-	 */
-	private Vector<TabelaSimbolos> vetorEscopos;
 	
 	/**
-	 * pilha de escopo
+	 * Classe usada para executar as aÁıes semanticas
 	 */
-	private Stack<TabelaSimbolos> pilhaEscopos;
+	private Semantico semantico;
 	
-	/**
-	 * pilha de tokens para a geracao de codigo
-	 */
-	private Stack<Token> pilhaTokens;
 	
-	/**
-	 * pilha de instrucoes de 
-	 */
-	private Stack<String> pilhaDeclaracoes;
-	
-	/**
-	 * pilha de tokens para a geracao de codigo
-	 */
-	private Stack<String> pilhaInstrucoes;
-	
-	public PercorreAPE(String arquivoMVN) {
-		this.arquivoMVN = arquivoMVN;
-		
-		arquivoObjeto = new File(this.arquivoMVN);
-		
+	public Sintatico(String arquivo) {
 		pilhaSubmaquinas = new Stack<PilhaEstadoSubmaquina>();
-		vetorEscopos = new Vector<TabelaSimbolos>();
-		pilhaEscopos = new Stack<TabelaSimbolos>();
-		pilhaTokens = new Stack<Token>();
-		pilhaDeclaracoes = new Stack<String>();
-		pilhaInstrucoes = new Stack<String>();
+		semantico = new Semantico(arquivo);
 	}
+	
 	
 	// Verifica se ha em alguma transicao em um dos nao terminais 
 	private boolean temTransicao (String token, int tokenTipo, AFD submaquina, APE automato) {
@@ -95,6 +69,7 @@ public class PercorreAPE {
 	}
 	
 	
+	
 	public boolean executa(APE automato, FluxoTokens tokensTokens) {
 		
 		Token token;
@@ -117,16 +92,6 @@ public class PercorreAPE {
 		// Inicializa pilha
 		pilhaSubmaquinas.push(new PilhaEstadoSubmaquina(0, "programa"));
 		
-		// inicializa a tabela de simbolos
-		TabelaSimbolos tabela = new TabelaSimbolos();
-		tabela.setEscopo(vetorEscopos.size());
-		vetorEscopos.add(tabela);
-		pilhaEscopos.push(tabela);
-		
-		// Empilha codigo de inicializacao
-		pilhaDeclaracoes.push("@ /0");
-		pilhaDeclaracoes.push("JP INICIO");
-		pilhaInstrucoes.push("@ /256");
 		
 		// Pega primeiro token
 		token = tokensTokens.recuperaToken();
@@ -195,13 +160,13 @@ public class PercorreAPE {
 				
 				// Adiciona na tabela de simbolos
 				// Se n„o È palavra reservada
-				if(!PalavrasReservadas.reservada(token.getValor())){
+				//if(!PalavrasReservadas.reservada(token.getValor())){
 					// Verifica se o nome ja esta na tabela de simbolos
-					if(!tabela.estaNaTabela(token.getValor())){
-						System.out.println("SIMBOLO = " + token.getValor());
-						tabela.adicionaEntrada(token.getValor(), TiposSimbolos.DESCONHECIDO, token.getLinha(), token.getColuna());
-					}
-				}
+				//	if(!tabela.estaNaTabela(token.getValor())){
+				//		System.out.println("SIMBOLO = " + token.getValor());
+				//		tabela.adicionaEntrada(token.getValor(), TiposSimbolos.DESCONHECIDO, token.getLinha(), token.getColuna());
+				//	}
+				//}
 			
 			// Se n˙mero
 			}else if (submaquina.temTransicao("numero") && token.getTipo() == TiposLexico.NUMERO) {
@@ -222,7 +187,7 @@ public class PercorreAPE {
 				}
 			}
 			
-			
+			// seta novamente o estado ativo da submaquina
 			submaquina.setEstadoAtivo(conteudoPilha.getEstado());
 			// Caso haja apenas uma transicao possivel, realiza a mesma
 			if (possiveisTransicoes == 1) {
@@ -232,7 +197,7 @@ public class PercorreAPE {
 				conteudoPilha.setEstado(submaquina.getEstadoAtivo());
 				
 				// Gera cÛdigo
-				geraCodigo(token, tabela, submaquina);
+				semantico.geraCodigo(token, aPercorrer, submaquina);
 				
 				// Caso seja necessario, pega um novo token
 				if (getNewToken == true) {
@@ -263,50 +228,10 @@ public class PercorreAPE {
 		}
 		
 		System.out.println("[INFO] Codigo aceito!");
+		
+		semantico.criaArquivo();
+		
 		return true;
-	}
-	
-	
-	public void geraCodigo(Token token, TabelaSimbolos tabela, AFD submaquina){
-		
-		//System.out.println("[DEBUG] Token: " + token.getValor() + " submaquina: " + submaquina.getNome());
-		
-		// Se submaquina <programa>
-		if(submaquina.getNome().equals("programa")){
-			
-		
-		// Se submaquina <comando>
-		}else if(submaquina.getNome().equals("comando")){
-			// Se acharmos uma declaração
-			if (token.getValor().equals("inteiro") || token.getValor().equals("booleano") || tabela.estaNaTabela(token.getValor())) {
-				pilhaTokens.push(token);
-			// Se acharmos o fim de um comando
-			}else if (token.getValor().equals(";")) {
-				Token ultimo = pilhaTokens.pop();
-				Token penultimo = pilhaTokens.pop();
-				// Foi declarado um inteiro ou um booleano
-				if ((penultimo.getValor().equals("inteiro") || penultimo.getValor().equals("booleano")) && tabela.estaNaTabela(ultimo.getValor())) {
-					// Caso ele nao tenha sido declarado
-					if (tabela.recuperaEntrada(ultimo.getValor()).jaDeclarado() == false) {
-						// Define proximo endereco
-						tabela.recuperaEntrada(ultimo.getValor()).setPosicao(ultimo.getValor());
-						pilhaDeclaracoes.push(ultimo.getValor() + " K /0");
-					}
-					else {
-						System.out.println("[ERRO] Variável " + ultimo.getValor() + " ja declarada!");
-					}
-				// Foi declarado um booleano
-				}else {
-					System.out.println("[ERRO] Erro na geração de código!");
-				}
-				
-			}
-		
-		// Se submaquina <expressao>
-		}else if(submaquina.getNome().equals("expressao")){
-			
-		
-		}
 	}
 	
 }
