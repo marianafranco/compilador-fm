@@ -21,7 +21,7 @@ import compilador.estruturas.Transicao;
 
 public class MontaAFD {
 	
-	private String arquivoXML = "automato.xml";
+	private String arquivoXML = "conf/automato.xml";
 	
 	public MontaAFD(){
 		

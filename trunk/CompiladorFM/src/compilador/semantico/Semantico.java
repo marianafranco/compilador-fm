@@ -24,7 +24,7 @@ public class Semantico {
 	/**
 	 * nome para o arquivo de saida 
 	 */
-	private String arquivoMVN;
+	private String arquivo;
 	
 	/**
 	 * pilha que guarda a tabela de simbolos atual
@@ -37,12 +37,17 @@ public class Semantico {
 	private Stack<TabelaSimbolos> pilhaEscopos;
 	
 	/**
+	 * tabela de simbolos do escopo atual
+	 */
+	private TabelaSimbolos tabela;
+	
+	/**
 	 * pilha de tokens para a geracao de codigo
 	 */
 	private Stack<Token> pilhaTokens;
 	
 	/**
-	 * pilha de declaracao 
+	 * pilha de declaracao de variaveis
 	 */
 	private Vector<String> pilhaDeclaracoes;
 	
@@ -56,69 +61,96 @@ public class Semantico {
 	 */
 	private int contaInt;
 	
-	
 	/**
 	 * contador de variáveis declaradas do tipo boolean
 	 */
 	private int contaBool;
-	
 	
 	/**
 	 * contador de variáveis declaradas do tipo string
 	 */
 	private int contaString;
 	
-	
 	/**
 	 * label da variavel que ira receber o resultado de uma atribuicao
 	 */
 	private String nomeResultAtrib;
 	
-	
+	/**
+	 * tipo de resultado esperado
+	 */
 	private int tipoResultAtrib;
 	
-	
-	//private int tipoComando;
-	
+	/**
+	 * pilha de tipo de comando
+	 */
 	private Stack<Integer> pilhaComando;
 	
-	
-	private TabelaSimbolos tabela;
-	
+	/**
+	 * pilha de operadores
+	 */
 	private Stack<String> pilhaOperadores;
 	
+	/**
+	 * pilha de operandos
+	 */
 	private Stack<String> pilhaOperandos;
 	
 	/**
-	 * guarda o ponteiro para os temporarios
+	 * ponteiro para os temporarios
 	 */
 	private int temp;
 	
-	
+	/**
+	 * numero maximo de temporarios
+	 */
 	private int maxTemp;
 	
-	
+	/**
+	 * tipo de comparacao
+	 */
 	private String tipoComparacao;
 	
+	/**
+	 * primeiro elemento de uma comparacao
+	 */
 	private String operadorA;
 	
+	/**
+	 * segundo elemento de uma comparacao
+	 */
 	private String operadorB;
 	
-	
+	/**
+	 * pilha de IFs
+	 */
 	private Stack<PilhaSeSenao> pilhaIF;
 	
-	
+	/**
+	 * contador de IFs no programa
+	 */
 	private int contaIF;
 	
-	
+	/**
+	 * pilha de whiles
+	 */
 	private Stack<Integer> pilhaWhile;
 	
+	/**
+	 * contador de whiles no programa
+	 */
 	private int contaWhile;
 	
 	
+	
+	/**
+	 * Metodo Construtor
+	 * 
+	 * @param arquivoMVN
+	 */
 	public Semantico(String arquivoMVN) {
 		this.output = "";
-		this.arquivoMVN = arquivoMVN;
+		this.arquivo = arquivoMVN;
 		
 		vetorEscopos = new Vector<TabelaSimbolos>();
 		pilhaEscopos = new Stack<TabelaSimbolos>();
@@ -131,7 +163,6 @@ public class Semantico {
 		contaString = 0;
 		
 		nomeResultAtrib = "";
-		//tipoComando = 0;
 		pilhaComando = new Stack<Integer>();
 		
 		pilhaOperadores = new Stack<String>();
@@ -152,17 +183,26 @@ public class Semantico {
 		// inicializa a tabela de simbolos
 		tabela = new TabelaSimbolos();
 		tabela.setEscopo(vetorEscopos.size());
+		tabela.setEscopoAnterior(0);
 		vetorEscopos.add(tabela);
 		pilhaEscopos.push(tabela);
 		
 		// Empilha codigo de inicializacao
-		pilhaDeclaracoes.add("@\t/00");
+		pilhaDeclaracoes.add("@\t/0");
 		pilhaDeclaracoes.add("\t\tJP\tINICIO");
-		pilhaInstrucoes.add("@\t/256");
+		//pilhaInstrucoes.add("@\t/256");
 	}
 	
 	
-public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD submaquina){
+	/**
+	 * Gera o codigo em MVN
+	 * 
+	 * @param token
+	 * @param nextToken
+	 * @param aPercorrer
+	 * @param submaquina
+	 */
+	public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD submaquina){
 		
 		//System.out.println("[DEBUG] Token: " + token.getValor() + " submaquina: " + submaquina.getNome());
 		//System.out.println("[DEBUG] nextToken: " + nextToken.getValor());
@@ -211,7 +251,7 @@ public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD subm
 			
 			// PRINCIPAL
 			}else if(token.getValor().equals("principal")){
-				pilhaInstrucoes.add("INICIO\t\tK\t/00");
+				pilhaInstrucoes.add("INICIO\t\tLD\t/00");
 				pilhaTokens.clear();
 			
 			}
@@ -235,11 +275,10 @@ public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD subm
 					temp++;
 					if(operadorA.equals("")){
 						if(pilhaComando.peek() == TiposComando.ENQUANTO){
-							pilhaInstrucoes.add("LOOP_" + pilhaWhile.peek() + "\t\tOS\t=0");
+							pilhaInstrucoes.add("LOOP_" + pilhaWhile.peek() + "\t\tLD\t/00");
 						}else if(pilhaComando.peek() == TiposComando.SE){
-							pilhaInstrucoes.add("IF_" + pilhaIF.peek().getIdIF() + "\t\tOS\t=0");
+							pilhaInstrucoes.add("IF_" + pilhaIF.peek().getIdIF() + "\t\tLD\t/00");
 						}
-						
 						operadorA = operadorA + nomeResultAtrib;
 					}else{
 						operadorB = operadorB + nomeResultAtrib;
@@ -247,13 +286,10 @@ public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD subm
 				
 				// comando SAIDA
 				}else if(pilhaComando.peek() == TiposComando.SAIDA){
-					// TODO Implementar
-					
 					nomeResultAtrib = "TEMP_" + temp;
 					tipoResultAtrib = TiposSimbolos.INTEIRO;
 					temp++;
 					
-				
 				// comando ENTRADA
 				}else if(pilhaComando.peek() == TiposComando.ENTRADA){
 					// TODO Implementar
@@ -275,13 +311,11 @@ public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD subm
 							
 							pilhaTokens.push(token);
 							pilhaComando.push(TiposComando.DECLARACAO);
-							//System.out.println("Poe na pilha: " + pilhaComando.peek());
 						}
 					}
 				}else{
 					pilhaTokens.push(token);
 					pilhaComando.push(TiposComando.DECLARACAO);
-					//System.out.println("Poe na pilha: " + pilhaComando.peek());
 				}
 				
 				
@@ -289,18 +323,14 @@ public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD subm
 			// IDENTIFICADOR
 			}else if (token.getTipo() == TiposLexico.NOME && !PalavrasReservadas.reservada(token.getValor())){
 				
-				//System.out.println("identificador = " + token.getValor());
-				
 				// se ja esta na tabela de simbolos
 				if(tabela.estaNaTabela(token.getValor())){
-					//System.out.println("token = " + token.getValor());
 					
 					if(!pilhaComando.empty()){
 						// ENTRADA
 						if(pilhaComando.peek() == TiposComando.ENTRADA){
 							// TODO Gerar a saida
 							
-						
 						// ERRO - declaracao de variavel ja declarada
 						}else if(pilhaComando.peek() == TiposComando.DECLARACAO){
 							// TODO Erro, abortar o programa
@@ -319,15 +349,12 @@ public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD subm
 										nomeResultAtrib = tabela.recuperaEntrada(token.getValor()).getEndereco();
 										tipoResultAtrib = tabela.recuperaEntrada(token.getValor()).getTipo();
 										pilhaComando.push(TiposComando.ATRIBUICAO);
-										//System.out.println("Poe na pilha: " + pilhaComando.peek());
 									}
 								}
 							}else{
-								// TODO Gerar inicio para a chamada de atribuicao
 								nomeResultAtrib = tabela.recuperaEntrada(token.getValor()).getEndereco();
 								tipoResultAtrib = tabela.recuperaEntrada(token.getValor()).getTipo();
 								pilhaComando.push(TiposComando.ATRIBUICAO);
-								//System.out.println("Poe na pilha: " + pilhaComando.peek());
 							}
 						}
 					
@@ -340,19 +367,15 @@ public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD subm
 								if(pilhaComando.peek() == TiposComando.DESCONHECIDO){
 									pilhaComando.pop();
 									
-									// TODO Gerar inicio para a chamada de atribuicao
 									nomeResultAtrib = tabela.recuperaEntrada(token.getValor()).getEndereco();
 									tipoResultAtrib = tabela.recuperaEntrada(token.getValor()).getTipo();
 									pilhaComando.push(TiposComando.ATRIBUICAO);
-									//System.out.println("Poe na pilha: " + pilhaComando.peek());
 								}
 							}
 						}else{
-							// TODO Gerar inicio para a chamada de atribuicao
 							nomeResultAtrib = tabela.recuperaEntrada(token.getValor()).getEndereco();
 							tipoResultAtrib = tabela.recuperaEntrada(token.getValor()).getTipo();
 							pilhaComando.push(TiposComando.ATRIBUICAO);
-							//System.out.println("Poe na pilha: " + pilhaComando.peek());
 						}
 					}
 					
@@ -383,6 +406,7 @@ public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD subm
 			}else if(token.getTipo() == TiposLexico.NUMERO){
 				if(!pilhaTokens.empty()){
 					Token anterior = pilhaTokens.pop();
+					
 					if(anterior.getTipo() == TiposLexico.NOME && tabela.estaNaTabela(anterior.getValor())){
 						tabela.recuperaEntrada(anterior.getValor()).setTamanho(Integer.parseInt(token.getValor()));
 					}else{
@@ -426,14 +450,12 @@ public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD subm
 						if(pilhaComando.peek() == TiposComando.DESCONHECIDO){
 							pilhaComando.pop();
 							pilhaComando.push(TiposComando.ENQUANTO);
-							//System.out.println("Poe na pilha: " + pilhaComando.peek());
 							pilhaWhile.push(contaWhile);
 							contaWhile ++;
 						}
 					}
 				}else{
 					pilhaComando.push(TiposComando.ENQUANTO);
-					//System.out.println("Poe na pilha: " + pilhaComando.peek());
 					pilhaWhile.push(contaWhile);
 					contaWhile ++;
 				}
@@ -447,14 +469,12 @@ public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD subm
 						if(pilhaComando.peek() == TiposComando.DESCONHECIDO){
 							pilhaComando.pop();
 							pilhaComando.push(TiposComando.SE);
-							//System.out.println("Poe na pilha: " + pilhaComando.peek());
 							pilhaIF.push(new PilhaSeSenao(contaIF, false));
 							contaIF ++;
 						}
 					}
 				}else{
 					pilhaComando.push(TiposComando.SE);
-					//System.out.println("Poe na pilha: " + pilhaComando.peek());
 					pilhaIF.push(new PilhaSeSenao(contaIF, false));
 					contaIF ++;
 				}
@@ -463,7 +483,7 @@ public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD subm
 			// SENAO
 			}else if(token.getValor().equals("senao")){
 				pilhaInstrucoes.add("\t\tJP\tENDIF_" + pilhaIF.peek().getIdIF());
-				pilhaInstrucoes.add("ELSE_" + pilhaIF.peek().getIdIF() + "\t\tOS\t=0\t; ELSE");
+				pilhaInstrucoes.add("ELSE_" + pilhaIF.peek().getIdIF() + "\t\tLD\t/00\t; ELSE");
 				pilhaIF.peek().setTemELSE(true);
 			
 			// ENTRADA
@@ -494,7 +514,6 @@ public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD subm
 				String result = pilhaOperandos.pop();
 				pilhaInstrucoes.add("\t\tLD\t"+ result + "\t; " + nomeResultAtrib + " = " + result);
 				pilhaInstrucoes.add("\t\tMM\t" + nomeResultAtrib);
-				//temp = 0;
 				
 			// ESPECIAL ')'
 			}else if(token.getValor().equals(")")){
@@ -513,6 +532,10 @@ public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD subm
 					
 				}
 			
+			// NOVO ESCOPO	
+			}else if(token.getValor().equals("{")){
+				
+				
 			// FIM DE COMANDO IF OU WHILE
 			}else if(token.getValor().equals("}")){
 				// fim SE
@@ -520,10 +543,10 @@ public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD subm
 					
 					if(!nextToken.getValor().equals("senao")){
 						if(!pilhaIF.peek().isTemELSE()){
-							pilhaInstrucoes.add("ELSE_" + pilhaIF.peek().getIdIF() + "\t\tOS\t=0\t; ELSE");
-							pilhaInstrucoes.add("ENDIF_" + pilhaIF.peek().getIdIF() + "\t\tOS\t=0\t; END IF");
+							pilhaInstrucoes.add("ELSE_" + pilhaIF.peek().getIdIF() + "\t\tLD\t/00\t; ELSE");
+							pilhaInstrucoes.add("ENDIF_" + pilhaIF.peek().getIdIF() + "\t\tLD\t/00\t; END IF");
 						}else{
-							pilhaInstrucoes.add("ENDIF_" + pilhaIF.peek().getIdIF() + "\t\tOS\t=0\t; END IF");
+							pilhaInstrucoes.add("ENDIF_" + pilhaIF.peek().getIdIF() + "\t\tLD\t/00\t; END IF");
 						}
 						pilhaComando.pop();
 						pilhaIF.pop();
@@ -532,7 +555,7 @@ public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD subm
 				// fim ENQUANTO	
 				}else if(pilhaComando.peek() == TiposComando.ENQUANTO){
 					pilhaInstrucoes.add("\t\tJP\tLOOP_" + pilhaWhile.peek());
-					pilhaInstrucoes.add("ENDLOOP_" + pilhaWhile.peek() + "\t\tOS\t=0\t; END WHILE");
+					pilhaInstrucoes.add("ENDLOOP_" + pilhaWhile.peek() + "\t\tLD\t/00\t; END WHILE");
 					pilhaComando.pop();
 					pilhaWhile.pop();
 				}
@@ -565,8 +588,14 @@ public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD subm
 						String result = pilhaOperandos.pop();
 						pilhaInstrucoes.add("\t\tLD\t"+ result + "\t; " + nomeResultAtrib + " = " + result);
 						pilhaInstrucoes.add("\t\tMM\t" + nomeResultAtrib);
-						pilhaInstrucoes.add("\t\tGD\t=0\t; SAIDA = " + nomeResultAtrib);
-						pilhaInstrucoes.add("\t\tMM\t" + nomeResultAtrib);
+						pilhaInstrucoes.add("\t\tLD\t" + nomeResultAtrib);
+						pilhaInstrucoes.add("\t\tMM\tARG_INT");
+						pilhaInstrucoes.add("\t\tSC\tPRINT_INT");
+						pilhaInstrucoes.add("\t\tLD\tRESULT_ASC");
+						pilhaInstrucoes.add("\t\tPD\t/100\t; SAIDA = " + nomeResultAtrib);
+						pilhaInstrucoes.add("\t\tLD\tNEW_LINE");
+						pilhaInstrucoes.add("\t\tPD\t/100");
+						temp = 0;
 					}
 					
 				}
@@ -680,7 +709,9 @@ public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD subm
 		}
 	}
 
-
+	/**
+	 * Gera as expressoes conforme o valor na pilha de operadores e operandos
+	 */
 	private void geraExpressao(){
 		if(!pilhaOperadores.empty()){
 			String op = pilhaOperadores.peek();
@@ -699,7 +730,11 @@ public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD subm
 		}
 	}
 	
-	
+	/**
+	 * Gera o codigo MVN para a operacao passada em parametro
+	 * 
+	 * @param op
+	 */
 	private void geraOperacao(String op){
 		if(pilhaOperadores.peek().equals(op)){
 			if(pilhaOperandos.size() >= 2){
@@ -721,6 +756,9 @@ public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD subm
 	}
 	
 
+	/**
+	 * Gera o codigo MVN inicial do comando SE
+	 */
 	private void geraComparacao(){
 		if(tipoComparacao.equals(">")){
 			pilhaInstrucoes.add("\t\tLD\t" + operadorA + "\t; IF ( " + operadorA + " > " + operadorB + " )");
@@ -749,7 +787,7 @@ public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD subm
 			pilhaInstrucoes.add("\t\t-\t" + operadorB);
 			pilhaInstrucoes.add("\t\tJZ\tIF_EQ_" + pilhaIF.peek().getIdIF());
 			pilhaInstrucoes.add("\t\tJP\tELSE_" + pilhaIF.peek().getIdIF());
-			pilhaInstrucoes.add("IF_EQ_" + pilhaIF.peek().getIdIF() + "\t\tOS\t=0");
+			pilhaInstrucoes.add("IF_EQ_" + pilhaIF.peek().getIdIF() + "\t\tLD\t/00");
 			
 		}else if(tipoComparacao.equals("!=")){
 			pilhaInstrucoes.add("\t\tLD\t" + operadorA + "\t; IF ( " + operadorA + " != " + operadorB + " )");
@@ -761,7 +799,9 @@ public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD subm
 		operadorB = "";
 	}
 	
-	
+	/**
+	 * Gera o codigo MVN inicial para o comando ENQUANTO 
+	 */
 	private void geraLoop(){
 		if(tipoComparacao.equals(">")){
 			pilhaInstrucoes.add("\t\tLD\t" + operadorA + "\t; WHILE ( " + operadorA + " > " + operadorB + " )");
@@ -790,7 +830,7 @@ public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD subm
 			pilhaInstrucoes.add("\t\t-\t" + operadorB);
 			pilhaInstrucoes.add("\t\tJZ\tLOOP_EQ_" + pilhaWhile.peek());
 			pilhaInstrucoes.add("\t\tJP\tENDLOOP_" + pilhaWhile.peek());
-			pilhaInstrucoes.add("LOOP_EQ_" + pilhaWhile.peek() + "\t\tOS\t=0");
+			pilhaInstrucoes.add("LOOP_EQ_" + pilhaWhile.peek() + "\t\tLD\t/00");
 			
 		}else if(tipoComparacao.equals("!=")){
 			pilhaInstrucoes.add("\t\tOS\t=0" + "\t; WHILE ( " + operadorA + " != " + operadorB + " )");
@@ -803,6 +843,11 @@ public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD subm
 		operadorB = "";
 	}
 	
+	/**
+	 * Verifica se a constante ja foi declarada em algum escopo
+	 * @param cte
+	 * @return true/false
+	 */
 	private boolean encontraConstante(String cte){
 		for(int i=0; i < vetorEscopos.size(); i++){
 			TabelaSimbolos tab = vetorEscopos.get(i);
@@ -816,16 +861,58 @@ public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD subm
 		return false;
 	}
 
+	/**
+	 * Subrotina para impressao
+	 */
+	private void print(){
+		String intToAsc = "PRINT_INT\t\tJP\t/00\n"
+				 		+ "\t\tLD\tARG_INT\t; CONVERT INT TO ASC\n" 
+						+ "\t\t+\tOFFSET\n"
+						+ "\t\tMM\tRESULT_ASC\n"
+						+ "\t\tLD\tSTRING_1\n"
+						+ "\t\tPD\t/100\t;\n"
+						+ "\t\tLD\tSTRING_2\n"
+						+ "\t\tPD\t/100\t;\n"
+						+ "\t\tLD\tSTRING_3\n"
+						+ "\t\tPD\t/100\t;\n"
+						+ "\t\tLD\tSTRING_4\n"
+						+ "\t\tPD\t/100\t;\n"
+						+ "\t\tLD\tSTRING_5\n"
+						+ "\t\tPD\t/100\t;\n"
+						+ "\t\tLD\tSTRING_6\n"
+						+ "\t\tPD\t/100\t;\n"
+						+ "\t\tLD\tSTRING_7\n"
+						+ "\t\tPD\t/100\t;\n"
+						+ "\t\tLD\tSTRING_6\n"
+						+ "\t\tPD\t/100\t;\n"
+						+ "\t\tRS\tPRINT_INT\n"
+						+ "ARG_INT\t\tK\t/00\t; ARG INT\n"
+						+ "RESULT_ASC\t\tK\t/00\t; RESULT ASC\n"
+						+ "OFFSET\t\tK\t/30\t; OFFSET\n"
+						+ "STRING_1\t\tK\t/53\t; S\n"
+						+ "STRING_2\t\tK\t/41\t; A\n"
+						+ "STRING_3\t\tK\t/49\t; I\n"
+						+ "STRING_4\t\tK\t/44\t; D\n"
+						+ "STRING_5\t\tK\t/41\t; A\n"
+						+ "STRING_6\t\tK\t/20\t; \n"
+						+ "STRING_7\t\tK\t/3d\t; =\n"
+						+ "NEW_LINE\t\tK\t/0a\t; NEW LINE\n"
+						;
+		this.output = this.output + intToAsc;
+	}
 	
+	
+	/**
+	 * Cria o arquivo de saida
+	 */
 	public void criaArquivo(){
 		try{
-			FileWriter writer = new FileWriter(this.arquivoMVN);
+			FileWriter writer = new FileWriter(this.arquivo);
 			PrintWriter saida = new PrintWriter(writer);
 			
-			
+			// constantes e declaracoes na pilha de declaracoes
 			for(int i=0; i < vetorEscopos.size(); i++){
 				TabelaSimbolos tab = vetorEscopos.get(i);
-				//System.out.println(tab.getEntradas());
 				for(int j=0; j< tab.getEntradas(); j++){
 					if(tab.recuperaEntrada(j).getTipo() == TiposSimbolos.CONSTANTE){
 						pilhaDeclaracoes.add(tab.recuperaEntrada(j).getEndereco() + "\t\tK\t/" 
@@ -841,26 +928,32 @@ public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD subm
 				}
 			}
 			
-			
+			// poe a pilha de declaracoes na saida
 			for(int i=0; i < pilhaDeclaracoes.size(); i++){
 				this.output = this.output + (String)pilhaDeclaracoes.get(i) + "\n";
 			}
 			
+			// poe as instrucoes na saida
 			for(int i=0; i < pilhaInstrucoes.size(); i++){
 				this.output = this.output + (String)pilhaInstrucoes.get(i) + "\n";
 			}
 			
+			// gera o final de programa
 			this.output = this.output + "FIM\t\tHM\t/00" + "\n";
 			
-			
+			// imprime os temporarios
 			for(int i=0; i <= maxTemp; i++){
 				this.output = this.output + "TEMP_" + i + "\t\tK\t/00\n"; 
 			}
 			
+			// acrescenta a rotina de impressao
+			print();
 			
+			// imprime na tela
 			System.out.println("ARQUIVO DE SAIDA\n"+ this.output);
 			saida.print(this.output);
 			
+			// fecha o arquivo
 			saida.close();
 			writer.close(); 
 		}catch(Exception e){
