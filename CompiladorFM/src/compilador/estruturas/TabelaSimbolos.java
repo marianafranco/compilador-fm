@@ -100,6 +100,29 @@ public class TabelaSimbolos {
 		}
 	}
 	
+	
+	public Simbolo recuperaEntradaPorEnd (String end) {
+		
+		if (this.entradas == 0) {
+			return null;
+		
+		}else {
+			Simbolo temp = this.simbolo;
+			
+			if(temp.getEndereco().equals(end)) {
+				return temp;
+			}
+			
+			for (int i = 2; i <= this.entradas; i++) {
+				temp = temp.getProximo();
+				if(temp.getEndereco().equals(end)) {
+					return temp;
+				}
+			}			
+			return null;
+		}
+	}
+	
 	public boolean estaNaTabela (String nome) {
 		
 		if (this.entradas == 0) {

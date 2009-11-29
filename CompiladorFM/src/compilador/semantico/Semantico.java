@@ -1,21 +1,16 @@
 package compilador.semantico;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.Stack;
 import java.util.Vector;
 
-import javax.sound.midi.Receiver;
-
 import compilador.estruturas.PalavrasReservadas;
-import compilador.estruturas.APE;
-import compilador.estruturas.FluxoTokens;
+import compilador.estruturas.PilhaSeSenao;
 import compilador.estruturas.TiposComando;
 import compilador.estruturas.TiposLexico;
 import compilador.estruturas.TiposSimbolos;
 import compilador.estruturas.Token;
-import compilador.estruturas.PilhaEstadoSubmaquina;
 import compilador.estruturas.AFD;
 import compilador.estruturas.TabelaSimbolos;
 
@@ -83,7 +78,9 @@ public class Semantico {
 	private int tipoResultAtrib;
 	
 	
-	private int tipoComando;
+	//private int tipoComando;
+	
+	private Stack<Integer> pilhaComando;
 	
 	
 	private TabelaSimbolos tabela;
@@ -108,10 +105,15 @@ public class Semantico {
 	private String operadorB;
 	
 	
-	private Stack<Integer> pilhaIF;
+	private Stack<PilhaSeSenao> pilhaIF;
 	
 	
 	private int contaIF;
+	
+	
+	private Stack<Integer> pilhaWhile;
+	
+	private int contaWhile;
 	
 	
 	public Semantico(String arquivoMVN) {
@@ -129,7 +131,8 @@ public class Semantico {
 		contaString = 0;
 		
 		nomeResultAtrib = "";
-		tipoComando = 0;
+		//tipoComando = 0;
+		pilhaComando = new Stack<Integer>();
 		
 		pilhaOperadores = new Stack<String>();
 		pilhaOperandos = new Stack<String>();
@@ -140,9 +143,11 @@ public class Semantico {
 		tipoComparacao = "";
 		operadorA = "";
 		operadorB = "";
-		pilhaIF = new Stack<Integer>();
+		pilhaIF = new Stack<PilhaSeSenao>();
 		contaIF = 0;
 		
+		pilhaWhile = new Stack<Integer>();
+		contaWhile = 0;
 		
 		// inicializa a tabela de simbolos
 		tabela = new TabelaSimbolos();
@@ -157,9 +162,10 @@ public class Semantico {
 	}
 	
 	
-public void geraCodigo(Token token, String aPercorrer, AFD submaquina){
+public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD submaquina){
 		
 		//System.out.println("[DEBUG] Token: " + token.getValor() + " submaquina: " + submaquina.getNome());
+		//System.out.println("[DEBUG] nextToken: " + nextToken.getValor());
 		
 		//*********************************************************************
 		// Submaquina <PROGRAMA>
@@ -222,64 +228,134 @@ public void geraCodigo(Token token, String aPercorrer, AFD submaquina){
 				
 			// EXPRESSAO
 			}else if(aPercorrer.equals("expressao")){
-				// comando SE
-				if(tipoComando == TiposComando.SE){
+				// comando SE ou ENQUANTO
+				if(pilhaComando.peek() == TiposComando.SE || pilhaComando.peek() == TiposComando.ENQUANTO){
 					nomeResultAtrib = "TEMP_" + temp;
 					tipoResultAtrib = TiposSimbolos.INTEIRO;
 					temp++;
 					if(operadorA.equals("")){
+						if(pilhaComando.peek() == TiposComando.ENQUANTO){
+							pilhaInstrucoes.add("LOOP_" + pilhaWhile.peek() + "\t\tOS\t=0");
+						}else if(pilhaComando.peek() == TiposComando.SE){
+							pilhaInstrucoes.add("IF_" + pilhaIF.peek().getIdIF() + "\t\tOS\t=0");
+						}
+						
 						operadorA = operadorA + nomeResultAtrib;
 					}else{
 						operadorB = operadorB + nomeResultAtrib;
 					}
-					
-				// comando ENQUANTO
-				}else if(tipoComando == TiposComando.ENQUANTO){
-					nomeResultAtrib = "TEMP_" + temp;
-					temp++;
 				
 				// comando SAIDA
-				}else if(tipoComando == TiposComando.SAIDA){
+				}else if(pilhaComando.peek() == TiposComando.SAIDA){
 					// TODO Implementar
+					
+					nomeResultAtrib = "TEMP_" + temp;
+					tipoResultAtrib = TiposSimbolos.INTEIRO;
+					temp++;
+					
 				
 				// comando ENTRADA
-				}else if(tipoComando == TiposComando.ENTRADA){
+				}else if(pilhaComando.peek() == TiposComando.ENTRADA){
 					// TODO Implementar
 					
 				// comando ATRIBUICAO
-				}else if(tipoComando == TiposComando.ATRIBUICAO){
+				}else if(pilhaComando.peek() == TiposComando.ATRIBUICAO){
 					// Nao faz nada
 				}
 				
 			
 			// TIPO
 			}else if (token.getValor().equals("inteiro") || token.getValor().equals("booleano") || token.getValor().equals("caracteres")) {
-				pilhaTokens.push(token);
-				tipoComando = TiposComando.DECLARACAO;
+				if(!pilhaComando.empty()){
+					if(pilhaComando.peek() == TiposComando.SE || pilhaComando.peek() == TiposComando.ENQUANTO){
+						pilhaComando.push(TiposComando.DESCONHECIDO);
+					}else{
+						if(pilhaComando.peek() == TiposComando.DESCONHECIDO){
+							pilhaComando.pop();
+							
+							pilhaTokens.push(token);
+							pilhaComando.push(TiposComando.DECLARACAO);
+							//System.out.println("Poe na pilha: " + pilhaComando.peek());
+						}
+					}
+				}else{
+					pilhaTokens.push(token);
+					pilhaComando.push(TiposComando.DECLARACAO);
+					//System.out.println("Poe na pilha: " + pilhaComando.peek());
+				}
+				
 				
 				
 			// IDENTIFICADOR
 			}else if (token.getTipo() == TiposLexico.NOME && !PalavrasReservadas.reservada(token.getValor())){
 				
+				//System.out.println("identificador = " + token.getValor());
+				
 				// se ja esta na tabela de simbolos
 				if(tabela.estaNaTabela(token.getValor())){
+					//System.out.println("token = " + token.getValor());
 					
-					// SAIDA
-					if(tipoComando == TiposComando.SAIDA){
-						// TODO Gerar a saida
+					if(!pilhaComando.empty()){
+						// ENTRADA
+						if(pilhaComando.peek() == TiposComando.ENTRADA){
+							// TODO Gerar a saida
+							
+						
+						// ERRO - declaracao de variavel ja declarada
+						}else if(pilhaComando.peek() == TiposComando.DECLARACAO){
+							// TODO Erro, abortar o programa
+							System.out.println("[ERRO] Variavel " + token.getValor() + " ja declarada!");
+						
+						// ATRIBUICAO
+						}else{
+							if(!pilhaComando.empty()){
+								if(pilhaComando.peek() == TiposComando.SE || pilhaComando.peek() == TiposComando.ENQUANTO){
+									pilhaComando.push(TiposComando.DESCONHECIDO);
+								}else{
+									if(pilhaComando.peek() == TiposComando.DESCONHECIDO){
+										pilhaComando.pop();
+										
+										// TODO Gerar inicio para a chamada de atribuicao
+										nomeResultAtrib = tabela.recuperaEntrada(token.getValor()).getEndereco();
+										tipoResultAtrib = tabela.recuperaEntrada(token.getValor()).getTipo();
+										pilhaComando.push(TiposComando.ATRIBUICAO);
+										//System.out.println("Poe na pilha: " + pilhaComando.peek());
+									}
+								}
+							}else{
+								// TODO Gerar inicio para a chamada de atribuicao
+								nomeResultAtrib = tabela.recuperaEntrada(token.getValor()).getEndereco();
+								tipoResultAtrib = tabela.recuperaEntrada(token.getValor()).getTipo();
+								pilhaComando.push(TiposComando.ATRIBUICAO);
+								//System.out.println("Poe na pilha: " + pilhaComando.peek());
+							}
+						}
 					
-					// ERRO - declaracao de variavel ja declarada
-					}else if(tipoComando == TiposComando.DECLARACAO){
-						// TODO Erro, abortar o programa
-						System.out.println("[ERRO] Variavel " + token.getValor() + " ja declarada!");
-					
-					// ATRIBUICAO
+					// Atribuicao
 					}else{
-						// TODO Gerar inicio para a chamada de atribuicao
-						nomeResultAtrib = tabela.recuperaEntrada(token.getValor()).getEndereco();
-						tipoResultAtrib = tabela.recuperaEntrada(token.getValor()).getTipo();
-						tipoComando = TiposComando.ATRIBUICAO;
+						if(!pilhaComando.empty()){
+							if(pilhaComando.peek() == TiposComando.SE || pilhaComando.peek() == TiposComando.ENQUANTO){
+								pilhaComando.push(TiposComando.DESCONHECIDO);
+							}else{
+								if(pilhaComando.peek() == TiposComando.DESCONHECIDO){
+									pilhaComando.pop();
+									
+									// TODO Gerar inicio para a chamada de atribuicao
+									nomeResultAtrib = tabela.recuperaEntrada(token.getValor()).getEndereco();
+									tipoResultAtrib = tabela.recuperaEntrada(token.getValor()).getTipo();
+									pilhaComando.push(TiposComando.ATRIBUICAO);
+									//System.out.println("Poe na pilha: " + pilhaComando.peek());
+								}
+							}
+						}else{
+							// TODO Gerar inicio para a chamada de atribuicao
+							nomeResultAtrib = tabela.recuperaEntrada(token.getValor()).getEndereco();
+							tipoResultAtrib = tabela.recuperaEntrada(token.getValor()).getTipo();
+							pilhaComando.push(TiposComando.ATRIBUICAO);
+							//System.out.println("Poe na pilha: " + pilhaComando.peek());
+						}
 					}
+					
 					
 				// senao nova DECLARACAO
 				}else{
@@ -319,7 +395,7 @@ public void geraCodigo(Token token, String aPercorrer, AFD submaquina){
 				
 			// VERDADEIRO
 			}else if(token.getValor().equals("verdadeiro")){
-				if(tipoComando == TiposComando.ATRIBUICAO){
+				if(pilhaComando.peek() == TiposComando.ATRIBUICAO){
 					if(tipoResultAtrib == TiposSimbolos.BOOLEANO){
 						pilhaInstrucoes.add("\t\tLD\t/01\t; " + nomeResultAtrib + " = TRUE");
 						pilhaInstrucoes.add("\t\tMM\t" + nomeResultAtrib);
@@ -331,7 +407,7 @@ public void geraCodigo(Token token, String aPercorrer, AFD submaquina){
 				
 			// FALSO
 			}else if(token.getValor().equals("falso")){
-				if(tipoComando == TiposComando.ATRIBUICAO){
+				if(pilhaComando.peek() == TiposComando.ATRIBUICAO){
 					if(tipoResultAtrib == TiposSimbolos.BOOLEANO){
 						pilhaInstrucoes.add("\t\tLD\t/00\t; " + nomeResultAtrib + " = FALSE");
 						pilhaInstrucoes.add("\t\tMM\t" + nomeResultAtrib);
@@ -343,15 +419,52 @@ public void geraCodigo(Token token, String aPercorrer, AFD submaquina){
 				
 			// ENQUANTO
 			}else if(token.getValor().equals("enquanto")){
-			
+				if(!pilhaComando.empty()){
+					if(pilhaComando.peek() == TiposComando.SE || pilhaComando.peek() == TiposComando.ENQUANTO){
+						pilhaComando.push(TiposComando.DESCONHECIDO);
+					}else{
+						if(pilhaComando.peek() == TiposComando.DESCONHECIDO){
+							pilhaComando.pop();
+							pilhaComando.push(TiposComando.ENQUANTO);
+							//System.out.println("Poe na pilha: " + pilhaComando.peek());
+							pilhaWhile.push(contaWhile);
+							contaWhile ++;
+						}
+					}
+				}else{
+					pilhaComando.push(TiposComando.ENQUANTO);
+					//System.out.println("Poe na pilha: " + pilhaComando.peek());
+					pilhaWhile.push(contaWhile);
+					contaWhile ++;
+				}
 				
 			// SE
 			}else if(token.getValor().equals("se")){
-				tipoComando = TiposComando.SE;
+				if(!pilhaComando.empty()){
+					if(pilhaComando.peek() == TiposComando.SE || pilhaComando.peek() == TiposComando.ENQUANTO){
+						pilhaComando.push(TiposComando.DESCONHECIDO);
+					}else{
+						if(pilhaComando.peek() == TiposComando.DESCONHECIDO){
+							pilhaComando.pop();
+							pilhaComando.push(TiposComando.SE);
+							//System.out.println("Poe na pilha: " + pilhaComando.peek());
+							pilhaIF.push(new PilhaSeSenao(contaIF, false));
+							contaIF ++;
+						}
+					}
+				}else{
+					pilhaComando.push(TiposComando.SE);
+					//System.out.println("Poe na pilha: " + pilhaComando.peek());
+					pilhaIF.push(new PilhaSeSenao(contaIF, false));
+					contaIF ++;
+				}
 				
+
 			// SENAO
 			}else if(token.getValor().equals("senao")){
-			
+				pilhaInstrucoes.add("\t\tJP\tENDIF_" + pilhaIF.peek().getIdIF());
+				pilhaInstrucoes.add("ELSE_" + pilhaIF.peek().getIdIF() + "\t\tOS\t=0\t; ELSE");
+				pilhaIF.peek().setTemELSE(true);
 			
 			// ENTRADA
 			}else if(token.getValor().equals("entrada")){
@@ -360,9 +473,21 @@ public void geraCodigo(Token token, String aPercorrer, AFD submaquina){
 			// SAIDA
 			}else if(token.getValor().equals("saida")){
 				
+				if(!pilhaComando.empty()){
+					if(pilhaComando.peek() == TiposComando.SE || pilhaComando.peek() == TiposComando.ENQUANTO){
+						pilhaComando.push(TiposComando.DESCONHECIDO);
+					}else{
+						if(pilhaComando.peek() == TiposComando.DESCONHECIDO){
+							pilhaComando.pop();
+							pilhaComando.push(TiposComando.SAIDA);
+						}
+					}
+				}else{
+					pilhaComando.push(TiposComando.SAIDA);
+				}
 			
 			// COMPARACAO
-			}else if(token.getValor().equals(">") || token.getValor().equals(">") || token.getValor().equals(">=") 
+			}else if(token.getValor().equals(">") || token.getValor().equals("<") || token.getValor().equals(">=") 
 					|| token.getValor().equals("<=") || token.getValor().equals("==") || token.getValor().equals("!=")){
 				tipoComparacao = token.getValor();
 				geraExpressao();
@@ -374,41 +499,79 @@ public void geraCodigo(Token token, String aPercorrer, AFD submaquina){
 			// ESPECIAL ')'
 			}else if(token.getValor().equals(")")){
 				
-				if(tipoComando == TiposComando.SE || tipoComando == TiposComando.ENQUANTO){
+				if(pilhaComando.peek() == TiposComando.SE || pilhaComando.peek() == TiposComando.ENQUANTO){
 					geraExpressao();
 					String result = pilhaOperandos.pop();
 					pilhaInstrucoes.add("\t\tLD\t"+ result + "\t; " + nomeResultAtrib + " = " + result);
 					pilhaInstrucoes.add("\t\tMM\t" + nomeResultAtrib);
 					temp = 0;
-					if(tipoComando == TiposComando.SE){
+					if(pilhaComando.peek() == TiposComando.SE){
 						geraComparacao();
 					}else{
-						
+						geraLoop();
 					}
 					
 				}
+			
+			// FIM DE COMANDO IF OU WHILE
+			}else if(token.getValor().equals("}")){
+				// fim SE
+				if(pilhaComando.peek() == TiposComando.SE){
+					
+					if(!nextToken.getValor().equals("senao")){
+						if(!pilhaIF.peek().isTemELSE()){
+							pilhaInstrucoes.add("ELSE_" + pilhaIF.peek().getIdIF() + "\t\tOS\t=0\t; ELSE");
+							pilhaInstrucoes.add("ENDIF_" + pilhaIF.peek().getIdIF() + "\t\tOS\t=0\t; END IF");
+						}else{
+							pilhaInstrucoes.add("ENDIF_" + pilhaIF.peek().getIdIF() + "\t\tOS\t=0\t; END IF");
+						}
+						pilhaComando.pop();
+						pilhaIF.pop();
+					}
+					
+				// fim ENQUANTO	
+				}else if(pilhaComando.peek() == TiposComando.ENQUANTO){
+					pilhaInstrucoes.add("\t\tJP\tLOOP_" + pilhaWhile.peek());
+					pilhaInstrucoes.add("ENDLOOP_" + pilhaWhile.peek() + "\t\tOS\t=0\t; END WHILE");
+					pilhaComando.pop();
+					pilhaWhile.pop();
+				}
+				
 			
 			// FIM DE COMANDO
 			}else if (token.getValor().equals(";")) {
 				
 				// DECLARACAO
-				if(tipoComando == TiposComando.DECLARACAO){
+				if(pilhaComando.peek() == TiposComando.DECLARACAO){
 					// desempilha o identificador
 					pilhaTokens.pop();
 				
 				// ATRIBUICAO
-				}else if(tipoComando == TiposComando.ATRIBUICAO){
+				}else if(pilhaComando.peek() == TiposComando.ATRIBUICAO){
 					if(tipoResultAtrib == TiposSimbolos.INTEIRO){
 						geraExpressao();
 						String result = pilhaOperandos.pop();
 						pilhaInstrucoes.add("\t\tLD\t"+ result + "\t; " + nomeResultAtrib + " = " + result);
 						pilhaInstrucoes.add("\t\tMM\t" + nomeResultAtrib);
 						temp = 0;
+						
+						tabela.recuperaEntradaPorEnd(nomeResultAtrib).setInicializado(true);
 					}
-				}
 				
-				tipoComando = TiposComando.DESCONHECIDO;
-				//pilhaTokens.clear();
+				// SAIDA	
+				} else if(pilhaComando.peek() == TiposComando.SAIDA){
+					if(tipoResultAtrib == TiposSimbolos.INTEIRO){
+						geraExpressao();
+						String result = pilhaOperandos.pop();
+						pilhaInstrucoes.add("\t\tLD\t"+ result + "\t; " + nomeResultAtrib + " = " + result);
+						pilhaInstrucoes.add("\t\tMM\t" + nomeResultAtrib);
+						pilhaInstrucoes.add("\t\tGD\t=0\t; SAIDA = " + nomeResultAtrib);
+						pilhaInstrucoes.add("\t\tMM\t" + nomeResultAtrib);
+					}
+					
+				}
+				//System.out.println("Retira da pilha " + pilhaComando.peek());
+				pilhaComando.pop();
 			}
 		
 			
@@ -452,18 +615,28 @@ public void geraCodigo(Token token, String aPercorrer, AFD submaquina){
 				if(tabela.estaNaTabela(token.getValor())){
 					
 					if(tabela.recuperaEntrada(token.getValor()).getTipo() == TiposSimbolos.INTEIRO){
-						pilhaOperandos.push(tabela.recuperaEntrada(token.getValor()).getEndereco());
 						
-						if(!pilhaOperadores.empty()){
+						// verifica se foi inicializada a variavel
+						if(tabela.recuperaEntrada(token.getValor()).isInicializado()){
 							
-							if(pilhaOperadores.peek().equals("*")){
-								geraOperacao("*");
-							}else if(pilhaOperadores.peek().equals("/")){
-								geraOperacao("/");
-							}else{
-								// Nao faz nada
+							// empilha
+							pilhaOperandos.push(tabela.recuperaEntrada(token.getValor()).getEndereco());
+							
+							if(!pilhaOperadores.empty()){
+								
+								if(pilhaOperadores.peek().equals("*")){
+									geraOperacao("*");
+								}else if(pilhaOperadores.peek().equals("/")){
+									geraOperacao("/");
+								}else{
+									// Nao faz nada
+								}
 							}
+						}else{
+							// TODO Erro, abortar o programa
+							System.out.println("[ERRO] Variavel " + token.getValor() + " nao foi inicializada." );
 						}
+						
 					}else{
 						// TODO Erro, abortar o programa
 						System.out.println("[ERRO] Variavel " + token.getValor() + " nao inteira, impossivel de calcular a expressao." );
@@ -550,20 +723,84 @@ public void geraCodigo(Token token, String aPercorrer, AFD submaquina){
 
 	private void geraComparacao(){
 		if(tipoComparacao.equals(">")){
+			pilhaInstrucoes.add("\t\tLD\t" + operadorA + "\t; IF ( " + operadorA + " > " + operadorB + " )");
+			pilhaInstrucoes.add("\t\t-\t" + operadorB);
+			pilhaInstrucoes.add("\t\tJN\tELSE_" + pilhaIF.peek().getIdIF());
+			pilhaInstrucoes.add("\t\tJZ\tELSE_" + pilhaIF.peek().getIdIF());
 			
 		}else if(tipoComparacao.equals("<")){
+			pilhaInstrucoes.add("\t\tLD\t" + operadorB + "\t; IF ( " + operadorA + " < " + operadorB + " )");
+			pilhaInstrucoes.add("\t\t-\t" + operadorA);
+			pilhaInstrucoes.add("\t\tJN\tELSE_" + pilhaIF.peek().getIdIF());
+			pilhaInstrucoes.add("\t\tJZ\tELSE_" + pilhaIF.peek().getIdIF());
 			
 		}else if(tipoComparacao.equals(">=")){
+			pilhaInstrucoes.add("\t\tLD\t" + operadorA + "\t; IF ( " + operadorA + " >= " + operadorB + " )");
+			pilhaInstrucoes.add("\t\t-\t" + operadorB);
+			pilhaInstrucoes.add("\t\tJN\tELSE_" + pilhaIF.peek().getIdIF());
 			
 		}else if(tipoComparacao.equals("<=")){
-			
-		}else if(tipoComparacao.equals(">=")){
+			pilhaInstrucoes.add("\t\tLD\t" + operadorB + "\t; IF ( " + operadorA + " <= " + operadorB + " )");
+			pilhaInstrucoes.add("\t\t-\t" + operadorA);
+			pilhaInstrucoes.add("\t\tJN\tELSE_" + pilhaIF.peek().getIdIF());
 			
 		}else if(tipoComparacao.equals("==")){
+			pilhaInstrucoes.add("\t\tLD\t" + operadorA + "\t; IF ( " + operadorA + " == " + operadorB + " )");
+			pilhaInstrucoes.add("\t\t-\t" + operadorB);
+			pilhaInstrucoes.add("\t\tJZ\tIF_EQ_" + pilhaIF.peek().getIdIF());
+			pilhaInstrucoes.add("\t\tJP\tELSE_" + pilhaIF.peek().getIdIF());
+			pilhaInstrucoes.add("IF_EQ_" + pilhaIF.peek().getIdIF() + "\t\tOS\t=0");
 			
 		}else if(tipoComparacao.equals("!=")){
-			
+			pilhaInstrucoes.add("\t\tLD\t" + operadorA + "\t; IF ( " + operadorA + " != " + operadorB + " )");
+			pilhaInstrucoes.add("\t\t-\t" + operadorB);
+			pilhaInstrucoes.add("\t\tJZ\tELSE_" + pilhaIF.peek().getIdIF());
 		}
+		
+		operadorA = "";
+		operadorB = "";
+	}
+	
+	
+	private void geraLoop(){
+		if(tipoComparacao.equals(">")){
+			pilhaInstrucoes.add("\t\tLD\t" + operadorA + "\t; WHILE ( " + operadorA + " > " + operadorB + " )");
+			pilhaInstrucoes.add("\t\t-\t" + operadorB);
+			pilhaInstrucoes.add("\t\tJN\tENDLOOP_" + pilhaWhile.peek());
+			pilhaInstrucoes.add("\t\tJZ\tENDLOOP_" + pilhaWhile.peek());
+			
+		}else if(tipoComparacao.equals("<")){
+			pilhaInstrucoes.add("\t\tLD\t" + operadorB + "\t; WHILE ( " + operadorA + " < " + operadorB + " )");
+			pilhaInstrucoes.add("\t\t-\t" + operadorA);
+			pilhaInstrucoes.add("\t\tJN\tENDLOOP_" + pilhaWhile.peek());
+			pilhaInstrucoes.add("\t\tJZ\tENDLOOP_" + pilhaWhile.peek());
+			
+		}else if(tipoComparacao.equals(">=")){
+			pilhaInstrucoes.add("\t\tLD\t" + operadorA + "\t; WHILE ( " + operadorA + " >= " + operadorB + " )");
+			pilhaInstrucoes.add("\t\t-\t" + operadorB);
+			pilhaInstrucoes.add("\t\tJN\tENDLOOP_" + pilhaWhile.peek());
+			
+		}else if(tipoComparacao.equals("<=")){
+			pilhaInstrucoes.add("\t\tLD\t" + operadorB + "\t; WHILE ( " + operadorA + " <= " + operadorB + " )");
+			pilhaInstrucoes.add("\t\t-\t" + operadorA);
+			pilhaInstrucoes.add("\t\tJN\tENDLOOP_" + pilhaWhile.peek());
+			
+		}else if(tipoComparacao.equals("==")){
+			pilhaInstrucoes.add("\t\tLD\t" + operadorA + "\t; WHILE ( " + operadorA + " == " + operadorB + " )");
+			pilhaInstrucoes.add("\t\t-\t" + operadorB);
+			pilhaInstrucoes.add("\t\tJZ\tLOOP_EQ_" + pilhaWhile.peek());
+			pilhaInstrucoes.add("\t\tJP\tENDLOOP_" + pilhaWhile.peek());
+			pilhaInstrucoes.add("LOOP_EQ_" + pilhaWhile.peek() + "\t\tOS\t=0");
+			
+		}else if(tipoComparacao.equals("!=")){
+			pilhaInstrucoes.add("\t\tOS\t=0" + "\t; WHILE ( " + operadorA + " != " + operadorB + " )");
+			pilhaInstrucoes.add("\t\tLD\t" + operadorA);
+			pilhaInstrucoes.add("\t\t-\t" + operadorB);
+			pilhaInstrucoes.add("\t\tJZ\tENDLOOP_" + pilhaWhile.peek());
+		}
+		
+		operadorA = "";
+		operadorB = "";
 	}
 	
 	private boolean encontraConstante(String cte){

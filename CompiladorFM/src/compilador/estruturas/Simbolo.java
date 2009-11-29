@@ -11,6 +11,7 @@ public class Simbolo {
 	
 	private String endereco;
 	private int tamanho;
+	private boolean inicializado;
 	
 	
 	public Simbolo (int id, String nome, int tipo, int coluna, int linha, String end, int tamanho) {
@@ -21,6 +22,7 @@ public class Simbolo {
 		this.linha = linha;
 		this.endereco = end;
 		this.tamanho = tamanho;
+		this.inicializado = false;
 	}
 	
 	
@@ -71,6 +73,18 @@ public class Simbolo {
 	public void setTamanho(int tamanho) {
 		this.tamanho = tamanho;
 	}
+
+
+	public boolean isInicializado() {
+		return inicializado;
+	}
+
+
+	public void setInicializado(boolean inicializado) {
+		this.inicializado = inicializado;
+	}
+	
+	
 	
 	
 }
