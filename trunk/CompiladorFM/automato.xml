@@ -23,7 +23,7 @@
 		</transicao>
         
         <transicao>
-			<entradas>=&lt;&gt;</entradas>
+			<entradas>=&lt;&gt;!</entradas>
 			<proximo>5</proximo>
 		</transicao>
         <transicao>
@@ -76,7 +76,7 @@
 		<final>true</final>
         <tipo>4</tipo>
 		<transicao>
-			<entradas>0123456789 	"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ{};+-*()./=&lt;&gt;</entradas>
+			<entradas>0123456789 	"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ{};+-*()./=&lt;&gt;!</entradas>
 			<proximo>6</proximo>
 		</transicao>
 	</estado>

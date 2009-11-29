@@ -73,6 +73,7 @@ public class Sintatico {
 	public boolean executa(APE automato, FluxoTokens tokensTokens) {
 		
 		Token token;
+		Token nextToken;
 		
 		if(tokensTokens.getTamanho() < 2){
 			System.out.println("[ERRO] Arquivo fonte incorreto.");
@@ -95,6 +96,7 @@ public class Sintatico {
 		
 		// Pega primeiro token
 		token = tokensTokens.recuperaToken();
+		nextToken = token;
 		
 		boolean fimTokensEFinal = true;
 		
@@ -102,10 +104,16 @@ public class Sintatico {
 		// Enquanto não chegamos ao final dos tokens
 		while(fimTokensEFinal) {
 			
+			if(pilhaSubmaquinas.empty()){
+				// ERRO
+				System.out.println("[ERRO] Caractere inesperado '" + token.getValor() + "' na linha " + token.getLinha() + ".");
+				return false;
+			}
+			
 			// Desempilha maquina
 			conteudoPilha = (PilhaEstadoSubmaquina) pilhaSubmaquinas.pop();
-			//System.out.println("pilha: (" + conteudoPilha.getEstado() + ", " + conteudoPilha.getSubmaquina() + ")");
-			//System.out.println("token: " + token.getValor());
+			System.out.println("pilha: (" + conteudoPilha.getEstado() + ", " + conteudoPilha.getSubmaquina() + ")");
+			System.out.println("token: " + token.getValor());
 			
 			// Identifica qual a maquina que estava empilhada
 			if(conteudoPilha.getSubmaquina().equals("programa")){
@@ -196,13 +204,19 @@ public class Sintatico {
 				// Salva estado da submaquina
 				conteudoPilha.setEstado(submaquina.getEstadoAtivo());
 				
+				// Caso seja necessario, pega um novo token
+				if (getNewToken == true) {
+					nextToken = tokensTokens.recuperaToken();
+				}
+				
 				// Gera código
-				semantico.geraCodigo(token, aPercorrer, submaquina);
+				semantico.geraCodigo(token, nextToken, aPercorrer, submaquina);
 				
 				// Caso seja necessario, pega um novo token
 				if (getNewToken == true) {
-					token = tokensTokens.recuperaToken();
+					token = nextToken;
 				}
+				
 				// Empilha submaquina, caso ela nao tenha terminado
 				if (!submaquina.estadoAtivoFinal() || submaquina.temTransicao('"' + token.getValor() + '"')) {
 					pilhaSubmaquinas.push(new PilhaEstadoSubmaquina(conteudoPilha.getEstado(), conteudoPilha.getSubmaquina()));

@@ -25,10 +25,9 @@ comando = [
 		  | 
 		  identificador "(" [ expressao {"," expressao} ] ")" ";" 
 		  | 
-		  "entrada" "=" identificador 
-		  [ "[" ( numero | expressao ) "]" ] ";" 
+		  "entrada" "=" identificador [ "[" ( numero | expressao ) "]" ] ";" 
 		  | 
-		  "saida" "=" ( expressao | string )";" 
+		  "saida" "=" ( expressao | string ) ";" 
 		  ] .
 
 
