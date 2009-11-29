@@ -22,7 +22,7 @@ import compilador.estruturas.Transicao;
 
 public class MontaMetaAPE {
 	
-	private String arquivoXML = "metacompilador.xml";
+	private String arquivoXML = "conf/metacompilador.xml";
 	
 	public MontaMetaAPE(){
 		

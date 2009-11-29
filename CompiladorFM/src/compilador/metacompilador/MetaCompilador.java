@@ -17,7 +17,7 @@ public class MetaCompilador {
 	/**
 	 * arquivo texto que contém a descrição em notação de Wirth para a linguagem FM.
 	 */
-	private static String arquivoFonte = "gramatica.txt";
+	private static String arquivoFonte = "conf/gramatica.txt";
 	
 	/**
 	 * reconhecedor para a notação de Wirth.

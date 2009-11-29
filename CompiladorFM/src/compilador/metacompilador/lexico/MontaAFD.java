@@ -21,7 +21,7 @@ import compilador.estruturas.Transicao;
 
 public class MontaAFD {
 	
-	private String arquivoXML = "metalexico.xml";
+	private String arquivoXML = "conf/metalexico.xml";
 	
 	public MontaAFD(){
 		

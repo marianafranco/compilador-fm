@@ -1,20 +1,14 @@
 package compilador.sintatico;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.util.Stack;
-import java.util.Vector;
 
-import compilador.estruturas.PalavrasReservadas;
+
 import compilador.estruturas.APE;
 import compilador.estruturas.FluxoTokens;
 import compilador.estruturas.TiposLexico;
-import compilador.estruturas.TiposSimbolos;
 import compilador.estruturas.Token;
 import compilador.estruturas.PilhaEstadoSubmaquina;
 import compilador.estruturas.AFD;
-import compilador.estruturas.TabelaSimbolos;
 import compilador.semantico.Semantico;
 
 public class Sintatico {
@@ -112,8 +106,8 @@ public class Sintatico {
 			
 			// Desempilha maquina
 			conteudoPilha = (PilhaEstadoSubmaquina) pilhaSubmaquinas.pop();
-			System.out.println("pilha: (" + conteudoPilha.getEstado() + ", " + conteudoPilha.getSubmaquina() + ")");
-			System.out.println("token: " + token.getValor());
+			//System.out.println("pilha: (" + conteudoPilha.getEstado() + ", " + conteudoPilha.getSubmaquina() + ")");
+			//System.out.println("token: " + token.getValor());
 			
 			// Identifica qual a maquina que estava empilhada
 			if(conteudoPilha.getSubmaquina().equals("programa")){
