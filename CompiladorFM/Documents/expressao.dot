@@ -1,7 +1,7 @@
 digraph expressao {
 
 	null [shape = plaintext label=""];
-	node [shape = doublecircle] 9 17 18 21 33 41 42 45 57 65 66 69 81 89 90 93 94 95 96 98 99 101 102 ;
+	node [shape = doublecircle] 9 17 18 21 33 41 42 45 57 65 66 69 81 89 90 93 94 95 96 97 98 99 100 101 102 103;
 	node [shape = circle];
 
 	null -> 0;
@@ -160,6 +160,12 @@ digraph expressao {
 	96 -> 48 [ label = "+" ];
 	96 -> 49 [ label = "-" ];
 	96 -> 35 [ label = "(" ];
+	97 -> 29 [ label = "[" ];
+	97 -> 24 [ label = "*" ];
+	97 -> 25 [ label = "/" ];
+	97 -> 48 [ label = "+" ];
+	97 -> 49 [ label = "-" ];
+	97 -> 35 [ label = "(" ];
 	98 -> 53 [ label = "[" ];
 	98 -> 72 [ label = "*" ];
 	98 -> 73 [ label = "/" ];
@@ -172,6 +178,12 @@ digraph expressao {
 	99 -> 48 [ label = "+" ];
 	99 -> 49 [ label = "-" ];
 	99 -> 59 [ label = "(" ];
+	100 -> 53 [ label = "[" ];
+	100 -> 72 [ label = "*" ];
+	100 -> 73 [ label = "/" ];
+	100 -> 48 [ label = "+" ];
+	100 -> 49 [ label = "-" ];
+	100 -> 59 [ label = "(" ];
 	101 -> 77 [ label = "[" ];
 	101 -> 72 [ label = "*" ];
 	101 -> 73 [ label = "/" ];
@@ -184,4 +196,10 @@ digraph expressao {
 	102 -> 48 [ label = "+" ];
 	102 -> 49 [ label = "-" ];
 	102 -> 83 [ label = "(" ];
+	103 -> 77 [ label = "[" ];
+	103 -> 72 [ label = "*" ];
+	103 -> 73 [ label = "/" ];
+	103 -> 48 [ label = "+" ];
+	103 -> 49 [ label = "-" ];
+	103 -> 83 [ label = "(" ];
 }
