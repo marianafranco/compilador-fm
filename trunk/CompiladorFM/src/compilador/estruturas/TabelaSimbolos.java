@@ -145,6 +145,7 @@ public class TabelaSimbolos {
 	}
 	
 	
+	
 	// Gets e Sets
 	
 	public int getEntradas() {
