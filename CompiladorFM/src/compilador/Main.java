@@ -61,7 +61,7 @@ public class Main {
 				gerador.executa(newAutomato, fluxoTokens);
 				
 			}catch(ArquivoNaoEcontradoException e){
-				System.out.println("[INFO] Compilador finalizador com ERROS.");
+				System.out.println("[INFO] Compilador finalizador com ERRO.");
 			}catch(Exception e){
 				e.printStackTrace();
 			}	

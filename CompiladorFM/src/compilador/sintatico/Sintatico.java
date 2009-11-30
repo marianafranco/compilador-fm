@@ -9,6 +9,7 @@ import compilador.estruturas.TiposLexico;
 import compilador.estruturas.Token;
 import compilador.estruturas.PilhaEstadoSubmaquina;
 import compilador.estruturas.AFD;
+import compilador.exceptions.SemanticoException;
 import compilador.semantico.Semantico;
 
 public class Sintatico {
@@ -159,16 +160,6 @@ public class Sintatico {
 				if(tokensTokens.getTamanho() > 0){
 					getNewToken = true;
 				}
-				
-				// Adiciona na tabela de simbolos
-				// Se não é palavra reservada
-				//if(!PalavrasReservadas.reservada(token.getValor())){
-					// Verifica se o nome ja esta na tabela de simbolos
-				//	if(!tabela.estaNaTabela(token.getValor())){
-				//		System.out.println("SIMBOLO = " + token.getValor());
-				//		tabela.adicionaEntrada(token.getValor(), TiposSimbolos.DESCONHECIDO, token.getLinha(), token.getColuna());
-				//	}
-				//}
 			
 			// Se número
 			}else if (submaquina.temTransicao("numero") && token.getTipo() == TiposLexico.NUMERO) {
@@ -203,8 +194,14 @@ public class Sintatico {
 					nextToken = tokensTokens.recuperaToken();
 				}
 				
-				// Gera código
-				semantico.geraCodigo(token, nextToken, aPercorrer, submaquina);
+				try{
+					// Gera código
+					semantico.geraCodigo(token, nextToken, aPercorrer, submaquina);
+				}catch(SemanticoException e){
+					System.out.println("[INFO] Compilador finalizado com ERRO.");
+					return false;
+				}
+				
 				
 				// Caso seja necessario, pega um novo token
 				if (getNewToken == true) {

@@ -7,6 +7,7 @@ import java.util.Vector;
 
 import compilador.estruturas.PalavrasReservadas;
 import compilador.estruturas.PilhaSeSenao;
+import compilador.estruturas.TabelaFuncao;
 import compilador.estruturas.TiposComando;
 import compilador.estruturas.TiposLexico;
 import compilador.estruturas.TiposSimbolos;
@@ -14,6 +15,7 @@ import compilador.estruturas.Token;
 import compilador.estruturas.AFD;
 import compilador.estruturas.TabelaSimbolos;
 import compilador.estruturas.TiposPrograma;
+import compilador.exceptions.SemanticoException;
 
 public class Semantico {
 	
@@ -28,14 +30,9 @@ public class Semantico {
 	private String arquivo;
 	
 	/**
-	 * pilha que guarda a tabela de simbolos atual
+	 * pilha que guarda as tabelas de simbolos das funções e do programa principal
 	 */
 	private Vector<TabelaSimbolos> vetorEscopos;
-	
-	/**
-	 * pilha de escopo
-	 */
-	private Stack<TabelaSimbolos> pilhaEscopos;
 	
 	/**
 	 * tabela de simbolos do escopo atual
@@ -152,6 +149,13 @@ public class Semantico {
 	 */
 	private Stack<Integer> pilhaPrograma;
 	
+	
+	private TabelaFuncao tabelaFuncao;
+	
+	
+	private int tipoFuncao;
+	
+	
 	/**
 	 * Metodo Construtor
 	 * 
@@ -161,8 +165,6 @@ public class Semantico {
 		this.output = "";
 		this.arquivo = arquivoMVN;
 		
-		vetorEscopos = new Vector<TabelaSimbolos>();
-		pilhaEscopos = new Stack<TabelaSimbolos>();
 		pilhaTokens = new Stack<Token>();
 		pilhaDeclaracoes = new Vector<String>();
 		pilhaInstrucoes = new Vector<String>();
@@ -189,22 +191,24 @@ public class Semantico {
 		pilhaWhile = new Stack<Integer>();
 		contaWhile = 0;
 		
+		
+		// Empilha codigo de inicializacao
+		pilhaDeclaracoes.add("@\t/0");
+		pilhaDeclaracoes.add("\t\tJP\tINICIO");
+		
+		
+		pilhaPrograma = new Stack<Integer>();
+		pilhaPrograma.push(TiposPrograma.DECLARAFUNCAO);
+		
+		contaSubrotinas = 0;
+		tabelaFuncao = new TabelaFuncao();
+		vetorEscopos = new Vector<TabelaSimbolos>();
+		
 		// inicializa a tabela de simbolos
 		tabela = new TabelaSimbolos();
 		tabela.setEscopo(vetorEscopos.size());
 		tabela.setEscopoAnterior(0);
 		vetorEscopos.add(tabela);
-		pilhaEscopos.push(tabela);
-		
-		// Empilha codigo de inicializacao
-		pilhaDeclaracoes.add("@\t/0");
-		pilhaDeclaracoes.add("\t\tJP\tINICIO");
-		//pilhaInstrucoes.add("@\t/256");
-		
-		contaSubrotinas = 0;
-		
-		pilhaPrograma = new Stack<Integer>();
-		this.pilhaPrograma.push(TiposPrograma.DECLARAFUNCAO);
 	}
 	
 	
@@ -215,52 +219,97 @@ public class Semantico {
 	 * @param nextToken
 	 * @param aPercorrer
 	 * @param submaquina
+	 * @throws SemanticoException 
 	 */
-	public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD submaquina){
+	public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD submaquina) throws SemanticoException{
 		
 		//System.out.println("[DEBUG] Token: " + token.getValor() + " submaquina: " + submaquina.getNome());
 		//System.out.println("[DEBUG] nextToken: " + nextToken.getValor());
+		
 		
 		//*********************************************************************
 		// Submaquina <PROGRAMA>
 		//*********************************************************************
 		if(submaquina.getNome().equals("programa")){
 			
-			// TIPO
-			if (token.getValor().equals("inteiro") || token.getValor().equals("booleano") || token.getValor().equals("caracteres")) {
-				this.pilhaTokens.push(token);
+			
+			if(aPercorrer.equals("comando") || aPercorrer.equals("expressao")){
+				// Não faz nada
 				
-			// IDENTIFICADOR - Pode ser o nome da subrotina ou um de seus par‰metros
-			}else if(token.getTipo() == TiposLexico.NOME && !PalavrasReservadas.reservada(token.getValor()) 
-					&& aPercorrer != "comando" && aPercorrer != "expressao"){
-				// Caso seja uma subrotina
-				if (this.pilhaPrograma.peek() == TiposPrograma.DECLARAFUNCAO) {
-					pilhaInstrucoes.add("FUNC_" + contaSubrotinas + "\t\tLD\t/00");
+			// TIPO
+			}else if (token.getValor().equals("inteiro") || token.getValor().equals("booleano") || token.getValor().equals("caracteres")) {
+				this.pilhaTokens.push(token);
+				if(token.getValor().equals("inteiro")){
+					tipoFuncao = TiposSimbolos.INTEIRO;
+				}else if(token.getValor().equals("booleano")){
+					tipoFuncao = TiposSimbolos.BOOLEANO;
+				}else if(token.getValor().equals("caracteres")){
+					tipoFuncao = TiposSimbolos.BOOLEANO;
 				}
+				
+			// IDENTIFICADOR - Pode ser o nome da subrotina ou um de seus parametros
+			}else if(token.getTipo() == TiposLexico.NOME && !PalavrasReservadas.reservada(token.getValor())){
+				
+				// Caso seja uma subrotina
+				if (pilhaPrograma.peek() == TiposPrograma.DECLARAFUNCAO) {
+					pilhaInstrucoes.add("FUNC_" + contaSubrotinas + "\t\tJP\t/00");
+					tabelaFuncao.insereFuncao(token.getValor(), tipoFuncao, "FUNC_" + contaSubrotinas);
+				
+				
+				}else if(pilhaPrograma.peek() == TiposPrograma.RETORNO){
+					if(tabela.estaNaTabela(token.getValor())){
+						if(tabela.recuperaEntrada(token.getValor()).isInicializado()){
+							pilhaInstrucoes.add("\t\tLD\t"+tabela.recuperaEntrada(token.getValor()).getEndereco() 
+									+ "\t; RETURN " + tabela.recuperaEntrada(token.getValor()).getEndereco());
+							pilhaInstrucoes.add("\t\tRS\t" + "FUNC_" + contaSubrotinas);
+						}else{
+							throw new SemanticoException("O parametro de retorno '" + token.getValor() + "' não foi inicializado.", token.getLinha());
+						}
+						pilhaPrograma.pop();
+					}else{
+						throw new SemanticoException(" O parametro de retorno '" + token.getValor() + "' não foi anteriormente declarado.", token.getLinha());
+					}
+				}
+				
 				// Caso seja uma variavel
 				else {
 					//pilhaDeclaracoes.add();
 				}
 				
-				
 			// RETORNO
 			}else if(token.getValor().equals("retorno")){
-				this.pilhaPrograma.push(TiposPrograma.RETORNO);
+				pilhaPrograma.push(TiposPrograma.RETORNO);
+				// TODO verificar se o tipo do retorno é o mesmo da função
 			
 			// PRINCIPAL
 			}else if(token.getValor().equals("principal")){
-				
+				tabela = new TabelaSimbolos();
 				pilhaInstrucoes.add("INICIO\t\tLD\t/00");
 				pilhaTokens.clear();
+				pilhaPrograma.push(TiposPrograma.PRINCIPAL);
+			
+			// (
 			}else if (token.getValor().equals("(")) {
-				this.pilhaPrograma.push(TiposPrograma.ARGUMENTO);
+				pilhaPrograma.push(TiposPrograma.ARGUMENTO);
+				
+			// )
 			}else if (token.getValor().equals(")")) {
-				this.pilhaPrograma.pop();
-			// TOKENS IGNORADOS
+				pilhaPrograma.pop();
+				
+			// TOKENS DE ESCOPO
 			}else if (token.getValor().equals("{")) { 
 				//pilhaInstrucoes.add("FUNC_" + contaSubrotinas + "\t\tLD\t/00");
+				// cria um novo escopo
+				tabela = new TabelaSimbolos();
+				tabela.setEscopo(vetorEscopos.size());
+				vetorEscopos.add(tabela);
+				
 			}else if (token.getValor().equals("}")) { 
-				//pilhaInstrucoes.add("FUNC_" + contaSubrotinas + "\t\tLD\t/00");
+				if(pilhaPrograma.peek() == TiposPrograma.DECLARAFUNCAO){
+					pilhaPrograma.pop();
+					contaSubrotinas++;
+				}
+				
 			}else {
 				// {, }, aPercorrer == comando, aPercorrer == expressao 
 			}
@@ -277,6 +326,7 @@ public class Semantico {
 				
 			// EXPRESSAO
 			}else if(aPercorrer.equals("expressao")){
+				
 				// comando SE ou ENQUANTO
 				if(pilhaComando.peek() == TiposComando.SE || pilhaComando.peek() == TiposComando.ENQUANTO){
 					nomeResultAtrib = "TEMP_" + temp;
@@ -328,22 +378,27 @@ public class Semantico {
 				}
 				
 				
-				
 			// IDENTIFICADOR
 			}else if (token.getTipo() == TiposLexico.NOME && !PalavrasReservadas.reservada(token.getValor())){
 				
+				// FUNCAO
+				if(tabelaFuncao.estaNaTabela(token.getValor())){
+					// chamada de funcao
+					pilhaInstrucoes.add("\t\tSC\t" + tabelaFuncao.recuperaFuncao(token.getValor()).getEnd());
+					pilhaComando.push(TiposComando.FUNCAO);
+				
 				// se ja esta na tabela de simbolos
-				if(tabela.estaNaTabela(token.getValor())){
+				}else if(tabela.estaNaTabela(token.getValor())){
 					
 					if(!pilhaComando.empty()){
+						
 						// ENTRADA
 						if(pilhaComando.peek() == TiposComando.ENTRADA){
-							// TODO Gerar a saida
+							// TODO Gerar a entrada
 							
 						// ERRO - declaracao de variavel ja declarada
 						}else if(pilhaComando.peek() == TiposComando.DECLARACAO){
-							// TODO Erro, abortar o programa
-							System.out.println("[ERRO] Variavel " + token.getValor() + " ja declarada!");
+							throw new SemanticoException(" Variavel " + token.getValor() + " ja declarada!", token.getLinha());
 						
 						// ATRIBUICAO
 						}else{
@@ -354,7 +409,7 @@ public class Semantico {
 									if(pilhaComando.peek() == TiposComando.DESCONHECIDO){
 										pilhaComando.pop();
 										
-										// TODO Gerar inicio para a chamada de atribuicao
+										// Gera inicio para a chamada de atribuicao
 										nomeResultAtrib = tabela.recuperaEntrada(token.getValor()).getEndereco();
 										tipoResultAtrib = tabela.recuperaEntrada(token.getValor()).getTipo();
 										pilhaComando.push(TiposComando.ATRIBUICAO);
@@ -367,7 +422,7 @@ public class Semantico {
 							}
 						}
 					
-					// Atribuicao
+					// ATRIBUICAO
 					}else{
 						if(!pilhaComando.empty()){
 							if(pilhaComando.peek() == TiposComando.SE || pilhaComando.peek() == TiposComando.ENQUANTO){
@@ -402,8 +457,7 @@ public class Semantico {
 						tabela.adicionaEntrada(token.getValor(), TiposSimbolos.STRING, "CHAR_"+contaString, 0, token.getLinha(), token.getColuna());
 						contaString++;
 					}else{
-						// TODO Erro, abortar o programa
-						System.out.println("[ERRO] Esperava-se um tipo no lugar de " + tipo.getValor());
+						throw new SemanticoException(" Esperava-se um tipo no lugar de " + tipo.getValor(), token.getLinha());
 					}
 					// empilha para poder depois usar em caso de vetor
 					pilhaTokens.push(token);
@@ -419,10 +473,10 @@ public class Semantico {
 					if(anterior.getTipo() == TiposLexico.NOME && tabela.estaNaTabela(anterior.getValor())){
 						tabela.recuperaEntrada(anterior.getValor()).setTamanho(Integer.parseInt(token.getValor()));
 					}else{
-						// TODO ATRIBUICAO
+						// ATRIBUICAO
 					}
 				}else{
-					// TODO ATRIBUICAO
+					// ATRIBUICAO
 				}
 				
 				
@@ -433,8 +487,7 @@ public class Semantico {
 						pilhaInstrucoes.add("\t\tLD\t/01\t; " + nomeResultAtrib + " = TRUE");
 						pilhaInstrucoes.add("\t\tMM\t" + nomeResultAtrib);
 					}else{
-						// TODO Erro, aborta programa
-						System.out.println("[ERRO] Impossivel atribuir o valor 'verdadeiro' para variavel nao booleana.");
+						throw new SemanticoException("Impossivel atribuir o valor 'verdadeiro' para variavel nao booleana.", token.getLinha());
 					}
 				}
 				
@@ -445,8 +498,7 @@ public class Semantico {
 						pilhaInstrucoes.add("\t\tLD\t/00\t; " + nomeResultAtrib + " = FALSE");
 						pilhaInstrucoes.add("\t\tMM\t" + nomeResultAtrib);
 					}else{
-						// TODO Erro, aborta programa
-						System.out.println("[ERRO] Impossivel atribuir o valor 'verdadeiro' para variavel nao booleana.");
+						throw new SemanticoException("Impossivel atribuir o valor 'falso' para variavel nao booleana.", token.getLinha());
 					}
 				}
 				
@@ -539,6 +591,8 @@ public class Semantico {
 						geraLoop();
 					}
 					
+				}else if(pilhaComando.peek() == TiposComando.FUNCAO){
+					// desempilha ao receber ;
 				}
 			
 			// NOVO ESCOPO	
@@ -613,7 +667,6 @@ public class Semantico {
 			}
 		
 			
-			
 		//*********************************************************************
 		// Submaquina <EXPRESSAO>
 		//*********************************************************************
@@ -621,17 +674,14 @@ public class Semantico {
 			
 			// BOOL OU STRING
 			if(tipoResultAtrib != TiposSimbolos.INTEIRO){
-				// TODO Erro, abortar o programa
-				System.out.println("[ERRO] Impossivel atribuir o valor " + token.getValor() + " para variavel de tipo booleano ou caracteres.");
-			
+				throw new SemanticoException("Impossivel atribuir o valor " + token.getValor() + " para variavel de tipo booleano ou caracteres.", token.getLinha());
 			
 			// chama EXPRESSAO
 			}else if(aPercorrer.equals("expressao")){
-				
+				// Não faz nada
 			
 			// NUMERO
 			}else if(token.getTipo() == TiposLexico.NUMERO){
-				
 				if(!encontraConstante(token.getValor())){
 					tabela.adicionaEntrada(token.getValor(), TiposSimbolos.CONSTANTE, "NUM_"+token.getValor(), 1, token.getLinha(), token.getColuna());
 				}
@@ -666,45 +716,25 @@ public class Semantico {
 									geraOperacao("*");
 								}else if(pilhaOperadores.peek().equals("/")){
 									geraOperacao("/");
-								}else{
-									// Nao faz nada
 								}
 							}
 						}else{
-							// TODO Erro, abortar o programa
-							System.out.println("[ERRO] Variavel " + token.getValor() + " nao foi inicializada." );
+							throw new SemanticoException("Variavel " + token.getValor() + " nao foi inicializada.", token.getLinha());
 						}
 						
 					}else{
-						// TODO Erro, abortar o programa
-						System.out.println("[ERRO] Variavel " + token.getValor() + " nao inteira, impossivel de calcular a expressao." );
+						throw new SemanticoException("Variavel " + token.getValor() + " nao inteira, impossivel de calcular a expressao.", token.getLinha());
 					}
 					
 				}else{
-					// TODO Erro, abortar o programa
-					System.out.println("[ERRO] Variavel " + token.getValor() + " nao foi declarada." );
+					throw new SemanticoException("Variavel " + token.getValor() + " nao foi declarada.", token.getLinha());
 				}
 			
-			// OPERADOR *
-			}else if(token.getValor().equals("*")){
-				pilhaOperadores.push("*");
+			// OPERADOR
+			}else if(token.getValor().equals("*") || token.getValor().equals("/") || token.getValor().equals("+")
+					|| token.getValor().equals("-") || token.getValor().equals("(")){
+				pilhaOperadores.push(token.getValor());
 				
-			// OPERADOR /
-			}else if(token.getValor().equals("/")){
-				pilhaOperadores.push("/");
-			
-			// OPERADOR +
-			}else if(token.getValor().equals("+")){
-				pilhaOperadores.push("+");
-			
-			// OPERADOR -
-			}else if(token.getValor().equals("-")){
-				pilhaOperadores.push("-");
-			
-			// (
-			}else if(token.getValor().equals("(")){
-				pilhaOperadores.push("(");
-			
 			// )
 			}else if(token.getValor().equals(")")){
 				pilhaOperadores.push(")");
@@ -712,12 +742,13 @@ public class Semantico {
 				
 			// ERRO
 			}else{
-				// TODO Erro, abortar o programa
-				System.out.println("[ERRO] Impossivel calcular a expressao.");
+				throw new SemanticoException("Impossivel calcular a expressao.", token.getLinha());
 			}
 		}
 	}
 
+	
+	
 	/**
 	 * Gera as expressoes conforme o valor na pilha de operadores e operandos
 	 */
@@ -738,6 +769,7 @@ public class Semantico {
 			}
 		}
 	}
+	
 	
 	/**
 	 * Gera o codigo MVN para a operacao passada em parametro

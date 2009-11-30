@@ -2,9 +2,7 @@ programa = { ("inteiro" | "caracteres" | "booleano") identificador
 		   "(" [ ("inteiro" | "caracteres" | "booleano") identificador [ "[" numero "]" ] 
 		   { "," ("inteiro" | "caracteres" | "booleano") identificador [ "[" numero "]" ] } ] ")"
 		   "{" {comando} 
-		   "retorno" ( identificador [ "[" ( numero | expressao ) "]" ] 
-		   | expressao | numero | string 
-		   | "verdadeiro" | "falso" ) ";" "}" }
+		   "retorno" identificador ";" "}" }
 		   "principal" "(" ")"
 		   "{" {comando} "}" .
 		   
