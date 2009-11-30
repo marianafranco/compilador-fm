@@ -1,15 +1,15 @@
 //inteiro funcao(inteiro param){
+//inteiro funcao(){
 //	enquanto (param == 2) {
 //		param = param + 1;
 //	}
-//	retorno param;
+//	retorno 1;
 //}
 
 principal () {
 
 	inteiro var1;
 	inteiro var2;
-	
 	
 	var1 = 0;
 	var2 = 3;

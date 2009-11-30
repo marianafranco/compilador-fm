@@ -1,7 +1,7 @@
 digraph programa {
 
 	null [shape = plaintext label=""];
-	node [shape = doublecircle] 77;
+	node [shape = doublecircle] 56;
 	node [shape = circle];
 
 	null -> 0;
@@ -69,36 +69,10 @@ digraph programa {
 	49 -> 6 [ label = "booleano" ];
 	49 -> 50 [ label = "principal" ];
 	50 -> 51 [ label = "(" ];
-	51 -> 54 [ label = "inteiro" ];
-	51 -> 55 [ label = "caracteres" ];
-	51 -> 56 [ label = "booleano" ];
-	51 -> 73 [ label = ")" ];
-	54 -> 57 [ label = identificador ];
-	55 -> 57 [ label = identificador ];
-	56 -> 57 [ label = identificador ];
-	57 -> 59 [ label = "[" ];
-	57 -> 63 [ label = "," ];
-	57 -> 73 [ label = ")" ];
-	59 -> 60 [ label = numero ];
-	60 -> 61 [ label = "]" ];
-	61 -> 63 [ label = "," ];
-	61 -> 73 [ label = ")" ];
-	63 -> 65 [ label = "inteiro" ];
-	63 -> 66 [ label = "caracteres" ];
-	63 -> 67 [ label = "booleano" ];
-	65 -> 68 [ label = identificador ];
-	66 -> 68 [ label = identificador ];
-	67 -> 68 [ label = identificador ];
-	68 -> 70 [ label = "[" ];
-	68 -> 63 [ label = "," ];
-	68 -> 73 [ label = ")" ];
-	70 -> 71 [ label = numero ];
-	71 -> 72 [ label = "]" ];
-	72 -> 63 [ label = "," ];
-	72 -> 73 [ label = ")" ];
-	73 -> 74 [ label = "{" ];
-	74 -> 76 [ label = comando ];
-	74 -> 77 [ label = "}" ];
-	76 -> 76 [ label = comando ];
-	76 -> 77 [ label = "}" ];
+	51 -> 52 [ label = ")" ];
+	52 -> 53 [ label = "{" ];
+	53 -> 55 [ label = comando ];
+	53 -> 56 [ label = "}" ];
+	55 -> 55 [ label = comando ];
+	55 -> 56 [ label = "}" ];
 }

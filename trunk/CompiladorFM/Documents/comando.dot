@@ -88,7 +88,7 @@ digraph comando {
 	71 -> 70 [ label = "," ];
 	71 -> 72 [ label = ")" ];
 	72 -> 73 [ label = ";" ];
-	74 -> 75 [ label = ">>" ];
+	74 -> 75 [ label = "=" ];
 	75 -> 76 [ label = identificador ];
 	76 -> 78 [ label = "[" ];
 	76 -> 83 [ label = ";" ];
@@ -97,7 +97,7 @@ digraph comando {
 	80 -> 82 [ label = "]" ];
 	81 -> 82 [ label = "]" ];
 	82 -> 83 [ label = ";" ];
-	84 -> 85 [ label = "<<" ];
+	84 -> 85 [ label = "=" ];
 	85 -> 87 [ label = expressao ];
 	85 -> 88 [ label = string ];
 	87 -> 89 [ label = ";" ];

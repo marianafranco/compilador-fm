@@ -13,6 +13,7 @@ import compilador.estruturas.TiposSimbolos;
 import compilador.estruturas.Token;
 import compilador.estruturas.AFD;
 import compilador.estruturas.TabelaSimbolos;
+import compilador.estruturas.TiposPrograma;
 
 public class Semantico {
 	
@@ -141,7 +142,15 @@ public class Semantico {
 	 */
 	private int contaWhile;
 	
+	/**
+	 * contador de subrotinas no programa
+	 */
+	private int contaSubrotinas;
 	
+	/**
+	 * pilha de tipo de programa
+	 */
+	private Stack<Integer> pilhaPrograma;
 	
 	/**
 	 * Metodo Construtor
@@ -191,6 +200,11 @@ public class Semantico {
 		pilhaDeclaracoes.add("@\t/0");
 		pilhaDeclaracoes.add("\t\tJP\tINICIO");
 		//pilhaInstrucoes.add("@\t/256");
+		
+		contaSubrotinas = 0;
+		
+		pilhaPrograma = new Stack<Integer>();
+		this.pilhaPrograma.push(TiposPrograma.DECLARAFUNCAO);
 	}
 	
 	
@@ -212,48 +226,43 @@ public class Semantico {
 		//*********************************************************************
 		if(submaquina.getNome().equals("programa")){
 			
-			// chama COMANDO
-			if(aPercorrer.equals("comando")){
-				
-				
-			// chama EXPRESSAO
-			}else if(aPercorrer.equals("expressao")){
-			
-				
-			
 			// TIPO
-			}else if (token.getValor().equals("inteiro") || token.getValor().equals("booleano") || token.getValor().equals("caracteres")) {
-				pilhaTokens.push(token);
+			if (token.getValor().equals("inteiro") || token.getValor().equals("booleano") || token.getValor().equals("caracteres")) {
+				this.pilhaTokens.push(token);
 				
-			// IDENTIFICADOR
-			}else if(token.getTipo() == TiposLexico.NOME && !PalavrasReservadas.reservada(token.getValor())){
-				
-				// se ja esta na tabela de simbolos
-				if(tabela.estaNaTabela(token.getValor())){
-					
-					// verificamos se teve um token RETORNO
-					Token retorno = pilhaTokens.pop();
-					if(retorno.getValor().equals("retorno")){
-						// TODO Verifica se é o mesmo tipo da função
-						// TODO Faz colocar o valor no topo da pilha de execução
-					}else{
-						// TODO Faz retornar um ERRO
-					}
-					
-				// se nova declaracao
-				}else{
-					pilhaTokens.push(token);
+			// IDENTIFICADOR - Pode ser o nome da subrotina ou um de seus par‰metros
+			}else if(token.getTipo() == TiposLexico.NOME && !PalavrasReservadas.reservada(token.getValor()) 
+					&& aPercorrer != "comando" && aPercorrer != "expressao"){
+				// Caso seja uma subrotina
+				if (this.pilhaPrograma.peek() == TiposPrograma.DECLARAFUNCAO) {
+					pilhaInstrucoes.add("FUNC_" + contaSubrotinas + "\t\tLD\t/00");
 				}
+				// Caso seja uma variavel
+				else {
+					//pilhaDeclaracoes.add();
+				}
+				
 				
 			// RETORNO
 			}else if(token.getValor().equals("retorno")){
-				pilhaTokens.push(token);
+				this.pilhaPrograma.push(TiposPrograma.RETORNO);
 			
 			// PRINCIPAL
 			}else if(token.getValor().equals("principal")){
+				
 				pilhaInstrucoes.add("INICIO\t\tLD\t/00");
 				pilhaTokens.clear();
-			
+			}else if (token.getValor().equals("(")) {
+				this.pilhaPrograma.push(TiposPrograma.ARGUMENTO);
+			}else if (token.getValor().equals(")")) {
+				this.pilhaPrograma.pop();
+			// TOKENS IGNORADOS
+			}else if (token.getValor().equals("{")) { 
+				//pilhaInstrucoes.add("FUNC_" + contaSubrotinas + "\t\tLD\t/00");
+			}else if (token.getValor().equals("}")) { 
+				//pilhaInstrucoes.add("FUNC_" + contaSubrotinas + "\t\tLD\t/00");
+			}else {
+				// {, }, aPercorrer == comando, aPercorrer == expressao 
 			}
 		
 			
