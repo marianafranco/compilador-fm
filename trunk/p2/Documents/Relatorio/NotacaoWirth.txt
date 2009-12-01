@@ -1,0 +1,76 @@
+
+programa = cabeçalho principal .
+
+cabeçalho = { estrut } .
+
+estrut = "estrut" "{" declaração { declaração } "}" .
+
+principal = seq_funções "principal" "(" declara_parâmetros ")" 
+			"{" seq_comandos "}" .
+			
+seq_funções = { função } .
+
+função = tipo identificador "(" declara_parâmetros ")" 
+		 "{" seq_comandos "retorno" retorno ";" "}" .
+		 
+retorno = variável | expressão | numero | string  | booleano
+
+tipo = "inteiro" | "caracteres" | "booleano" .
+
+declara_parâmetros = [ parâmetro {"," parâmetro} ] .
+
+parâmetro = tipo identificador vetor .
+
+identificador = letra { letra | digito } .
+
+vetor = [ "[" numero "]" ] .
+
+seq_comandos = { comando } .
+
+comando = [ declaração | atribuição | iterativo 
+			| condicional | chamada_função | entrada | saida ] .
+
+declaração = parâmetro ";" .
+
+atribuição = variável "=" ( expressão | string | booleano )";" .
+
+variável = identificador vetor_exp .
+
+vetor_exp = vetor | "[" expressão "]" .
+
+expressão = termo { ( "+" | "-" ) termo } .
+
+termo = fator { ( "*" | "/" ) fator} .
+
+fator = variável | valor_função | numero | "(" expressão ")" .
+
+valor_função = identificador "(" lista_parâmetros ")" .
+
+lista_parâmetros =  [ expressão	{"," expressão } ] .
+
+string  = ( letra | digito ) { letra | digito } .
+
+booleano = "true" | "false" .
+
+iterativo = "enquanto" "(" condição ")" "{" seq_comandos "}" .
+
+condição = expressão comparador expressão .
+
+comparador = ">" | "<" | ">=" | "<=" | "==" | "!=" .
+
+condicional = "se" "(" condição ")" "{" seq_comandos "}" 
+			  [ "senão" "{" seq_comandos "}" ] .
+
+chamada_função = valor_função ";"
+
+entrada = "entrada" "=" variável ";" .
+
+saida = "saida" "=" ( expressão | string ) ";" .
+
+numero = digito { digito } .
+
+letra = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" | "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z" .
+
+digito = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" .
+
+

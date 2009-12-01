@@ -1,0 +1,46 @@
+programa = { ("inteiro" | "caracteres" | "booleano") identificador 
+		   "(" [ ("inteiro" | "caracteres" | "booleano") identificador [ "[" numero "]" ] 
+		   { "," ("inteiro" | "caracteres" | "booleano") identificador [ "[" numero "]" ] } ] ")"
+		   "{" {comando} 
+		   "retorno" identificador ";" "}" }
+		   "principal" "(" ")"
+		   "{" {comando} "}" .
+		   
+		   
+comando = [ 
+		  ("inteiro" | "caracteres" | "booleano") identificador [ "[" numero "]" ] ";" 
+		  | 
+		  identificador [ "[" ( numero | expressao ) "]" ]  "=" 
+		  ( expressao | string | "verdadeiro" | "falso" )";" 
+		  | 
+	  	  "enquanto" 
+	  	  "(" expressao (">" | "<" | ">=" | "<=" | "==" | "!=") 
+	  	  expressao ")" "{" { comando } "}"
+		  | 
+		  "se" "(" expressao (">" | "<" | ">=" | "<=" | "==" | "!=") 
+		  expressao ")" "{" { comando } "}" 
+		  [ "senao" "{" { comando } "}" ] 
+		  | 
+		  identificador "(" [ expressao {"," expressao} ] ")" ";" 
+		  | 
+		  "entrada" "=" identificador [ "[" ( numero | expressao ) "]" ] ";" 
+		  | 
+		  "saida" "=" ( expressao | string ) ";" 
+		  ] .
+
+
+expressao = ( identificador [ "[" ( numero | expressao ) "]" ] 
+			| identificador "(" [ expressao  { "," expressao } ] ")" 
+			| numero | "(" expressao ")" ) 
+			{ ( "*" | "/" ) 
+			( identificador [ "[" ( numero | expressao ) "]" ] 
+			| identificador "(" [ expressao {"," expressao } ] ")" 
+			| numero | "(" expressao ")" ) } 
+			{ ( "+" | "-" ) 
+			( identificador [ "[" ( numero | expressao ) "]" ] 
+			| identificador "(" [ expressao {"," expressao } ] ")" 
+			| numero | "(" expressao ")" ) 
+			{ ( "*" | "/" ) 
+			( identificador [ "[" ( numero | expressao ) "]" ] 
+			| identificador "(" [ expressao {"," expressao } ] ")" 
+			| numero | "(" expressao ")" ) } } .
