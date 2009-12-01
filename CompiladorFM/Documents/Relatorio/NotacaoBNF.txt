@@ -18,7 +18,7 @@
 <tipo> ::= inteiro | caracteres | booleano
 
 <retorno> :: = <variável> | <expressão> | <numero> 
-			   | " <seq_caracteres> " | <booleano>
+			   | <string> | <booleano>
 
 <declara_parâmetros> ::= <declara_parâmetros> , <parâmetro> 
 						 | <parâmetro> | E
@@ -38,7 +38,7 @@
 <declaração> ::= <parâmetro> ;
 
 <atribuição> ::= <variável> = <expressão> ; 
-				 | <variável> = " <seq_caracteres> " ; 
+				 | <variável> = <string> ; 
 				 | <variável> = <booleano> ;
 
 <variável> ::= <identificador> <vetor_exp>
@@ -53,14 +53,12 @@
 
 <valor_função> ::= <identificador> ( <lista_parâmetros> ) 
 					   
-<lista_parâmetros> ::= <expressão> | " <seq_caracteres> " | <booleano>
-					   | <lista_parâmetros> , <expressão> 
-					   | <lista_parâmetros> , " <seq_caracteres> "
-					   | <lista_parâmetros> , <booleano> | E
+<lista_parâmetros> ::= <expressão> | <string> | <booleano>
+					   | <lista_parâmetros> , <expressão> | E
 
-<seq_caracteres> := <seq_caracteres> <letra> 
-					| <seq_caracteres> <digito> 
-					| <letra> | <digito> 
+<string> := <string> <letra> 
+		  | <string> <digito> 
+		  | <letra> | <digito> 
 
 <booleano> := true | false
 
@@ -76,9 +74,9 @@
 
 <chamada_função> ::= <valor_função> ;
 
-<entrada> ::= entrada >> <variável> ;
+<entrada> ::= entrada = <variável> ;
 
-<saida> ::= saida << <expressão> ; | saida << " <seq_caracteres> " ;
+<saida> ::= saida = <expressão> ; | saida = <string> ;
 
 <numero> ::= <numero> <digito> | <digito>
 
