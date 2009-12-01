@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!ELEMENT gramatica (nterminal+)>
+<!ELEMENT nterminal (nome,(estado)+)>
+<!ELEMENT nome (#PCDATA)*>
+<!ELEMENT estado (id,final,(transicao)* )>
+<!ELEMENT id (#PCDATA)*>
+<!ELEMENT final (#PCDATA)*>
+<!ELEMENT transicao (entradas, proximo)>
+<!ELEMENT entradas (#PCDATA)*>
+<!ELEMENT proximo (#PCDATA)*>

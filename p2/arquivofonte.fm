@@ -1,0 +1,59 @@
+
+// exemplo de funcao
+inteiro funcao(){
+	inteiro param;
+	inteiro var1;
+	
+	param = 0;
+	var1 = 15;
+	
+	saida = var1;
+	
+	enquanto ( param <= 2) {
+		param = param + 1;
+		saida = param;
+	}
+	retorno param;
+}
+
+// rotina de inicio do programa
+principal () {
+
+	// declaracao de variavel para tipo int e boolean
+	inteiro var1;
+	inteiro var2;
+	booleano bol;
+	
+	// atribuicao de valor com verificacao de tipo
+	bol = verdadeiro;	
+	var1 = 0;
+	var2 = 3;
+	
+	// nao eh possivel atribuir o valor de retorno da funcao para uma variavel
+	funcao();
+	
+	// ifs e whiles aninhados e operacoes de comparacao com o valor de expressoes
+	enquanto ( var1 < ( var2 * 2) ){
+		var1 = var1 + 1;
+		
+		// if sem else
+		se ( (var1 - 2) > 0 ){
+			saida = var1;
+		}
+	}
+	
+	// if com else
+	se (var1 == var2){
+		saida = var1 + var2;
+	
+	}senao{
+		var1 = var2;
+		saida = var1;
+	}
+	
+	// expressoes fazem verificacao de tipo
+	var1 = (var1 * 5) / var1 + 3;
+	
+	// operacao de saida
+	saida = var1;
+}
