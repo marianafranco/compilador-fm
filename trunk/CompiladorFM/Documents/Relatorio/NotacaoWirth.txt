@@ -13,8 +13,7 @@ seq_funções = { função } .
 função = tipo identificador "(" declara_parâmetros ")" 
 		 "{" seq_comandos "retorno" retorno ";" "}" .
 		 
-retorno = variável | expressão | numero | """ seq_caracteres """ 
-		  | booleano
+retorno = variável | expressão | numero | string  | booleano
 
 tipo = "inteiro" | "caracteres" | "booleano" .
 
@@ -33,25 +32,23 @@ comando = [ declaração | atribuição | iterativo
 
 declaração = parâmetro ";" .
 
-atribuição = variável "=" ( expressão | """ seq_caracteres """ 
-			| booleano )";" .
+atribuição = variável "=" ( expressão | string | booleano )";" .
 
 variável = identificador vetor_exp .
 
 vetor_exp = vetor | "[" expressão "]" .
 
-expressão = termo { ("+" | "-") termo } .
+expressão = termo { ( "+" | "-" ) termo } .
 
-termo = fator { ("*" | "/") fator} .
+termo = fator { ( "*" | "/" ) fator} .
 
 fator = variável | valor_função | numero | "(" expressão ")" .
 
 valor_função = identificador "(" lista_parâmetros ")" .
 
-lista_parâmetros =  [ ( expressão | """ seq_caracteres """ | booleano ) 
-					{"," ( expressão | """ seq_caracteres """ | booleano ) } ] .
+lista_parâmetros =  [ expressão	{"," expressão } ] .
 
-seq_caracteres  = (letra | digito){letra | digito} .
+string  = ( letra | digito ) { letra | digito } .
 
 booleano = "true" | "false" .
 
@@ -66,11 +63,11 @@ condicional = "se" "(" condição ")" "{" seq_comandos "}"
 
 chamada_função = valor_função ";"
 
-entrada = "entrada" ">>" variável ";" .
+entrada = "entrada" "=" variável ";" .
 
-saida = "saida" << (expressão | """ seq_caracteres """ )";" .
+saida = "saida" "=" ( expressão | string ) ";" .
 
-numero = digito {digito} .
+numero = digito { digito } .
 
 letra = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" | "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z" .
 

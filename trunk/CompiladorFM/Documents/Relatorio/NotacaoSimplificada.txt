@@ -7,7 +7,7 @@ programa = { "estrut"
 		   { "," tipo identificador [ "[" numero "]" ] } ] ")"
 		   "{" {comando} 
 		   "retorno" ( identificador [ "[" ( numero | expressao ) "]" ] 
-		   | expressao | numero | """ seq_caracteres """ 
+		   | expressao | numero | string 
 		   | booleano ) ";" "}" }
 		   "principal" "(" [ tipo identificador [ "[" numero "]" ]
 		   { "," tipo identificador [ "[" numero "]" ] } ] ")"
@@ -18,7 +18,7 @@ comando = [
 		  tipo identificador [ "[" numero "]" ] ";" 
 		  | 
 		  identificador [ "[" ( numero | expressao ) "]" ]  "=" 
-		  ( expressao | """ seq_caracteres """ | booleano )";" 
+		  ( expressao | string | booleano ) ";" 
 		  | 
 	  	  "enquanto" 
 	  	  "(" expressao (">" | "<" | ">=" | "<=" | "==" | "!=") 
@@ -30,37 +30,25 @@ comando = [
 		  | 
 		  identificador "(" [ expressao {"," expressao} ] ")" ";" 
 		  | 
-		  "entrada" ">>" identificador 
+		  "entrada" "=" identificador 
 		  [ "[" ( numero | expressao ) "]" ] ";" 
 		  | 
-		  "saida" "<<" ( expressao | """ seq_caracteres """ )";" 
+		  "saida" "=" ( expressao | string ) ";" 
 		  ] .
 
 
 expressao = ( identificador [ "[" ( numero | expressao ) "]" ] 
-			| identificador "(" 
-			[ ( expressao | """ seq_caracteres """ | booleano ) 
-			{"," ( expressao | """ seq_caracteres """ 
-			| booleano ) } ] ")" 
+			| identificador "(" [ expressao  { "," expressao } ] ")" 
 			| numero | "(" expressao ")" ) 
 			{ ( "*" | "/" ) 
 			( identificador [ "[" ( numero | expressao ) "]" ] 
-			| identificador "(" 
-			[ ( expressao | """ seq_caracteres """ | booleano ) 
-			{"," ( expressao | """ seq_caracteres """ 
-			| booleano ) } ] ")" 
+			| identificador "(" [ expressao {"," expressao } ] ")" 
 			| numero | "(" expressao ")" ) } 
 			{ ( "+" | "-" ) 
 			( identificador [ "[" ( numero | expressao ) "]" ] 
-			| identificador "(" 
-			[ ( expressao | """ seq_caracteres """ | booleano ) 
-			{"," ( expressao | """ seq_caracteres """ 
-			| booleano ) } ] ")" 
+			| identificador "(" [ expressao {"," expressao } ] ")" 
 			| numero | "(" expressao ")" ) 
 			{ ( "*" | "/" ) 
 			( identificador [ "[" ( numero | expressao ) "]" ] 
-			| identificador "(" 
-			[ ( expressao | """ seq_caracteres """ | booleano ) 
-			{"," ( expressao | """ seq_caracteres """ 
-			| booleano ) } ] ")" 
+			| identificador "(" [ expressao {"," expressao } ] ")" 
 			| numero | "(" expressao ")" ) } } .
