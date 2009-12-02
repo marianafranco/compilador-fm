@@ -29,7 +29,7 @@ public class Semantico {
 	
 	public void geraCodigo(Token token, Token nextToken, String aPercorrer, AFD submaquina) throws SemanticoException{
 		
-		//System.out.println("[DEBUG] Token: " + token.getValor() + " submaquina: " + submaquina.getNome());
+		System.out.println("[DEBUG] Token: " + token.getValor() + " submaquina: " + submaquina.getNome());
 		//System.out.println("[DEBUG] nextToken: " + nextToken.getValor());
 		
 		

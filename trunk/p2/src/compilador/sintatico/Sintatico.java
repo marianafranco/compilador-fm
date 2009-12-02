@@ -98,7 +98,7 @@ public class Sintatico {
 			if(conteudoPilha.getSubmaquina().equals("Program")){
 				submaquina = progr;
 			}
-			else if(conteudoPilha.getSubmaquina().equals("expressao")){
+			else if(conteudoPilha.getSubmaquina().equals("Expr")){
 				submaquina = expr;
 			}
 			else{
@@ -160,7 +160,7 @@ public class Sintatico {
 				}
 				
 				// Empilha submaquina, caso ela nao tenha terminado
-				if (!submaquina.estadoAtivoFinal() || submaquina.temTransicao('"' + token.getValor() + '"')) {
+				if (!submaquina.estadoAtivoFinal() || submaquina.temTransicao('"' + token.getValor() + '"') || aPercorrer == "Expr") {
 					pilhaSubmaquinas.push(new PilhaEstadoSubmaquina(conteudoPilha.getEstado(), conteudoPilha.getSubmaquina()));
 					
 					// Empilha nova maquina, caso transicao de um nao-terminal
