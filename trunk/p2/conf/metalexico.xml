@@ -30,7 +30,7 @@
 			<proximo>5</proximo>
 		</transicao>
 		<transicao>
-			<entradas>"</entradas>
+			<entradas>"`</entradas>
 			<proximo>5</proximo>
 		</transicao>
 	</estado>

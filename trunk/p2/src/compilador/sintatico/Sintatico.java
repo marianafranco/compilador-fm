@@ -36,28 +36,14 @@ public class Sintatico {
 	private boolean temTransicao (String token, int tokenTipo, AFD submaquina, APE automato) {
 		
 		submaquina.setEstadoAtivo(0);
-		AFD comando = automato.getSubmaquina("comando");
 		AFD expr = automato.getSubmaquina("expressao");
 		
 		if (submaquina.temTransicao('"' + token + '"')) {
 			return true;
 		}
-		if (submaquina.temTransicao("comando")) {
-			if (temTransicao (token, tokenTipo, comando, automato))
-				return true;
-		}
-		if (submaquina.temTransicao("expressao")) {
+		if (submaquina.temTransicao("Expr")) {
 			if (temTransicao (token, tokenTipo, expr, automato))
 				return true;
-		}
-		if (submaquina.temTransicao("identificador") && tokenTipo == TiposLexico.NOME) {
-			return true;
-		}
-		if (submaquina.temTransicao("numero") && tokenTipo == TiposLexico.NUMERO) {
-			return true;
-		}
-		if (submaquina.temTransicao("string") && tokenTipo == TiposLexico.STRING) {
-			return true;
 		}
 		
 		return false;
@@ -77,16 +63,15 @@ public class Sintatico {
 		
 		
 		// Submaquinas temporarias
-		AFD progr = automato.getSubmaquina("programa");
-		AFD comando = automato.getSubmaquina("comando");
-		AFD expr = automato.getSubmaquina("expressao");
+		AFD progr = automato.getSubmaquina("Program");
+		AFD expr = automato.getSubmaquina("Expr");
 		
 		// Submaquina e pilha
 		AFD submaquina;
 		PilhaEstadoSubmaquina conteudoPilha;
 		
 		// Inicializa pilha
-		pilhaSubmaquinas.push(new PilhaEstadoSubmaquina(0, "programa"));
+		pilhaSubmaquinas.push(new PilhaEstadoSubmaquina(0, "Program"));
 		
 		
 		// Pega primeiro token
@@ -94,8 +79,7 @@ public class Sintatico {
 		nextToken = token;
 		
 		boolean fimTokensEFinal = true;
-		
-		
+				
 		// Enquanto não chegamos ao final dos tokens
 		while(fimTokensEFinal) {
 			
@@ -111,11 +95,8 @@ public class Sintatico {
 			//System.out.println("token: " + token.getValor());
 			
 			// Identifica qual a maquina que estava empilhada
-			if(conteudoPilha.getSubmaquina().equals("programa")){
+			if(conteudoPilha.getSubmaquina().equals("Program")){
 				submaquina = progr;
-			}
-			else if(conteudoPilha.getSubmaquina().equals("comando")){
-				submaquina = comando;
 			}
 			else if(conteudoPilha.getSubmaquina().equals("expressao")){
 				submaquina = expr;
@@ -144,40 +125,10 @@ public class Sintatico {
 				}
 				
 			// Se chamada para submáquina "comando"
-			}else if (submaquina.temTransicao("comando") && temTransicao(token.getValor(), token.getTipo(), comando, automato)) {
+			}else if (submaquina.temTransicao("Expr") && temTransicao (token.getValor(), token.getTipo(), expr, automato)) {
 				possiveisTransicoes++;
-				aPercorrer = "comando";
-			
-			// Se chamada para submáquina "expressao"
-			}else if (submaquina.temTransicao("expressao") && temTransicao (token.getValor(), token.getTipo(), expr, automato)) {
-				possiveisTransicoes++;
-				aPercorrer = "expressao";
+				aPercorrer = "Expr";
 
-			}else if (submaquina.temTransicao("identificador") && token.getTipo() == TiposLexico.NOME) {
-				possiveisTransicoes++;
-				aPercorrer = "identificador";
-				
-				if(tokensTokens.getTamanho() > 0){
-					getNewToken = true;
-				}
-			
-			// Se número
-			}else if (submaquina.temTransicao("numero") && token.getTipo() == TiposLexico.NUMERO) {
-				possiveisTransicoes++;
-				aPercorrer = "numero";
-				
-				if(tokensTokens.getTamanho() > 0){
-					getNewToken = true;
-				}
-			
-			// Se string
-			}else if (submaquina.temTransicao("string") && token.getTipo() == TiposLexico.STRING) {
-				possiveisTransicoes++;
-				aPercorrer = "string";
-				
-				if(tokensTokens.getTamanho() > 0){
-					getNewToken = true;
-				}
 			}
 			
 			// seta novamente o estado ativo da submaquina
@@ -213,8 +164,7 @@ public class Sintatico {
 					pilhaSubmaquinas.push(new PilhaEstadoSubmaquina(conteudoPilha.getEstado(), conteudoPilha.getSubmaquina()));
 					
 					// Empilha nova maquina, caso transicao de um nao-terminal
-					if (aPercorrer == "programa" || aPercorrer == "comando" || aPercorrer == "expressao" || 
-							aPercorrer == "tipo" || aPercorrer == "booleano") {
+					if (aPercorrer == "Program" || aPercorrer == "Expr" ) {
 						pilhaSubmaquinas.push(new PilhaEstadoSubmaquina(0, aPercorrer));
 					}
 				}
