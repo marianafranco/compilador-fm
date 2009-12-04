@@ -7,8 +7,6 @@ import java.io.Reader;
 
 import compilador.estruturas.AFD;
 import compilador.estruturas.FluxoTokens;
-import compilador.estruturas.Simbolo;
-import compilador.estruturas.TabelaSimbolos;
 import compilador.estruturas.Token;
 import compilador.exceptions.ArquivoNaoEcontradoException;
 

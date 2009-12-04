@@ -4,7 +4,6 @@ import java.io.Reader;
 
 import compilador.estruturas.AFD;
 import compilador.estruturas.FluxoTokens;
-import compilador.estruturas.PalavrasReservadas;
 import compilador.estruturas.TiposLexico;
 
 public class PercorreAFD {
@@ -120,14 +119,7 @@ public class PercorreAFD {
 		
 		// Se for uma string, talvez colocamos na tabela
 		else if (tipo == TiposLexico.NOME) {
-			
-			// Verifica se é palavra reservada
-			if (PalavrasReservadas.reservada(token) == false) {
-				tokensTokens.adicionaToken(token, tipo, linha, coluna);
-			}
-			else {
-				tokensTokens.adicionaToken(token, TiposLexico.RESERVADO, linha, coluna);
-			}
+			tokensTokens.adicionaToken(token, TiposLexico.RESERVADO, linha, coluna);
 			
 		// Se for uma string
 		}else if (tipo == TiposLexico.STRING){
