@@ -6,10 +6,10 @@
 \usepackage{fullpage}
 
 \usepackage{verbatimbox}
-\usepackage{indentfirst} % primeiro parágrado indendado
-\usepackage{listings}	 % para colocar código fonte
+\usepackage{indentfirst} % primeiro parÂ·grado indendado
+\usepackage{listings}	 % para colocar cÃ›digo fonte
 
-\title{Continuação da segunda avaliação de linguagens e compiladores} 
+\title{ContinuaÃâ€o da segunda avaliaÃâ€o de linguagens e compiladores} 
 \author{Felipe Giunte Yoshida N$^{\circ}$ USP 4978231\\Mariana Ramos Franco N$^{\circ}$ USP 5179364} 
 %\date {29 de Outubro de 2009}
 
@@ -22,11 +22,11 @@
 
 \maketitle 
 
-\paragraph{Construa o sistema de programação para a linguagem LazyComb que terá um compilador para a linguagem C, um ambiente de execução que contará com bibliotecas da linguagem. Não há E/S na linguagem, mas cada resultado deve ser mostrado na forma de combinadores.}
+\paragraph{Construa o sistema de programaÃâ€o para a linguagem LazyComb que terÂ· um compilador para a linguagem C, um ambiente de execuÃâ€o que contarÂ· com bibliotecas da linguagem. Nâ€o hÂ· E/S na linguagem, mas cada resultado deve ser mostrado na forma de combinadores.}
 
 % LEXICO
-\section{Léxico}
-Para implementar o analisador léxico utilizamos a mesma estrutura criada para o Compilador FM, sendo necessário apenas modificar o arquivo \textbf{automato.xml} com a nova descrição do autômato mostrada a seguir:
+\section{LÃˆxico}
+Para implementar o analisador lÃˆxico utilizamos a mesma estrutura criada para o Compilador FM, sendo necessÂ·rio apenas modificar o arquivo \textbf{automato.xml} com a nova descriÃâ€o do autÃ™mato mostrada a seguir:
 
 \lstset{language=XML, basicstyle=\footnotesize}
 \begin{lstlisting}
@@ -48,12 +48,12 @@ Para implementar o analisador léxico utilizamos a mesma estrutura criada para o 
 </gramatica>
 \end{lstlisting} 
 
-Como pode-se notar, o léxico aceita somente as entradas 'I','S', 'K', '(' e ')'. Assim, nosso compilador não trata entradas no formato Unlambda, Iota ou Jot.
+Como pode-se notar, o lÃˆxico aceita somente as entradas 'I','S', 'K', '(' e ')'. Assim, nosso compilador nâ€o trata entradas no formato Unlambda, Iota ou Jot.
 
 % SINTATICO
-\section{Sintático}
-Assim como o léxico, também utilizamos a estrutura montada para o compilador FM para implementar o sintático.
-Foi necessário alterar a o arquivo \textbf{gramática.txt} de entrada para o meta-analisador com a gramática da linguagem Lazy-K na notação de Wirth:
+\section{SintÂ·tico}
+Assim como o lÃˆxico, tambÃˆm utilizamos a estrutura montada para o compilador FM para implementar o sintÂ·tico.
+Foi necessÂ·rio alterar a o arquivo \textbf{gramÂ·tica.txt} de entrada para o meta-analisador com a gramÂ·tica da linguagem Lazy-K na notaÃâ€o de Wirth:
 
 \lstset{language=C, basicstyle=\footnotesize}
 \begin{lstlisting}
@@ -62,12 +62,12 @@ Program = { Expr } .
 Expr = "I" | "K" | "S" | "(" { Expr } ")" .
 \end{lstlisting}
 
-Desta maneira obtemos o autômato de pilha estruturado da linguagem como mostrado nas figuras \ref{fig:program} e \ref{fig:expr}.
+Desta maneira obtemos o autÃ™mato de pilha estruturado da linguagem como mostrado nas figuras \ref{fig:program} e \ref{fig:expr}.
 
 \begin{figure}[ht!]
 	\begin{center}
 		\includegraphics[scale=0.60]{program.jpg}
-		\caption{Submáquina 'Program'}
+		\caption{SubmÂ·quina 'Program'}
 		\label{fig:program}
 	\end{center}
 \end{figure}
@@ -75,19 +75,19 @@ Desta maneira obtemos o autômato de pilha estruturado da linguagem como mostrado
 \begin{figure}[ht!]
 	\begin{center}
 		\includegraphics[scale=0.60]{expr.jpg}
-		\caption{Submáquina 'Expr'}
+		\caption{SubmÂ·quina 'Expr'}
 		\label{fig:expr}
 	\end{center}
 \end{figure}
 
-Também alteramos a classe \textbf{Sintatico.java} para que esta passasse a chamar corretamente os autômatos 'Program' ou 'Expr' conforme os tokens recebidos e o valor no topo da pilha estado-submáquina.
+TambÃˆm alteramos a classe \textbf{Sintatico.java} para que esta passasse a chamar corretamente os autÃ™matos 'Program' ou 'Expr' conforme os tokens recebidos e o valor no topo da pilha estado-submÂ·quina.
 
 
 % SEMANTICO
-\section{Semântico}
-Para fazer a análise semântica e gerar o código em C, responsável por reduzir a cadeia contida no arquivo \textbf{arquivofonte.lazy}, criamos uma nova classe \textbf{Semantico.java} que é chamada pelo sintático à cada transição nos autômatos 'Program' ou 'Expr'.
+\section{Semâ€šntico}
+Para fazer a anÂ·lise semâ€šntica e gerar o cÃ›digo em C, responsÂ·vel por reduzir a cadeia contida no arquivo \textbf{arquivofonte.lazy}, criamos uma nova classe \textbf{Semantico.java} que Ãˆ chamada pelo sintÂ·tico â€¡ cada transiÃâ€o nos autÃ™matos 'Program' ou 'Expr'.
 
-Basicamente o que o semântico faz é escrever no arquivo final as seguintes chamadas de função conforme o valor do token consumido:
+Basicamente o que o semâ€šntico faz Ãˆ escrever no arquivo final as seguintes chamadas de funÃâ€o conforme o valor do token consumido:
 
 \lstset{language=Java, basicstyle=\footnotesize}
 \begin{lstlisting}
@@ -114,15 +114,15 @@ Basicamente o que o semântico faz é escrever no arquivo final as seguintes chama
 
 
 % SEMANTICO
-\section{Ambiente de Execução}
+\section{Ambiente de ExecuÃâ€o}
 
-O ambiente de execução consiste em 5 funções, descritas abaixo:
+O ambiente de execuÃâ€o consiste em 5 funÃÄ±es, descritas abaixo:
 
-\paragraph{novo\_escopo} Abre um novo escopo, que ocorre quando se encontra uma abertura de parênteses.
+\paragraph{novo\_escopo} Abre um novo escopo, que ocorre quando se encontra uma abertura de parÃnteses.
 
 \paragraph{entra} Insere um novo caracter no atual escopo
 
-\paragraph{tenta\_reduzir} Tenta fazer uma das reduções ($I x \rightarrow x$, $K x y \rightarrow x$ ou $S x y z \rightarrow ( x z ) ( x y )$) no escopo atual
+\paragraph{tenta\_reduzir} Tenta fazer uma das reduÃÄ±es ($I x \rightarrow x$, $K x y \rightarrow x$ ou $S x y z \rightarrow ( x z ) ( x y )$) no escopo atual
 
 \paragraph{fecha\_escopo} Fecha escopo atual e copia resultado para o escopo anterior
 
@@ -130,9 +130,10 @@ O ambiente de execução consiste em 5 funções, descritas abaixo:
 
 \section{Testes}
 
-Para a entrada \verb|I(KKI)(IIKSI)|, chegamos a um c—digo em C, que n‹o ser‡ colocado no relat—rio por seu tamanho.
 
-Ao se executar este c—digo em um compilador C, chegamos ao seguinte resultado:
+Para a entrada \verb|I(KKI)(IIKSI)|, chegamos a um cÃ³digo em C, que nÃ£o serÃ¡ colocado no relatÃ³rio por seu tamanho.
+
+Ao se executar este cÃ³digo em um compilador C, chegamos ao seguinte resultado:
 
 \begin{verbatim}
 Caractere adicionado I
