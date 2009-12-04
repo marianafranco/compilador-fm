@@ -6,7 +6,7 @@
 		<final>false</final>
         <tipo>0</tipo>
 		<transicao>
-			<entradas>iIsSkK*`()</entradas>
+			<entradas>ISK()</entradas>
 			<proximo>1</proximo>
 		</transicao>
     </estado><estado>

@@ -1,3 +1,3 @@
 Program = { Expr } .
 
-Expr = "i" | "I" | "K" | "S" | "k" | "s" | ( "0" | "1" ) { ( "0" | "1" ) } | "`" Expr Expr | "*" Expr Expr | "(" { Expr } ")" .
+Expr = "I" | "K" | "S" | "(" { Expr } ")" .

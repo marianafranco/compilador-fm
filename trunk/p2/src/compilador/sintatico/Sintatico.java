@@ -5,7 +5,6 @@ import java.util.Stack;
 
 import compilador.estruturas.APE;
 import compilador.estruturas.FluxoTokens;
-import compilador.estruturas.TiposLexico;
 import compilador.estruturas.Token;
 import compilador.estruturas.PilhaEstadoSubmaquina;
 import compilador.estruturas.AFD;
@@ -33,16 +32,15 @@ public class Sintatico {
 	
 	
 	// Verifica se ha em alguma transicao em um dos nao terminais 
-	private boolean temTransicao (String token, int tokenTipo, AFD submaquina, APE automato) {
+	private boolean temTransicao (String token, AFD submaquina) {
 		
 		submaquina.setEstadoAtivo(0);
-		AFD expr = automato.getSubmaquina("expressao");
 		
 		if (submaquina.temTransicao('"' + token + '"')) {
 			return true;
 		}
 		if (submaquina.temTransicao("Expr")) {
-			if (temTransicao (token, tokenTipo, expr, automato))
+			if (temTransicao(token, submaquina))
 				return true;
 		}
 		
@@ -61,7 +59,6 @@ public class Sintatico {
 			return false;
 		}
 		
-		
 		// Submaquinas temporarias
 		AFD progr = automato.getSubmaquina("Program");
 		AFD expr = automato.getSubmaquina("Expr");
@@ -73,11 +70,11 @@ public class Sintatico {
 		// Inicializa pilha
 		pilhaSubmaquinas.push(new PilhaEstadoSubmaquina(0, "Program"));
 		
-		
 		// Pega primeiro token
 		token = tokensTokens.recuperaToken();
 		nextToken = token;
 		
+		boolean fimTokens = false;
 		boolean fimTokensEFinal = true;
 				
 		// Enquanto não chegamos ao final dos tokens
@@ -91,7 +88,7 @@ public class Sintatico {
 			
 			// Desempilha maquina
 			conteudoPilha = (PilhaEstadoSubmaquina) pilhaSubmaquinas.pop();
-			//System.out.println("pilha: (" + conteudoPilha.getEstado() + ", " + conteudoPilha.getSubmaquina() + ")");
+			//System.out.println("desempilha: (" + conteudoPilha.getEstado() + ", " + conteudoPilha.getSubmaquina() + ")");
 			//System.out.println("token: " + token.getValor());
 			
 			// Identifica qual a maquina que estava empilhada
@@ -122,19 +119,23 @@ public class Sintatico {
 				
 				if(tokensTokens.getTamanho() > 0){
 					getNewToken = true;
+					
+				}else{
+					fimTokens = true;
 				}
 				
-			// Se chamada para submáquina "comando"
-			}else if (submaquina.temTransicao("Expr") && temTransicao (token.getValor(), token.getTipo(), expr, automato)) {
+			// Se chamada para submáquina "Expr"
+			}else if (submaquina.temTransicao("Expr") && temTransicao(token.getValor(), expr)) {
 				possiveisTransicoes++;
 				aPercorrer = "Expr";
-
 			}
 			
 			// seta novamente o estado ativo da submaquina
 			submaquina.setEstadoAtivo(conteudoPilha.getEstado());
+			
 			// Caso haja apenas uma transicao possivel, realiza a mesma
 			if (possiveisTransicoes == 1) {
+				
 				// Percorre submaquina
 				submaquina.percorre(aPercorrer);
 				// Salva estado da submaquina
@@ -147,7 +148,7 @@ public class Sintatico {
 				
 				try{
 					// Gera código
-					semantico.geraCodigo(token, nextToken, aPercorrer, submaquina);
+					semantico.geraCodigo(token, aPercorrer);
 				}catch(SemanticoException e){
 					System.out.println("[INFO] Compilador finalizado com ERRO.");
 					return false;
@@ -163,9 +164,15 @@ public class Sintatico {
 				if (!submaquina.estadoAtivoFinal() || submaquina.temTransicao('"' + token.getValor() + '"') || aPercorrer == "Expr") {
 					pilhaSubmaquinas.push(new PilhaEstadoSubmaquina(conteudoPilha.getEstado(), conteudoPilha.getSubmaquina()));
 					
+					//System.out.println("empilha: (" + pilhaSubmaquinas.peek().getEstado() + ", " 
+					//		+ pilhaSubmaquinas.peek().getSubmaquina() + ")");
+					
 					// Empilha nova maquina, caso transicao de um nao-terminal
 					if (aPercorrer == "Program" || aPercorrer == "Expr" ) {
 						pilhaSubmaquinas.push(new PilhaEstadoSubmaquina(0, aPercorrer));
+						
+						//System.out.println("empilha: (" + pilhaSubmaquinas.peek().getEstado() + ", " 
+						//		+ pilhaSubmaquinas.peek().getSubmaquina() + ")");
 					}
 				}
 				
@@ -178,12 +185,14 @@ public class Sintatico {
 			// Verifica se a pilha esta vazia e o estado é final
 			if (tokensTokens.getTamanho() == 0 && submaquina.estadoAtivoFinal() && pilhaSubmaquinas.empty()) {
 				fimTokensEFinal = false;
+			
+			}else if(fimTokens && pilhaSubmaquinas.peek().getSubmaquina().equals("Program")){
+				fimTokensEFinal = false;
 			}
 			
 		}
 		
 		System.out.println("[INFO] Codigo aceito!");
-		
 		semantico.criaArquivo();
 		
 		return true;
