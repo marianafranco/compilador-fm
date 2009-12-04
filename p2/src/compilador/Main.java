@@ -1,9 +1,6 @@
 package compilador;
 
-import java.io.FileNotFoundException;
-
 import compilador.estruturas.FluxoTokens;
-import compilador.estruturas.TabelaSimbolos;
 import compilador.lexico.Lexico;
 import compilador.metacompilador.MetaCompilador;
 import compilador.estruturas.APE;
@@ -42,8 +39,7 @@ public class Main {
 			String codMVN = args[1];
 			
 			try{
-				// Cria a tabela de simbolos e o fluxo de tokens
-				TabelaSimbolos tabelaSimbolos = new TabelaSimbolos();
+				// Cria o fluxo de tokens
 				FluxoTokens fluxoTokens = new FluxoTokens();
 				
 				// Cria o autômato de pilha estruturado da linguagem
