@@ -116,6 +116,63 @@ Basicamente o que o semântico faz é escrever no arquivo final as seguintes chama
 % SEMANTICO
 \section{Ambiente de Execução}
 
+O ambiente de execução consiste em 5 funções, descritas abaixo:
 
+\paragraph{novo\_escopo} Abre um novo escopo, que ocorre quando se encontra uma abertura de parênteses.
+
+\paragraph{entra} Insere um novo caracter no atual escopo
+
+\paragraph{tenta\_reduzir} Tenta fazer uma das reduções ($I x \rightarrow x$, $K x y \rightarrow x$ ou $S x y z \rightarrow ( x z ) ( x y )$) no escopo atual
+
+\paragraph{fecha\_escopo} Fecha escopo atual e copia resultado para o escopo anterior
+
+\paragraph{imprime} Imprime cadeia do escopo atual
+
+\section{Testes}
+
+Para a entrada \verb|I(KKI)(IIKSI)|, chegamos a um c—digo em C, que n‹o ser‡ colocado no relat—rio por seu tamanho.
+
+Ao se executar este c—digo em um compilador C, chegamos ao seguinte resultado:
+
+\begin{verbatim}
+Caractere adicionado I
+I
+Novo escopo nivel 1
+
+Caractere adicionado K
+K
+Caractere adicionado K
+KK
+Caractere adicionado I
+KKI
+Reduziu K
+K
+Escopo nivel 1 fechado
+IK
+Reduziu I
+K
+Novo escopo nivel 1
+
+Caractere adicionado I
+I
+Caractere adicionado I
+II
+Reduziu I
+I
+Caractere adicionado K
+IK
+Reduziu I
+K
+Caractere adicionado S
+KS
+Caractere adicionado I
+KSI
+Reduziu K
+S
+Escopo nivel 1 fechado
+KS
+KS
+
+\end{verbatim}
 
 \end{document} 

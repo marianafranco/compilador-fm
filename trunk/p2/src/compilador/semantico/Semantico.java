@@ -2,6 +2,7 @@ package compilador.semantico;
 
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.io.FileReader;
 
 import compilador.estruturas.Token;
 import compilador.exceptions.SemanticoException;
@@ -60,10 +61,14 @@ public class Semantico {
 		try{
 			FileWriter writer = new FileWriter(this.arquivo);
 			PrintWriter saida = new PrintWriter(writer);
+			FileReader ambiente = new FileReader("conf/ambiente.txt");
 			
-			// includes
-			this.output = this.output + "#include \"environment.h\"\n";
-			this.output = this.output + "#include <stdio.h>\n\n";
+			int temp = ambiente.read();
+			while (temp != -1) {
+				this.output = this.output + (char) temp;
+				temp = ambiente.read();
+			}
+			
 			
 			// main
 			this.output = this.output + "int main(void) {\n";
