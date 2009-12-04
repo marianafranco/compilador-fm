@@ -1,13 +1,10 @@
 package compilador.lexico;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.FileReader;
 import java.io.Reader;
 
 import compilador.estruturas.AFD;
 import compilador.estruturas.FluxoTokens;
-import compilador.estruturas.Token;
 import compilador.exceptions.ArquivoNaoEcontradoException;
 
 
@@ -45,30 +42,6 @@ public class Lexico {
 			fechaArquivoFonte();
 			
 			return simuladorOK;
-			
-			/*
-			if(simuladorOK){
-				if (false) {
-					System.out.println("[INFO] Automato executado com sucesso");
-					Token temp = fluxoTokens.recuperaToken();
-					while (temp != null) {
-						System.out.println("Token: " + temp.getValor() + ", id: " + temp.getTipo());
-						temp = fluxoTokens.recuperaToken();
-					}
-					System.out.println("[INFO] Automato executado com sucesso");
-					int i = 1;
-					Simbolo temp2 = tabelaSimbolos.recuperaEntrada(i);
-					while (temp2 != null) {
-						i++;
-						System.out.println("Id: " + temp2.getId() + ", tipo: " + temp2.getTipo());
-						temp2 = tabelaSimbolos.recuperaEntrada(i);
-					}
-				}
-				return true;
-			}else{
-				return false;
-			}
-			*/
 			
 		}else{
 			fechaArquivoFonte();
