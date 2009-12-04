@@ -1,0 +1,121 @@
+\documentclass[12pt,a4paper]{article} 
+\usepackage{graphicx}
+\usepackage[portuguese]{babel}
+%\usepackage[applemac]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fullpage}
+
+\usepackage{verbatimbox}
+\usepackage{indentfirst} % primeiro parágrado indendado
+\usepackage{listings}	 % para colocar código fonte
+
+\title{Continuação da segunda avaliação de linguagens e compiladores} 
+\author{Felipe Giunte Yoshida N$^{\circ}$ USP 4978231\\Mariana Ramos Franco N$^{\circ}$ USP 5179364} 
+%\date {29 de Outubro de 2009}
+
+\begin{document} 
+
+\begin{figure}[!t]
+\centering 
+\includegraphics[width=15.5cm]{logo.pdf}
+\end{figure}
+
+\maketitle 
+
+\paragraph{Construa o sistema de programação para a linguagem LazyComb que terá um compilador para a linguagem C, um ambiente de execução que contará com bibliotecas da linguagem. Não há E/S na linguagem, mas cada resultado deve ser mostrado na forma de combinadores.}
+
+% LEXICO
+\section{Léxico}
+Para implementar o analisador léxico utilizamos a mesma estrutura criada para o Compilador FM, sendo necessário apenas modificar o arquivo \textbf{automato.xml} com a nova descrição do autômato mostrada a seguir:
+
+\lstset{language=XML, basicstyle=\footnotesize}
+\begin{lstlisting}
+<gramatica>
+	<estado>
+		<id>0</id>
+		<final>false</final>
+		<tipo>0</tipo>
+		<transicao>
+			<entradas>ISK()</entradas>
+			<proximo>1</proximo>
+		</transicao>
+	</estado>
+	<estado>
+		<id>1</id>
+		<final>true</final>
+		<tipo>1</tipo>
+	</estado>
+</gramatica>
+\end{lstlisting} 
+
+Como pode-se notar, o léxico aceita somente as entradas 'I','S', 'K', '(' e ')'. Assim, nosso compilador não trata entradas no formato Unlambda, Iota ou Jot.
+
+% SINTATICO
+\section{Sintático}
+Assim como o léxico, também utilizamos a estrutura montada para o compilador FM para implementar o sintático.
+Foi necessário alterar a o arquivo \textbf{gramática.txt} de entrada para o meta-analisador com a gramática da linguagem Lazy-K na notação de Wirth:
+
+\lstset{language=C, basicstyle=\footnotesize}
+\begin{lstlisting}
+Program = { Expr } .
+
+Expr = "I" | "K" | "S" | "(" { Expr } ")" .
+\end{lstlisting}
+
+Desta maneira obtemos o autômato de pilha estruturado da linguagem como mostrado nas figuras \ref{fig:program} e \ref{fig:expr}.
+
+\begin{figure}[ht!]
+	\begin{center}
+		\includegraphics[scale=0.60]{program.jpg}
+		\caption{Submáquina 'Program'}
+		\label{fig:program}
+	\end{center}
+\end{figure}
+
+\begin{figure}[ht!]
+	\begin{center}
+		\includegraphics[scale=0.60]{expr.jpg}
+		\caption{Submáquina 'Expr'}
+		\label{fig:expr}
+	\end{center}
+\end{figure}
+
+Também alteramos a classe \textbf{Sintatico.java} para que esta passasse a chamar corretamente os autômatos 'Program' ou 'Expr' conforme os tokens recebidos e o valor no topo da pilha estado-submáquina.
+
+
+% SEMANTICO
+\section{Semântico}
+Para fazer a análise semântica e gerar o código em C, responsável por reduzir a cadeia contida no arquivo \textbf{arquivofonte.lazy}, criamos uma nova classe \textbf{Semantico.java} que é chamada pelo sintático à cada transição nos autômatos 'Program' ou 'Expr'.
+
+Basicamente o que o semântico faz é escrever no arquivo final as seguintes chamadas de função conforme o valor do token consumido:
+
+\lstset{language=Java, basicstyle=\footnotesize}
+\begin{lstlisting}
+			if(token.getValor().equals("S")){
+				main = "entra('S');";
+				main = "tenta_reduzir();";
+				
+			}else if(token.getValor().equals("K")){
+				main = "entra('K');";
+				main = "tenta_reduzir();";
+				
+			}else if(token.getValor().equals("I")){
+				main = "entra('I');";
+				main = "tenta_reduzir();";
+				
+			}else if(token.getValor().equals("(")){
+				main = "novo_escopo();";
+				
+				
+			}else if(token.getValor().equals(")")){
+				main = "fecha_escopo();";
+				main = "tenta_reduzir();";
+\end{lstlisting} 
+
+
+% SEMANTICO
+\section{Ambiente de Execução}
+
+
+
+\end{document} 

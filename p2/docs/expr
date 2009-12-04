@@ -1,0 +1,16 @@
+digraph Expr {
+
+	null [shape = plaintext label=""];
+	node [shape = doublecircle] 2 3 4 8;
+	node [shape = circle];
+
+	null -> 0;
+	0 -> 2 [ label = "I" ];
+	0 -> 3 [ label = "K" ];
+	0 -> 4 [ label = "S" ];
+	0 -> 5 [ label = "(" ];
+	5 -> 7 [ label = Expr ];
+	5 -> 8 [ label = ")" ];
+	7 -> 7 [ label = Expr ];
+	7 -> 8 [ label = ")" ];
+}
